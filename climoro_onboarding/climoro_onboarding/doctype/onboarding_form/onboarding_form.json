@@ -1,5 +1,16 @@
 {
- "actions": [],
+ "actions": [
+  {
+   "label": "Approve",
+   "action": "approve_application",
+   "type": "Primary"
+  },
+  {
+   "label": "Reject",
+   "action": "reject_application",
+   "type": "Danger"
+  }
+ ],
  "allow_rename": 1,
  "autoname": "naming_series:",
  "creation": "2024-01-01 12:00:00.000000",
@@ -48,6 +59,36 @@
    "label": "Status",
    "options": "Draft\nIn Progress\nSubmitted\nApproved\nRejected",
    "reqd": 1
+  },
+  {
+   "fieldname": "approved_at",
+   "fieldtype": "Datetime",
+   "label": "Approved At",
+   "read_only": 1
+  },
+  {
+   "fieldname": "approved_by",
+   "fieldtype": "Data",
+   "label": "Approved By",
+   "read_only": 1
+  },
+  {
+   "fieldname": "rejected_at",
+   "fieldtype": "Datetime",
+   "label": "Rejected At",
+   "read_only": 1
+  },
+  {
+   "fieldname": "rejected_by",
+   "fieldtype": "Data",
+   "label": "Rejected By",
+   "read_only": 1
+  },
+  {
+   "fieldname": "rejection_reason",
+   "fieldtype": "Small Text",
+   "label": "Rejection Reason",
+   "read_only": 1
   },
   {
    "default": "1",

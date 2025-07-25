@@ -55,6 +55,7 @@ def submit_onboarding_form(form_data):
             # Add new units and users
             if form_data.get("units"):
                 for unit_data in form_data["units"]:
+                    # Create unit document
                     unit_doc = frappe.get_doc({
                         "doctype": "Company Unit",
                         "parent": doc.name,
@@ -68,9 +69,8 @@ def submit_onboarding_form(form_data):
                         "phone_number": unit_data.get("phone_number"),
                         "position": unit_data.get("position")
                     })
-                    doc.append("units", unit_doc)
                     
-                    # Add users for this unit
+                    # Add users for this unit BEFORE appending to parent
                     if unit_data.get("assigned_users"):
                         for user_data in unit_data["assigned_users"]:
                             user_doc = frappe.get_doc({
@@ -83,6 +83,9 @@ def submit_onboarding_form(form_data):
                                 "user_role": user_data.get("user_role")
                             })
                             unit_doc.append("assigned_users", user_doc)
+                    
+                    # Now append the unit (with its users) to the parent
+                    doc.append("units", unit_doc)
             
             doc.save()
             frappe.db.commit()
@@ -115,6 +118,7 @@ def submit_onboarding_form(form_data):
             # Add units and users
             if form_data.get("units"):
                 for unit_data in form_data["units"]:
+                    # Create unit document
                     unit_doc = frappe.get_doc({
                         "doctype": "Company Unit",
                         "parent": doc.name,
@@ -128,9 +132,8 @@ def submit_onboarding_form(form_data):
                         "phone_number": unit_data.get("phone_number"),
                         "position": unit_data.get("position")
                     })
-                    unit_doc.insert()
                     
-                    # Add users for this unit
+                    # Add users for this unit BEFORE inserting
                     if unit_data.get("assigned_users"):
                         for user_data in unit_data["assigned_users"]:
                             user_doc = frappe.get_doc({
@@ -142,7 +145,10 @@ def submit_onboarding_form(form_data):
                                 "first_name": user_data.get("first_name"),
                                 "user_role": user_data.get("user_role")
                             })
-                            user_doc.insert()
+                            unit_doc.append("assigned_users", user_doc)
+                    
+                    # Now insert the unit (with its users)
+                    unit_doc.insert()
             
             frappe.logger().info(f"✅ Successfully created new application: {doc.name}")
         
@@ -246,6 +252,7 @@ def save_step_data(step_data):
             # Add new units and users
             if step_data.get("units"):
                 for unit_data in step_data["units"]:
+                    # Create unit document
                     unit_doc = frappe.get_doc({
                         "doctype": "Company Unit",
                         "parent": doc.name,
@@ -259,9 +266,8 @@ def save_step_data(step_data):
                         "phone_number": unit_data.get("phone_number"),
                         "position": unit_data.get("position")
                     })
-                    doc.append("units", unit_doc)
                     
-                    # Add users for this unit
+                    # Add users for this unit BEFORE appending to parent
                     if unit_data.get("assigned_users"):
                         for user_data in unit_data["assigned_users"]:
                             user_doc = frappe.get_doc({
@@ -274,6 +280,9 @@ def save_step_data(step_data):
                                 "user_role": user_data.get("user_role")
                             })
                             unit_doc.append("assigned_users", user_doc)
+                    
+                    # Now append the unit (with its users) to the parent
+                    doc.append("units", unit_doc)
             
             doc.current_step = 3
         

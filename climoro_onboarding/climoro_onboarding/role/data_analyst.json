@@ -1,0 +1,8 @@
+{
+ "doctype": "Role",
+ "role_name": "Data Analyst",
+ "desk_access": 1,
+ "module": "Climoro Onboarding",
+ "restrict_to_domain": null,
+ "disabled": 0
+} 
