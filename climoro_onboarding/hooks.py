@@ -181,7 +181,11 @@ whitelisted_methods = [
     "climoro_onboarding.climoro_onboarding.climoro_onboarding.onboarding_form.onboarding_form.send_admin_notification",
     "climoro_onboarding.www.apply.api.submit_onboarding_form",
     "climoro_onboarding.www.apply.api.get_existing_application",
-    "climoro_onboarding.www.apply.api.save_step_data"
+    "climoro_onboarding.www.apply.api.save_step_data",
+    "climoro_onboarding.www.apply.api.send_verification_email",
+    "climoro_onboarding.www.apply.api.verify_email",
+    "climoro_onboarding.www.apply.api.get_session_data",
+    "climoro_onboarding.www.apply.api.test_email_verification_flow"
 ]
 
 # Overriding Methods

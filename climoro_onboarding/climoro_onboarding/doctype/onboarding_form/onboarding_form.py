@@ -25,9 +25,14 @@ class OnboardingForm(Document):
     def validate_phone(self):
         """Validate phone number format"""
         if self.phone_number:
-            # Basic phone validation - can be enhanced
-            if len(self.phone_number) < 10:
-                frappe.throw("Phone number must be at least 10 digits")
+            # Remove any non-digit characters for validation
+            digits_only = ''.join(filter(str.isdigit, self.phone_number))
+            
+            # Basic phone validation - allow 7-15 digits for international numbers
+            if len(digits_only) < 7:
+                frappe.throw("Phone number must be at least 7 digits")
+            elif len(digits_only) > 15:
+                frappe.throw("Phone number cannot exceed 15 digits")
     
     def validate_company_details(self):
         """Validate company details"""

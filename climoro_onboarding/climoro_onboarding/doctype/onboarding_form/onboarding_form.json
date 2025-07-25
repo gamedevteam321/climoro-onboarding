@@ -10,6 +10,8 @@
   "naming_series",
   "status",
   "current_step",
+  "email_verified",
+  "email_verified_at",
   "section_break_contact",
   "contact_details_tab",
   "first_name",
@@ -52,6 +54,19 @@
    "fieldname": "current_step",
    "fieldtype": "Int",
    "label": "Current Step"
+  },
+  {
+   "default": "0",
+   "fieldname": "email_verified",
+   "fieldtype": "Check",
+   "label": "Email Verified",
+   "read_only": 1
+  },
+  {
+   "fieldname": "email_verified_at",
+   "fieldtype": "Datetime",
+   "label": "Email Verified At",
+   "read_only": 1
   },
   {
    "fieldname": "section_break_contact",
@@ -98,33 +113,28 @@
   {
    "fieldname": "company_name",
    "fieldtype": "Data",
-   "label": "Company Name",
-   "reqd": 1
+   "label": "Company Name"
   },
   {
    "fieldname": "address",
    "fieldtype": "Small Text",
-   "label": "Address",
-   "reqd": 1
+   "label": "Address"
   },
   {
    "fieldname": "cin",
    "fieldtype": "Data",
-   "label": "CIN",
-   "reqd": 1
+   "label": "CIN"
   },
   {
    "fieldname": "gst_number",
    "fieldtype": "Data",
-   "label": "GST Number",
-   "reqd": 1
+   "label": "GST Number"
   },
   {
    "fieldname": "industry_type",
    "fieldtype": "Select",
    "label": "Industry Type",
-   "options": "Manufacturing\nTechnology\nHealthcare\nFinance\nRetail\nOther",
-   "reqd": 1
+   "options": "Manufacturing\nTechnology\nHealthcare\nFinance\nRetail\nOther"
   },
   {
    "fieldname": "website",
@@ -134,8 +144,7 @@
   {
    "fieldname": "letter_of_authorisation",
    "fieldtype": "Attach",
-   "label": "Letter of Authorisation",
-   "reqd": 1
+   "label": "Letter of Authorisation"
   },
   {
    "fieldname": "section_break_units",
