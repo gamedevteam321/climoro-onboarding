@@ -1,0 +1,1057 @@
+{% extends "templates/web.html" %}
+
+{% block page_content %}
+<div class="onboarding-container">
+    <!-- Header with Logo -->
+    <div class="onboarding-header">
+        <div class="logo-container">
+            <img src="/assets/climoro_onboarding/images/climoro.png" alt="Climoro Logo" class="climoro-logo">
+        </div>
+        <h1>Climoro Onboarding Form</h1>
+        <p>Complete your company onboarding in 3 simple steps</p>
+    </div>
+
+    <!-- Progress Indicator -->
+    <div class="onboarding-progress-container">
+        <div class="onboarding-progress-bar">
+            <div class="onboarding-progress-step onboarding-current" data-step="1">
+                <div class="onboarding-step-number">1</div>
+                <div class="onboarding-step-label">Contact Details</div>
+            </div>
+            <div class="onboarding-progress-line"></div>
+            <div class="onboarding-progress-step" data-step="2">
+                <div class="onboarding-step-number">2</div>
+                <div class="onboarding-step-label">Company Details</div>
+            </div>
+            <div class="onboarding-progress-line"></div>
+            <div class="onboarding-progress-step" data-step="3">
+                <div class="onboarding-step-number">3</div>
+                <div class="onboarding-step-label">Units & Users</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Form Container -->
+    <div class="form-container">
+        <form id="onboarding-form" class="onboarding-form">
+            <!-- Step 1: Contact Details -->
+            <div class="form-step active" id="step-1">
+                <h2>Contact Details</h2>
+                <div class="form-group">
+                    <label for="first_name">First Name *</label>
+                    <input type="text" id="first_name" name="first_name" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone_number">Phone Number *</label>
+                    <input type="tel" id="phone_number" name="phone_number" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email *</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="position">Position</label>
+                    <input type="text" id="position" name="position">
+                </div>
+            </div>
+
+            <!-- Step 2: Company Details -->
+            <div class="form-step" id="step-2">
+                <h2>Company Details (Headquarters)</h2>
+                <div class="form-group">
+                    <label for="company_name">Company Name *</label>
+                    <input type="text" id="company_name" name="company_name" required>
+                </div>
+                <div class="form-group">
+                    <label for="address">Address *</label>
+                    <textarea id="address" name="address" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="cin">CIN *</label>
+                    <input type="text" id="cin" name="cin" required>
+                </div>
+                <div class="form-group">
+                    <label for="gst_number">GST Number *</label>
+                    <input type="text" id="gst_number" name="gst_number" required>
+                </div>
+                <div class="form-group">
+                    <label for="industry_type">Industry Type *</label>
+                    <select id="industry_type" name="industry_type" required>
+                        <option value="">Select Industry Type</option>
+                        <option value="Manufacturing">Manufacturing</option>
+                        <option value="Technology">Technology</option>
+                        <option value="Healthcare">Healthcare</option>
+                        <option value="Finance">Finance</option>
+                        <option value="Retail">Retail</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="website">Website</label>
+                    <input type="url" id="website" name="website">
+                </div>
+                <div class="form-group">
+                    <label for="letter_of_authorisation">Letter of Authorisation *</label>
+                    <input type="file" id="letter_of_authorisation" name="letter_of_authorisation" required>
+                </div>
+            </div>
+
+            <!-- Step 3: Units & Users -->
+            <div class="form-step" id="step-3">
+                <h2>Units & Users</h2>
+                <div id="units-container">
+                    <!-- Units will be added here dynamically -->
+                </div>
+                <button type="button" id="add-unit-btn" class="btn btn-secondary">+ Add Unit</button>
+            </div>
+
+            <!-- Navigation Buttons -->
+            <div class="form-navigation">
+                <button type="button" id="prev-btn" class="btn btn-secondary" style="display: none;">Previous</button>
+                <button type="button" id="next-btn" class="btn btn-primary">Next</button>
+                <button type="submit" id="submit-btn" class="btn btn-success" style="display: none;">Submit Application</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Unit Template (Hidden) -->
+<template id="unit-template">
+    <div class="unit-container">
+        <h3>Unit <span class="unit-number"></span></h3>
+        <div class="unit-form">
+            <div class="form-group">
+                <label>Type of Unit *</label>
+                <select class="unit-type" required>
+                    <option value="">Select Unit Type</option>
+                    <option value="Office">Office</option>
+                    <option value="Warehouse">Warehouse</option>
+                    <option value="Factory">Factory</option>
+                    <option value="Franchise">Franchise</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Name of Unit *</label>
+                <input type="text" class="unit-name" required>
+            </div>
+            <div class="form-group">
+                <label>Size of Unit (sq ft) *</label>
+                <input type="number" class="unit-size" required>
+            </div>
+            <div class="form-group">
+                <label>Address *</label>
+                <textarea class="unit-address" required></textarea>
+            </div>
+            <div class="form-group">
+                <label>GST (optional)</label>
+                <input type="text" class="unit-gst">
+            </div>
+            <div class="form-group">
+                <label>Phone Number</label>
+                <input type="tel" class="unit-phone">
+            </div>
+            <div class="form-group">
+                <label>Position</label>
+                <input type="text" class="unit-position">
+            </div>
+            
+            <!-- Users Section -->
+            <div class="users-section">
+                <h4>Users for this Unit</h4>
+                <div class="users-container">
+                    <!-- Users will be added here dynamically -->
+                </div>
+                <button type="button" class="add-user-btn btn btn-sm btn-secondary">+ Add User</button>
+            </div>
+        </div>
+        <button type="button" class="remove-unit-btn btn btn-sm btn-danger">Remove Unit</button>
+    </div>
+</template>
+
+<!-- User Template (Hidden) -->
+<template id="user-template">
+    <div class="user-container">
+        <h5>User <span class="user-number"></span></h5>
+        <div class="user-form">
+            <div class="form-group">
+                <label>Email *</label>
+                <input type="email" class="user-email" required>
+            </div>
+            <div class="form-group">
+                <label>First Name *</label>
+                <input type="text" class="user-first-name" required>
+            </div>
+            <div class="form-group">
+                <label>User Role *</label>
+                <select class="user-role" required>
+                    <option value="">Select Role</option>
+                    <option value="Admin">Admin</option>
+                    <option value="Manager">Manager</option>
+                    <option value="Employee">Employee</option>
+                    <option value="Viewer">Viewer</option>
+                </select>
+            </div>
+        </div>
+        <button type="button" class="remove-user-btn btn btn-sm btn-danger">Remove User</button>
+    </div>
+</template>
+
+{% endblock %}
+
+{% block style %}
+<style>
+/* ERP Theme Colors */
+:root {
+    --primary-color: #5e64ff;
+    --primary-hover: #4a4fef;
+    --secondary-color: #6c757d;
+    --success-color: #28a745;
+    --danger-color: #dc3545;
+    --warning-color: #ffc107;
+    --info-color: #17a2b8;
+    --light-color: #f8f9fa;
+    --dark-color: #343a40;
+    --border-color: #dee2e6;
+    --text-color: #495057;
+    --text-muted: #6c757d;
+    --background-color: #f5f7fa;
+    --card-background: #ffffff;
+    --shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+.onboarding-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Header with Logo */
+.onboarding-header {
+    text-align: center;
+    margin-bottom: 40px;
+    background: var(--card-background);
+    border-radius: 8px;
+    padding: 30px;
+    box-shadow: var(--shadow);
+}
+
+.logo-container {
+    margin-bottom: 20px;
+}
+
+.climoro-logo {
+    max-height: 80px;
+    max-width: 200px;
+    object-fit: contain;
+}
+
+.onboarding-header h1 {
+    color: var(--dark-color);
+    margin-bottom: 10px;
+    font-size: 2rem;
+    font-weight: 600;
+}
+
+.onboarding-header p {
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    margin: 0;
+}
+
+/* Progress Indicator - Updated with unique class names to avoid conflicts */
+.onboarding-progress-container {
+    margin-bottom: 30px;
+    background: var(--card-background);
+    border-radius: 8px;
+    padding: 25px;
+    box-shadow: var(--shadow);
+}
+
+.onboarding-progress-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    background: none;
+    height: auto;
+    min-height: auto;
+    width: 100%;
+}
+
+.onboarding-progress-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    position: relative;
+    z-index: 2;
+}
+
+.onboarding-step-number {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 18px;
+    margin-bottom: 10px;
+    border: 3px solid var(--border-color);
+    background-color: var(--card-background);
+    color: var(--text-muted);
+    transition: all 0.3s ease;
+    box-shadow: none;
+    position: relative;
+}
+
+.onboarding-step-label {
+    font-size: 14px;
+    color: var(--text-color);
+    text-align: center;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+/* Progress Step States */
+.onboarding-progress-step.onboarding-completed .onboarding-step-number {
+    background-color: var(--success-color);
+    border-color: var(--success-color);
+    color: white;
+    box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.2);
+}
+
+.onboarding-progress-step.onboarding-completed .onboarding-step-label {
+    color: var(--success-color);
+    font-weight: 600;
+}
+
+.onboarding-progress-step.onboarding-current .onboarding-step-number {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: white;
+    box-shadow: 0 0 0 3px rgba(94, 100, 255, 0.2);
+}
+
+.onboarding-progress-step.onboarding-current .onboarding-step-label {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.onboarding-progress-step:not(.onboarding-completed):not(.onboarding-current) .onboarding-step-number {
+    background-color: var(--light-color);
+    border-color: var(--border-color);
+    color: var(--text-muted);
+}
+
+.onboarding-progress-step:not(.onboarding-completed):not(.onboarding-current) .onboarding-step-label {
+    color: var(--text-muted);
+}
+
+/* Progress Lines */
+.onboarding-progress-line {
+    flex: 1;
+    height: 3px;
+    background-color: var(--border-color);
+    margin: 0 15px;
+    position: relative;
+    top: -15px;
+    z-index: 1;
+}
+
+.onboarding-progress-line.onboarding-completed {
+    background-color: var(--success-color);
+}
+
+/* Form Container */
+.form-container {
+    background: var(--card-background);
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+    padding: 30px;
+}
+
+.form-step {
+    display: none;
+}
+
+.form-step.active {
+    display: block;
+}
+
+.form-step h2 {
+    margin-bottom: 25px;
+    color: var(--dark-color);
+    font-size: 1.5rem;
+    font-weight: 600;
+    border-bottom: 2px solid var(--primary-color);
+    padding-bottom: 10px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: var(--text-color);
+    font-size: 14px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 14px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    background-color: var(--card-background);
+    color: var(--text-color);
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(94, 100, 255, 0.1);
+}
+
+.form-group textarea {
+    height: 80px;
+    resize: vertical;
+}
+
+.form-group input[type="file"] {
+    padding: 8px;
+    border: 2px dashed var(--border-color);
+    background-color: var(--light-color);
+    cursor: pointer;
+}
+
+.form-group input[type="file"]:hover {
+    border-color: var(--primary-color);
+    background-color: rgba(94, 100, 255, 0.05);
+}
+
+/* Navigation Buttons */
+.form-navigation {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-color);
+}
+
+.btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+}
+
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+    background-color: var(--primary-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(94, 100, 255, 0.3);
+}
+
+.btn-secondary {
+    background-color: var(--secondary-color);
+    color: white;
+}
+
+.btn-secondary:hover:not(:disabled) {
+    background-color: #5a6268;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(108, 117, 125, 0.3);
+}
+
+.btn-success {
+    background-color: var(--success-color);
+    color: white;
+}
+
+.btn-success:hover:not(:disabled) {
+    background-color: #218838;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3);
+}
+
+.btn-danger {
+    background-color: var(--danger-color);
+    color: white;
+}
+
+.btn-danger:hover:not(:disabled) {
+    background-color: #c82333;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3);
+}
+
+.btn-sm {
+    padding: 6px 12px;
+    font-size: 12px;
+}
+
+/* Unit and User Containers */
+.unit-container {
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    background-color: var(--light-color);
+    position: relative;
+}
+
+.unit-container h3 {
+    margin-bottom: 15px;
+    color: var(--dark-color);
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.users-section {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-color);
+}
+
+.users-section h4 {
+    margin-bottom: 15px;
+    color: var(--dark-color);
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.user-container {
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 15px;
+    margin-bottom: 15px;
+    background-color: var(--card-background);
+    position: relative;
+}
+
+.user-container h5 {
+    margin-bottom: 10px;
+    color: var(--dark-color);
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+#add-unit-btn {
+    margin-bottom: 20px;
+    width: 100%;
+    padding: 15px;
+    font-size: 16px;
+}
+
+.add-user-btn {
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+.remove-unit-btn,
+.remove-user-btn {
+    margin-top: 10px;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .onboarding-container {
+        padding: 10px;
+    }
+    
+    .form-container {
+        padding: 20px;
+    }
+    
+    .onboarding-progress-bar {
+        flex-direction: column;
+        gap: 20px;
+    }
+    
+    .onboarding-progress-line {
+        display: none;
+    }
+    
+    .form-navigation {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .btn {
+        width: 100%;
+    }
+}
+
+/* Loading States */
+.loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid var(--primary-color);
+    border-top: 2px solid transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Error States */
+.form-group input.error,
+.form-group select.error,
+.form-group textarea.error {
+    border-color: var(--danger-color);
+    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
+}
+
+.error-message {
+    color: var(--danger-color);
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+/* Success States */
+.form-group input.success,
+.form-group select.success,
+.form-group textarea.success {
+    border-color: var(--success-color);
+    box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.1);
+}
+</style>
+{% endblock %}
+
+{% block script %}
+<script>
+// Onboarding Form JavaScript
+class OnboardingForm {
+    constructor() {
+        this.currentStep = 1;
+        this.totalSteps = 3;
+        this.unitCounter = 0;
+        this.userCounters = {};
+        
+        this.initializeForm();
+        this.bindEvents();
+    }
+    
+    initializeForm() {
+        this.form = document.getElementById('onboarding-form');
+        this.prevBtn = document.getElementById('prev-btn');
+        this.nextBtn = document.getElementById('next-btn');
+        this.submitBtn = document.getElementById('submit-btn');
+        this.unitsContainer = document.getElementById('units-container');
+        this.addUnitBtn = document.getElementById('add-unit-btn');
+        
+        this.updateNavigation();
+        this.updateProgress();
+    }
+    
+    bindEvents() {
+        this.prevBtn.addEventListener('click', () => this.previousStep());
+        this.nextBtn.addEventListener('click', () => this.nextStep());
+        this.submitBtn.addEventListener('click', (e) => this.submitForm(e));
+        this.addUnitBtn.addEventListener('click', () => this.addUnit());
+        
+        // Form validation
+        this.form.addEventListener('input', () => this.validateCurrentStep());
+    }
+    
+    nextStep() {
+        if (this.validateCurrentStep()) {
+            if (this.currentStep < this.totalSteps) {
+                this.currentStep++;
+                this.updateStep();
+            }
+        }
+    }
+    
+    previousStep() {
+        if (this.currentStep > 1) {
+            this.currentStep--;
+            this.updateStep();
+        }
+    }
+    
+    updateStep() {
+        // Hide all steps
+        document.querySelectorAll('.form-step').forEach(step => {
+            step.classList.remove('active');
+        });
+        
+        // Show current step
+        document.getElementById(`step-${this.currentStep}`).classList.add('active');
+        
+        this.updateNavigation();
+        this.updateProgress();
+        this.validateCurrentStep();
+    }
+    
+    updateNavigation() {
+        this.prevBtn.style.display = this.currentStep > 1 ? 'block' : 'none';
+        this.nextBtn.style.display = this.currentStep < this.totalSteps ? 'block' : 'none';
+        this.submitBtn.style.display = this.currentStep === this.totalSteps ? 'block' : 'none';
+    }
+    
+    updateProgress() {
+        document.querySelectorAll('.onboarding-progress-step').forEach((step, index) => {
+            const stepNumber = index + 1;
+            
+            // Remove all classes
+            step.classList.remove('onboarding-completed', 'onboarding-current');
+            
+            if (stepNumber < this.currentStep) {
+                // Completed steps
+                step.classList.add('onboarding-completed');
+            } else if (stepNumber === this.currentStep) {
+                // Current step
+                step.classList.add('onboarding-current');
+            }
+        });
+        
+        // Update progress lines
+        document.querySelectorAll('.onboarding-progress-line').forEach((line, index) => {
+            const lineNumber = index + 1;
+            if (lineNumber < this.currentStep) {
+                line.classList.add('onboarding-completed');
+            } else {
+                line.classList.remove('onboarding-completed');
+            }
+        });
+    }
+    
+    validateCurrentStep() {
+        const currentStepElement = document.getElementById(`step-${this.currentStep}`);
+        const requiredFields = currentStepElement.querySelectorAll('[required]');
+        let isValid = true;
+        
+        requiredFields.forEach(field => {
+            if (!field.value.trim()) {
+                field.classList.add('error');
+                field.classList.remove('success');
+                isValid = false;
+            } else {
+                field.classList.remove('error');
+                field.classList.add('success');
+            }
+        });
+        
+        this.nextBtn.disabled = !isValid;
+        this.submitBtn.disabled = !isValid;
+        
+        return isValid;
+    }
+    
+    addUnit() {
+        this.unitCounter++;
+        const unitNumber = this.unitCounter;
+        this.userCounters[unitNumber] = 0;
+        
+        const template = document.getElementById('unit-template');
+        const unitElement = template.content.cloneNode(true);
+        
+        const unitContainer = unitElement.querySelector('.unit-container');
+        unitContainer.dataset.unitNumber = unitNumber;
+        
+        const unitNumberSpan = unitElement.querySelector('.unit-number');
+        unitNumberSpan.textContent = unitNumber;
+        
+        // Bind unit events
+        const removeUnitBtn = unitElement.querySelector('.remove-unit-btn');
+        removeUnitBtn.addEventListener('click', () => this.removeUnit(unitContainer));
+        
+        const addUserBtn = unitElement.querySelector('.add-user-btn');
+        addUserBtn.addEventListener('click', () => this.addUser(unitNumber));
+        
+        this.unitsContainer.appendChild(unitElement);
+    }
+    
+    removeUnit(unitContainer) {
+        const unitNumber = parseInt(unitContainer.dataset.unitNumber);
+        delete this.userCounters[unitNumber];
+        unitContainer.remove();
+        
+        // Renumber remaining units
+        this.renumberUnits();
+    }
+    
+    renumberUnits() {
+        const units = this.unitsContainer.querySelectorAll('.unit-container');
+        units.forEach((unit, index) => {
+            const unitNumber = index + 1;
+            unit.dataset.unitNumber = unitNumber;
+            unit.querySelector('.unit-number').textContent = unitNumber;
+            
+            // Update user counters
+            if (!this.userCounters[unitNumber]) {
+                this.userCounters[unitNumber] = 0;
+            }
+        });
+    }
+    
+    addUser(unitNumber) {
+        this.userCounters[unitNumber]++;
+        const userNumber = this.userCounters[unitNumber];
+        
+        const template = document.getElementById('user-template');
+        const userElement = template.content.cloneNode(true);
+        
+        const userContainer = userElement.querySelector('.user-container');
+        userContainer.dataset.unitNumber = unitNumber;
+        userContainer.dataset.userNumber = userNumber;
+        
+        const userNumberSpan = userElement.querySelector('.user-number');
+        userNumberSpan.textContent = userNumber;
+        
+        // Bind user events
+        const removeUserBtn = userElement.querySelector('.remove-user-btn');
+        removeUserBtn.addEventListener('click', () => this.removeUser(userContainer));
+        
+        const unitContainer = this.unitsContainer.querySelector(`[data-unit-number="${unitNumber}"]`);
+        const usersContainer = unitContainer.querySelector('.users-container');
+        usersContainer.appendChild(userElement);
+    }
+    
+    removeUser(userContainer) {
+        const unitNumber = parseInt(userContainer.dataset.unitNumber);
+        const userNumber = parseInt(userContainer.dataset.userNumber);
+        
+        userContainer.remove();
+        
+        // Renumber remaining users in this unit
+        this.renumberUsers(unitNumber);
+    }
+    
+    renumberUsers(unitNumber) {
+        const unitContainer = this.unitsContainer.querySelector(`[data-unit-number="${unitNumber}"]`);
+        const users = unitContainer.querySelectorAll('.user-container');
+        users.forEach((user, index) => {
+            const userNumber = index + 1;
+            user.dataset.userNumber = userNumber;
+            user.querySelector('.user-number').textContent = userNumber;
+        });
+    }
+    
+    async submitForm(e) {
+        e.preventDefault();
+        
+        if (!this.validateCurrentStep()) {
+            return;
+        }
+        
+        try {
+            this.showLoading(true);
+            const formData = this.collectFormData();
+            const result = await this.saveFormData(formData);
+            
+            if (result.success) {
+                this.showSuccessMessage(result.message);
+                setTimeout(() => {
+                    window.location.href = '/';
+                }, 2000);
+            } else {
+                this.showErrorMessage(result.message);
+            }
+            
+        } catch (error) {
+            console.error('Error submitting form:', error);
+            this.showErrorMessage('Error submitting form. Please try again.');
+        } finally {
+            this.showLoading(false);
+        }
+    }
+    
+    collectFormData() {
+        const formData = {
+            // Step 1: Contact Details
+            first_name: document.getElementById('first_name').value,
+            phone_number: document.getElementById('phone_number').value,
+            email: document.getElementById('email').value,
+            position: document.getElementById('position').value,
+            
+            // Step 2: Company Details
+            company_name: document.getElementById('company_name').value,
+            address: document.getElementById('address').value,
+            cin: document.getElementById('cin').value,
+            gst_number: document.getElementById('gst_number').value,
+            industry_type: document.getElementById('industry_type').value,
+            website: document.getElementById('website').value,
+            letter_of_authorisation: document.getElementById('letter_of_authorisation').files[0],
+            
+            // Step 3: Units & Users
+            units: []
+        };
+        
+        // Collect units and users data
+        const units = this.unitsContainer.querySelectorAll('.unit-container');
+        units.forEach(unit => {
+            const unitData = {
+                type_of_unit: unit.querySelector('.unit-type').value,
+                name_of_unit: unit.querySelector('.unit-name').value,
+                size_of_unit: parseFloat(unit.querySelector('.unit-size').value),
+                address: unit.querySelector('.unit-address').value,
+                gst: unit.querySelector('.unit-gst').value,
+                phone_number: unit.querySelector('.unit-phone').value,
+                position: unit.querySelector('.unit-position').value,
+                assigned_users: []
+            };
+            
+            // Collect users for this unit
+            const users = unit.querySelectorAll('.user-container');
+            users.forEach(user => {
+                const userData = {
+                    email: user.querySelector('.user-email').value,
+                    first_name: user.querySelector('.user-first-name').value,
+                    user_role: user.querySelector('.user-role').value
+                };
+                unitData.assigned_users.push(userData);
+            });
+            
+            formData.units.push(unitData);
+        });
+        
+        return formData;
+    }
+    
+    async saveFormData(formData) {
+        // Call the Frappe API
+        const response = await fetch('/api/method/climoro_onboarding.www.apply.api.submit_onboarding_form', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                form_data: JSON.stringify(formData)
+            })
+        });
+        
+        const result = await response.json();
+        return result.message;
+    }
+    
+    showLoading(show) {
+        if (show) {
+            this.form.classList.add('loading');
+            this.submitBtn.disabled = true;
+        } else {
+            this.form.classList.remove('loading');
+            this.submitBtn.disabled = false;
+        }
+    }
+    
+    showSuccessMessage(message) {
+        // Create success message
+        const successDiv = document.createElement('div');
+        successDiv.className = 'alert alert-success';
+        successDiv.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--success-color);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 6px;
+            box-shadow: var(--shadow);
+            z-index: 1000;
+            animation: slideIn 0.3s ease;
+        `;
+        successDiv.textContent = message;
+        
+        document.body.appendChild(successDiv);
+        
+        setTimeout(() => {
+            successDiv.remove();
+        }, 5000);
+    }
+    
+    showErrorMessage(message) {
+        // Create error message
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'alert alert-danger';
+        errorDiv.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--danger-color);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 6px;
+            box-shadow: var(--shadow);
+            z-index: 1000;
+            animation: slideIn 0.3s ease;
+        `;
+        errorDiv.textContent = message;
+        
+        document.body.appendChild(errorDiv);
+        
+        setTimeout(() => {
+            errorDiv.remove();
+        }, 5000);
+    }
+}
+
+// Initialize the form when page loads
+document.addEventListener('DOMContentLoaded', () => {
+    new OnboardingForm();
+});
+
+// Add slideIn animation
+const style = document.createElement('style');
+style.textContent = `
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+`;
+document.head.appendChild(style);
+</script>
+{% endblock %} 

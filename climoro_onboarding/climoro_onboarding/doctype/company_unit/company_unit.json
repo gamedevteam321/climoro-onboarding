@@ -1,0 +1,119 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-01-01 12:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "parent",
+  "parenttype",
+  "parentfield",
+  "idx",
+  "type_of_unit",
+  "name_of_unit",
+  "size_of_unit",
+  "address",
+  "gst",
+  "phone_number",
+  "position",
+  "assigned_users"
+ ],
+ "fields": [
+  {
+   "fieldname": "parent",
+   "fieldtype": "Data",
+   "label": "Parent",
+   "hidden": 1
+  },
+  {
+   "fieldname": "parenttype",
+   "fieldtype": "Data",
+   "label": "Parent Type",
+   "hidden": 1
+  },
+  {
+   "fieldname": "parentfield",
+   "fieldtype": "Data",
+   "label": "Parent Field",
+   "hidden": 1
+  },
+  {
+   "fieldname": "idx",
+   "fieldtype": "Int",
+   "label": "Index",
+   "hidden": 1
+  },
+  {
+   "fieldname": "type_of_unit",
+   "fieldtype": "Select",
+   "label": "Type of Unit",
+   "options": "Office\nWarehouse\nFactory\nFranchise",
+   "reqd": 1
+  },
+  {
+   "fieldname": "name_of_unit",
+   "fieldtype": "Data",
+   "label": "Name of Unit",
+   "reqd": 1
+  },
+  {
+   "fieldname": "size_of_unit",
+   "fieldtype": "Float",
+   "label": "Size of Unit (sq ft)",
+   "reqd": 1
+  },
+  {
+   "fieldname": "address",
+   "fieldtype": "Small Text",
+   "label": "Address",
+   "reqd": 1
+  },
+  {
+   "fieldname": "gst",
+   "fieldtype": "Data",
+   "label": "GST (optional)"
+  },
+  {
+   "fieldname": "phone_number",
+   "fieldtype": "Data",
+   "label": "Phone Number"
+  },
+  {
+   "fieldname": "position",
+   "fieldtype": "Data",
+   "label": "Position"
+  },
+  {
+   "fieldname": "assigned_users",
+   "fieldtype": "Table",
+   "label": "Assigned Users",
+   "options": "Assigned User"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2024-01-01 12:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Climoro Onboarding",
+ "name": "Company Unit",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+} 
