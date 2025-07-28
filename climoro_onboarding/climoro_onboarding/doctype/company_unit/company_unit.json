@@ -96,19 +96,6 @@
    "fieldname": "position",
    "fieldtype": "Data",
    "label": "Position"
-  },
-  {
-   "fieldname": "section_break_users",
-   "fieldtype": "Section Break",
-   "label": "Assigned Users"
-  },
-  {
-   "fieldname": "assigned_users",
-   "fieldtype": "Table",
-   "label": "Assigned Users",
-   "options": "Assigned User",
-   "collapsible": 0,
-   "collapsible_depends_on": ""
   }
  ],
  "index_web_pages_for_search": 1,

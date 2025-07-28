@@ -6,38 +6,20 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "parent",
-  "parenttype",
-  "parentfield",
-  "idx",
+  "assigned_unit",
   "email",
   "first_name",
-  "user_role"
+  "user_role",
+  "parent",
+  "parentfield",
+  "parenttype"
  ],
  "fields": [
   {
-   "fieldname": "parent",
+   "fieldname": "assigned_unit",
    "fieldtype": "Data",
-   "label": "Parent",
-   "hidden": 1
-  },
-  {
-   "fieldname": "parenttype",
-   "fieldtype": "Data",
-   "label": "Parent Type",
-   "hidden": 1
-  },
-  {
-   "fieldname": "parentfield",
-   "fieldtype": "Data",
-   "label": "Parent Field",
-   "hidden": 1
-  },
-  {
-   "fieldname": "idx",
-   "fieldtype": "Int",
-   "label": "Index",
-   "hidden": 1
+   "label": "Assigned Unit",
+   "reqd": 1
   },
   {
    "fieldname": "email",
@@ -56,8 +38,32 @@
    "fieldname": "user_role",
    "fieldtype": "Select",
    "label": "User Role",
-   "options": "Unit Manager\nData Analyst",
+   "options": "Admin\nManager\nEmployee\nViewer",
    "reqd": 1
+  },
+  {
+   "fieldname": "parent",
+   "fieldtype": "Data",
+   "label": "Parent",
+   "hidden": 1
+  },
+  {
+   "fieldname": "parentfield",
+   "fieldtype": "Data",
+   "label": "Parent Field",
+   "hidden": 1
+  },
+  {
+   "fieldname": "parenttype",
+   "fieldtype": "Data",
+   "label": "Parent Type",
+   "hidden": 1
+  },
+  {
+   "fieldname": "idx",
+   "fieldtype": "Int",
+   "label": "Index",
+   "hidden": 1
   }
  ],
  "index_web_pages_for_search": 1,

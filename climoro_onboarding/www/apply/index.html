@@ -42,6 +42,14 @@
                     <input type="text" id="first_name" name="first_name" required>
                 </div>
                 <div class="form-group">
+                    <label for="middle_name">Middle Name</label>
+                    <input type="text" id="middle_name" name="middle_name" placeholder="Optional">
+                </div>
+                <div class="form-group">
+                    <label for="last_name">Last Name *</label>
+                    <input type="text" id="last_name" name="last_name" required>
+                </div>
+                <div class="form-group">
                     <label for="phone_number">Phone Number *</label>
                     <input type="tel" id="phone_number" name="phone_number" required>
                 </div>
@@ -72,7 +80,7 @@
                         <input type="text" id="gps_coordinates" name="gps_coordinates" placeholder="e.g., 28.6139, 77.2090 (type manually or use map)" readonly>
                         <button type="button" id="map_search_btn" class="btn btn-secondary map-select-btn" onclick="openMapModal()">📍 Map</button>
                     </div>
-                    <small style="color: #6c757d; margin-top: 5px; display: block;">
+                <small style="color: #6c757d; margin-top: 5px; display: block;">
                         💡 <strong>Tip:</strong> Click "📍 Map" to select your location visually, or type coordinates manually.
                         <br>📍 <strong>Example:</strong> 28.6139, 77.2090 (New Delhi) | You can get coordinates from Google Maps by right-clicking any location.
                     </small>
@@ -129,10 +137,15 @@
             <!-- Step 3: Units & Users -->
             <div class="form-step" id="step-3">
                 <h2>Units & Users</h2>
-                <div id="units-container">
-                    <!-- Units will be added here dynamically -->
+                
+                <!-- Units Section -->
+                <div class="section-container">
+                    <h3>Units</h3>
+                    <div id="units-container">
+                        <!-- Units will be added here dynamically -->
+                    </div>
+                    <button type="button" id="add-unit-btn" class="btn btn-secondary">+ Add Unit</button>
                 </div>
-                <button type="button" id="add-unit-btn" class="btn btn-secondary">+ Add Unit</button>
             </div>
 
             <!-- Navigation Buttons -->
@@ -200,16 +213,17 @@
                 <label>Position</label>
                 <input type="text" class="unit-position">
             </div>
-            
-            <!-- Users Section -->
-            <div class="users-section">
-                <h4>Users for this Unit</h4>
-                <div class="users-container">
-                    <!-- Users will be added here dynamically -->
-                </div>
-                <button type="button" class="add-user-btn btn btn-sm btn-secondary">+ Add User</button>
-            </div>
         </div>
+        
+        <!-- Users Section within Unit -->
+        <div class="users-section">
+            <h4>Users for this Unit</h4>
+            <div class="users-container">
+                <!-- Users will be added here dynamically -->
+            </div>
+            <button type="button" class="add-user-btn btn btn-sm btn-secondary">+ Add User</button>
+        </div>
+        
         <button type="button" class="remove-unit-btn btn btn-sm btn-danger">Remove Unit</button>
     </div>
 </template>
@@ -1247,6 +1261,7 @@ class OnboardingForm {
         this.initializeForm();
         this.bindEvents();
         this.initializeFileUploads();
+        this.loadSavedData(); // Load any previously saved data
     }
     
     initializeForm() {
@@ -1276,6 +1291,126 @@ class OnboardingForm {
         this.checkVerificationToken();
     }
     
+    async loadSavedData() {
+        try {
+            // Get CSRF token
+            let csrfToken = frappe?.csrf_token;
+            if (!csrfToken) {
+                csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || 
+                           document.querySelector('meta[name="csrf_token"]')?.getAttribute('content') ||
+                           document.querySelector('input[name="csrf_token"]')?.value ||
+                           window.csrf_token;
+            }
+            
+            // Create params for API call
+            const params = new URLSearchParams();
+            if (csrfToken) {
+                params.append('csrf_token', csrfToken);
+            }
+            
+            const response = await fetch('/api/method/climoro_onboarding.www.apply.api.get_saved_data', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-Frappe-CSRF-Token': csrfToken || ''
+                },
+                body: params.toString()
+            });
+            
+            const result = await response.json();
+            
+            if (result.message && result.message.success && result.message.data) {
+                const savedData = result.message.data;
+                console.log('📥 Loaded saved data:', savedData);
+                
+                // Restore form fields with saved data
+                if (savedData.first_name) {
+                    const firstNameField = document.getElementById('first_name');
+                    if (firstNameField) firstNameField.value = savedData.first_name;
+                }
+                
+                if (savedData.middle_name) {
+                    const middleNameField = document.getElementById('middle_name');
+                    if (middleNameField) middleNameField.value = savedData.middle_name;
+                }
+                
+                if (savedData.last_name) {
+                    const lastNameField = document.getElementById('last_name');
+                    if (lastNameField) {
+                        lastNameField.value = savedData.last_name;
+                        console.log('🔍 Restored Last Name:', savedData.last_name);
+                    }
+                }
+                
+                if (savedData.phone_number) {
+                    const phoneField = document.getElementById('phone_number');
+                    if (phoneField) phoneField.value = savedData.phone_number;
+                }
+                
+                if (savedData.email) {
+                    const emailField = document.getElementById('email');
+                    if (emailField) emailField.value = savedData.email;
+                }
+                
+                if (savedData.position) {
+                    const positionField = document.getElementById('position');
+                    if (positionField) positionField.value = savedData.position;
+                }
+                
+                if (savedData.company_name) {
+                    const companyNameField = document.getElementById('company_name');
+                    if (companyNameField) companyNameField.value = savedData.company_name;
+                }
+                
+                if (savedData.address) {
+                    const addressField = document.getElementById('address');
+                    if (addressField) addressField.value = savedData.address;
+                }
+                
+                if (savedData.gps_coordinates) {
+                    const gpsField = document.getElementById('gps_coordinates');
+                    if (gpsField) gpsField.value = savedData.gps_coordinates;
+                }
+                
+                if (savedData.location_name) {
+                    const locationNameField = document.getElementById('location_name');
+                    if (locationNameField) locationNameField.value = savedData.location_name;
+                }
+                
+                if (savedData.cin) {
+                    const cinField = document.getElementById('cin');
+                    if (cinField) cinField.value = savedData.cin;
+                }
+                
+                if (savedData.gst_number) {
+                    const gstField = document.getElementById('gst_number');
+                    if (gstField) gstField.value = savedData.gst_number;
+                }
+                
+                if (savedData.industry_type) {
+                    const industryField = document.getElementById('industry_type');
+                    if (industryField) industryField.value = savedData.industry_type;
+                }
+                
+                if (savedData.website) {
+                    const websiteField = document.getElementById('website');
+                    if (websiteField) websiteField.value = savedData.website;
+                }
+                
+                if (savedData.letter_of_authorisation) {
+                    const fileField = document.getElementById('letter_of_authorisation');
+                    if (fileField) fileField.setAttribute('data-file-url', savedData.letter_of_authorisation);
+                }
+                
+                console.log('✅ Saved data restored successfully');
+            } else {
+                console.log('📭 No saved data found or error loading data');
+            }
+        } catch (error) {
+            console.error('❌ Error loading saved data:', error);
+        }
+    }
+
     async nextStep() {
         if (this.validateCurrentStep()) {
             // Check if there are any warnings
@@ -1366,17 +1501,29 @@ class OnboardingForm {
     }
     
     validateCurrentStep() {
-        const currentStepElement = document.getElementById(`step-${this.currentStep}`);
-        const requiredFields = currentStepElement.querySelectorAll('[required]');
         let isValid = true;
         let warnings = [];
         
         // Clear previous warnings
         this.clearWarnings();
         
+        // Only validate current step fields, not all fields from all steps
+        const currentStepElement = document.getElementById(`step-${this.currentStep}`);
+        const requiredFields = currentStepElement.querySelectorAll('[required]');
+        
         requiredFields.forEach(field => {
             const fieldName = field.name || field.id;
             const fieldValue = field.value.trim();
+            
+            // Debug: Log validation for last_name field
+            if (fieldName === 'last_name') {
+                console.log('🔍 Last Name Validation Debug:');
+                console.log('   Field element:', field);
+                console.log('   Field name:', fieldName);
+                console.log('   Field value:', fieldValue);
+                console.log('   Field value length:', fieldValue.length);
+                console.log('   Is empty:', !fieldValue);
+            }
             
             if (!fieldValue) {
                 field.classList.add('error');
@@ -1601,6 +1748,16 @@ class OnboardingForm {
     validateSingleField(field, showWarning = false) {
         const fieldValue = field.value.trim();
         const fieldName = field.name || field.id;
+        
+        // Debug: Log Last Name field validation
+        if (fieldName === 'last_name') {
+            console.log('🔍 Last Name Field Validation Debug:');
+            console.log('   Field element:', field);
+            console.log('   Field value:', fieldValue);
+            console.log('   Field value length:', fieldValue.length);
+            console.log('   Is empty:', !fieldValue);
+            console.log('   Is required:', field.hasAttribute('required'));
+        }
         
         // Clear previous states
         field.classList.remove('error', 'warning', 'success');
@@ -2261,6 +2418,8 @@ class OnboardingForm {
         if (targetStep === 1) {
             // Step 1: Contact Details
             stepData.first_name = document.getElementById('first_name').value;
+            stepData.middle_name = document.getElementById('middle_name').value;
+            stepData.last_name = document.getElementById('last_name').value;
             stepData.phone_number = document.getElementById('phone_number').value;
             stepData.position = document.getElementById('position').value;
         } else if (targetStep === 2) {
@@ -2277,8 +2436,9 @@ class OnboardingForm {
         } else if (targetStep === 3) {
             // Step 3: Units & Users
             stepData.units = [];
+            stepData.assigned_users = [];
             
-            // Collect units and users data
+            // Collect units data
             const units = this.unitsContainer.querySelectorAll('.unit-container');
             units.forEach(unit => {
                 const unitData = {
@@ -2290,22 +2450,25 @@ class OnboardingForm {
                     location_name: unit.querySelector('.unit-location-name').value,
                     gst: unit.querySelector('.unit-gst').value,
                     phone_number: unit.querySelector('.unit-phone').value,
-                    position: unit.querySelector('.unit-position').value,
-                    assigned_users: []
+                    position: unit.querySelector('.unit-position').value
                 };
                 
-                // Collect users for this unit
-                const users = unit.querySelectorAll('.user-container');
-                users.forEach(user => {
+                stepData.units.push(unitData);
+            });
+            
+            // Collect users data from within units
+            units.forEach(unit => {
+                const unitName = unit.querySelector('.unit-name').value;
+                const usersInUnit = unit.querySelectorAll('.user-container');
+                usersInUnit.forEach(user => {
                     const userData = {
+                        assigned_unit: unitName, // Use unit name as reference
                         email: user.querySelector('.user-email').value,
                         first_name: user.querySelector('.user-first-name').value,
                         user_role: user.querySelector('.user-role').value
                     };
-                    unitData.assigned_users.push(userData);
+                    stepData.assigned_users.push(userData);
                 });
-                
-                stepData.units.push(unitData);
             });
         }
         
@@ -2315,13 +2478,28 @@ class OnboardingForm {
     async submitForm(e) {
         e.preventDefault();
         
-        if (!this.validateCurrentStep()) {
+        // Debug: Check last_name field before validation
+        const lastNameField = document.getElementById('last_name');
+        console.log('🔍 Last Name Field Debug (before validation):');
+        console.log('   Field element:', lastNameField);
+        console.log('   Field value:', lastNameField ? lastNameField.value : 'FIELD NOT FOUND');
+        console.log('   Field required:', lastNameField ? lastNameField.required : 'N/A');
+        
+        if (!this.validateAllSteps()) {
             return;
         }
         
         try {
             this.showLoading(true);
-            const formData = this.collectFormData();
+            const formData = await this.collectFormData();
+            
+            // Debug: Check formData before sending
+            console.log('🔍 Final Form Submission Debug:');
+            console.log('   Form data object:', formData);
+            console.log('   Last name in formData:', formData.last_name);
+            console.log('   Last name type:', typeof formData.last_name);
+            console.log('   Last name length:', formData.last_name ? formData.last_name.length : 0);
+            console.log('   All form data keys:', Object.keys(formData));
             
             // Get CSRF token from frappe object
             let csrfToken = frappe?.csrf_token;
@@ -2369,42 +2547,79 @@ class OnboardingForm {
         }
     }
     
-    collectFormData() {
+    async collectFormData() {
+        // First, fetch any saved data from the backend
+        let savedData = null;
+        try {
+            const csrfToken = frappe?.csrf_token || document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+            const params = new URLSearchParams();
+            if (csrfToken) {
+                params.append('csrf_token', csrfToken);
+            }
+            
+            const response = await fetch('/api/method/climoro_onboarding.www.apply.api.get_saved_data', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-Frappe-CSRF-Token': csrfToken || ''
+                },
+                body: params.toString()
+            });
+            
+            const result = await response.json();
+            if (result.message && result.message.success && result.message.data) {
+                savedData = result.message.data;
+                console.log('📥 Fetched saved data for form submission:', savedData);
+            }
+        } catch (error) {
+            console.error('❌ Error fetching saved data:', error);
+        }
+        
+        // Debug: Check last_name field during collection
+        const lastNameField = document.getElementById('last_name');
+        console.log('🔍 Last Name Field Debug (during collection):');
+        console.log('   Field element:', lastNameField);
+        console.log('   Field value:', lastNameField ? lastNameField.value : 'FIELD NOT FOUND');
+        console.log('   Field value length:', lastNameField ? lastNameField.value.length : 'N/A');
+        console.log('   Field classList:', lastNameField ? lastNameField.classList.toString() : 'N/A');
+        console.log('   Field required:', lastNameField ? lastNameField.required : 'N/A');
+        console.log('   Field visible:', lastNameField ? lastNameField.offsetParent !== null : 'N/A');
+        
         const formData = {
-            // Step 1: Contact Details
-            first_name: document.getElementById('first_name').value,
-            phone_number: document.getElementById('phone_number').value,
-            email: document.getElementById('email').value,
-            position: document.getElementById('position').value,
+            // Step 1: Contact Details - Use saved data if available, otherwise use current field values
+            first_name: savedData?.first_name || document.getElementById('first_name').value,
+            middle_name: savedData?.middle_name || document.getElementById('middle_name').value,
+            last_name: savedData?.last_name || (lastNameField ? lastNameField.value : ''),
+            phone_number: savedData?.phone_number || document.getElementById('phone_number').value,
+            email: savedData?.email || document.getElementById('email').value,
+            position: savedData?.position || document.getElementById('position').value,
             
-            // Step 2: Company Details
-            company_name: document.getElementById('company_name').value,
-            address: document.getElementById('address').value,
-            gps_coordinates: document.getElementById('gps_coordinates').value,
-            location_name: document.getElementById('location_name').value,
-            cin: document.getElementById('cin').value,
-            gst_number: document.getElementById('gst_number').value,
-            industry_type: document.getElementById('industry_type').value,
-            website: document.getElementById('website').value,
-            letter_of_authorisation: document.getElementById('letter_of_authorisation').getAttribute('data-file-url') || '',
+            // Step 2: Company Details - Use saved data if available, otherwise use current field values
+            company_name: savedData?.company_name || document.getElementById('company_name').value,
+            address: savedData?.address || document.getElementById('address').value,
+            gps_coordinates: savedData?.gps_coordinates || document.getElementById('gps_coordinates').value,
+            location_name: savedData?.location_name || document.getElementById('location_name').value,
+            cin: savedData?.cin || document.getElementById('cin').value,
+            gst_number: savedData?.gst_number || document.getElementById('gst_number').value,
+            industry_type: savedData?.industry_type || document.getElementById('industry_type').value,
+            website: savedData?.website || document.getElementById('website').value,
+            letter_of_authorisation: savedData?.letter_of_authorisation || document.getElementById('letter_of_authorisation').getAttribute('data-file-url') || '',
             
-            // Step 3: Units & Users
-            units: []
+            // Step 3: Units and Users
+            units: [],
+            assigned_users: []
         };
         
-        // Debug logging for GPS coordinates and location name
-        console.log('🔍 Frontend GPS Coordinates Debug:');
-        console.log('   GPS coordinates value:', formData.gps_coordinates);
-        console.log('   GPS coordinates type:', typeof formData.gps_coordinates);
-        console.log('   GPS coordinates length:', formData.gps_coordinates ? formData.gps_coordinates.length : 0);
-        console.log('🔍 Frontend Location Name Debug:');
-        console.log('   Location name value:', formData.location_name);
-        console.log('   Location name type:', typeof formData.location_name);
-        console.log('   Location name length:', formData.location_name ? formData.location_name.length : 0);
+        // Debug: Log the collected last_name value
+        console.log('🔍 Collected last_name value:', formData.last_name);
+        console.log('🔍 Collected last_name type:', typeof formData.last_name);
+        console.log('🔍 Collected last_name length:', formData.last_name ? formData.last_name.length : 0);
+        console.log('🔍 Saved data used for last_name:', !!savedData?.last_name);
         
-        // Collect units and users data
-        const units = this.unitsContainer.querySelectorAll('.unit-container');
-        units.forEach(unit => {
+        // Collect units data
+        const units = document.querySelectorAll('.unit-container');
+        console.log('🔍 Units Debug: Found', units.length, 'units');
+        units.forEach((unit, index) => {
             const unitData = {
                 type_of_unit: unit.querySelector('.unit-type').value,
                 name_of_unit: unit.querySelector('.unit-name').value,
@@ -2414,28 +2629,27 @@ class OnboardingForm {
                 location_name: unit.querySelector('.unit-location-name').value,
                 gst: unit.querySelector('.unit-gst').value,
                 phone_number: unit.querySelector('.unit-phone').value,
-                position: unit.querySelector('.unit-position').value,
-                assigned_users: []
+                position: unit.querySelector('.unit-position').value
             };
-            
-            // Collect users for this unit
-            const users = unit.querySelectorAll('.user-container');
-            users.forEach(user => {
+            console.log('🔍 Unit', index + 1, 'data:', unitData);
+            formData.units.push(unitData);
+        });
+        
+        // Collect users data from within units
+        units.forEach(unit => {
+            const unitName = unit.querySelector('.unit-name').value;
+            const usersInUnit = unit.querySelectorAll('.user-container');
+            console.log('🔍 Users Debug: Found', usersInUnit.length, 'users in unit:', unitName);
+            usersInUnit.forEach((user, userIndex) => {
                 const userData = {
+                    assigned_unit: unitName, // Use unit name as reference
                     email: user.querySelector('.user-email').value,
                     first_name: user.querySelector('.user-first-name').value,
                     user_role: user.querySelector('.user-role').value
                 };
-                unitData.assigned_users.push(userData);
+                console.log('🔍 User', userIndex + 1, 'data:', userData);
+                formData.assigned_users.push(userData);
             });
-            
-            formData.units.push(unitData);
-            
-            // Debug logging for unit location names
-            console.log('🔍 Unit Location Name Debug:');
-            console.log('   Unit:', unitData.name_of_unit);
-            console.log('   Location name value:', unitData.location_name);
-            console.log('   Location name type:', typeof unitData.location_name);
         });
         
         return formData;
@@ -2819,6 +3033,48 @@ class OnboardingForm {
         }
         
         console.log('File removed:', inputId);
+    }
+
+    validateAllSteps() {
+        let isValid = true;
+        let warnings = [];
+        
+        // Only validate fields from the current step
+        const currentStepElement = document.getElementById(`step-${this.currentStep}`);
+        const currentStepRequiredFields = currentStepElement.querySelectorAll('[required]');
+        
+        console.log('🔍 Current Step Validation Debug:');
+        console.log('   Current step:', this.currentStep);
+        console.log('   Total required fields in current step:', currentStepRequiredFields.length);
+        
+        currentStepRequiredFields.forEach((field, index) => {
+            const fieldName = field.name || field.id;
+            const fieldValue = field.value.trim();
+            
+            console.log(`🔍 Current Step Field ${index + 1}: ${fieldName}`);
+            console.log('   Field element:', field);
+            console.log('   Field value:', fieldValue);
+            console.log('   Field value length:', fieldValue.length);
+            console.log('   Is empty:', !fieldValue);
+            console.log('   Field visible:', field.offsetParent !== null);
+            
+            if (!fieldValue) {
+                field.classList.add('error');
+                field.classList.remove('success');
+                isValid = false;
+                warnings.push(`${this.getFieldLabel(field)} is required`);
+            } else {
+                field.classList.remove('error', 'warning');
+                field.classList.add('success');
+            }
+        });
+        
+        // Show warnings if any
+        if (warnings.length > 0) {
+            this.showWarnings(warnings);
+        }
+        
+        return isValid;
     }
 }
 

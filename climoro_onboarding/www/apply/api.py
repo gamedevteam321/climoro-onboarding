@@ -15,9 +15,41 @@ def submit_onboarding_form(form_data):
         if isinstance(form_data, str):
             form_data = json.loads(form_data)
         
+        # Debug logging for form data
+        frappe.logger().info(f"🔍 Form Data Debug:")
+        frappe.logger().info(f"   Form data keys: {list(form_data.keys())}")
+        frappe.logger().info(f"   First name: '{form_data.get('first_name')}'")
+        frappe.logger().info(f"   Middle name: '{form_data.get('middle_name')}'")
+        frappe.logger().info(f"   Last name: '{form_data.get('last_name')}'")
+        frappe.logger().info(f"   Last name type: {type(form_data.get('last_name'))}")
+        frappe.logger().info(f"   Last name length: {len(form_data.get('last_name', ''))}")
+        frappe.logger().info(f"   Phone number: '{form_data.get('phone_number')}'")
+        frappe.logger().info(f"   Email: '{form_data.get('email')}'")
+        frappe.logger().info(f"   Position: '{form_data.get('position')}'")
+        
+        # Check if last_name is empty and try to get it from saved data
+        last_name = form_data.get('last_name')
+        if not last_name or last_name.strip() == '':
+            frappe.logger().info(f"⚠️ Last name is empty, trying to get from saved data")
+            email = form_data.get("email")
+            if email:
+                # Try to get saved data for this email
+                existing_applications = frappe.get_all(
+                    "Onboarding Form",
+                    filters={"email": email},
+                    fields=["last_name"],
+                    order_by="modified desc",
+                    limit=1
+                )
+                if existing_applications and existing_applications[0].get('last_name'):
+                    last_name = existing_applications[0].get('last_name')
+                    frappe.logger().info(f"✅ Retrieved last_name from saved data: '{last_name}'")
+                    form_data['last_name'] = last_name
+                else:
+                    frappe.logger().info(f"❌ No saved last_name found for email: {email}")
+        
         # Debug logging for GPS coordinates
         frappe.logger().info(f"🔍 GPS Coordinates Debug:")
-        frappe.logger().info(f"   Form data keys: {list(form_data.keys())}")
         frappe.logger().info(f"   GPS coordinates value: '{form_data.get('gps_coordinates')}'")
         frappe.logger().info(f"   GPS coordinates type: {type(form_data.get('gps_coordinates'))}")
         
@@ -44,6 +76,8 @@ def submit_onboarding_form(form_data):
             
             # Update basic fields
             doc.first_name = form_data.get("first_name")
+            doc.middle_name = form_data.get("middle_name")
+            doc.last_name = form_data.get("last_name")
             doc.phone_number = form_data.get("phone_number")
             doc.position = form_data.get("position")
             doc.company_name = form_data.get("company_name")
@@ -62,7 +96,7 @@ def submit_onboarding_form(form_data):
             # Clear existing units and users
             doc.units = []
             
-            # Add new units and users
+            # Add new units
             if form_data.get("units"):
                 for unit_data in form_data["units"]:
                     # Debug logging for unit data
@@ -87,17 +121,30 @@ def submit_onboarding_form(form_data):
                         "position": unit_data.get("position")
                     })
                     
-                    # Add users for this unit BEFORE appending to parent
-                    if unit_data.get("assigned_users"):
-                        for user_data in unit_data["assigned_users"]:
-                            unit_doc.append("assigned_users", {
-                                "email": user_data.get("email"),
-                                "first_name": user_data.get("first_name"),
-                                "user_role": user_data.get("user_role")
-                            })
-                    
-                    # Now append the unit (with its users) to the parent
+                    # Append the unit to the parent
                     doc.append("units", unit_doc)
+            
+            # Add new users
+            if form_data.get("assigned_users"):
+                for user_data in form_data["assigned_users"]:
+                    # Debug logging for user data
+                    frappe.logger().info(f"🔍 User Data Debug:")
+                    frappe.logger().info(f"   User email: {user_data.get('email')}")
+                    frappe.logger().info(f"   Assigned unit: {user_data.get('assigned_unit')}")
+                    # Create user document
+                    user_doc = frappe.get_doc({
+                        "doctype": "Assigned User",
+                        "parent": doc.name,
+                        "parenttype": "Onboarding Form",
+                        "parentfield": "assigned_users",
+                        "assigned_unit": user_data.get("assigned_unit"),  # Store unit name directly
+                        "email": user_data.get("email"),
+                        "first_name": user_data.get("first_name"),
+                        "user_role": user_data.get("user_role")
+                    })
+                    
+                    # Append the user to the parent
+                    doc.append("assigned_users", user_doc)
             
             doc.save()
             frappe.db.commit()
@@ -112,6 +159,8 @@ def submit_onboarding_form(form_data):
             doc = frappe.get_doc({
                 "doctype": "Onboarding Form",
                 "first_name": form_data.get("first_name"),
+                "middle_name": form_data.get("middle_name"),
+                "last_name": form_data.get("last_name"),
                 "phone_number": form_data.get("phone_number"),
                 "email": form_data.get("email"),
                 "position": form_data.get("position"),
@@ -130,7 +179,7 @@ def submit_onboarding_form(form_data):
             frappe.logger().info(f"📍 Creating new doc with GPS coordinates: '{form_data.get('gps_coordinates')}'")
             doc.insert()
             
-            # Add units and users
+            # Add units
             if form_data.get("units"):
                 for unit_data in form_data["units"]:
                     # Create unit as child table entry
@@ -140,23 +189,22 @@ def submit_onboarding_form(form_data):
                         "size_of_unit": unit_data.get("size_of_unit"),
                         "address": unit_data.get("address"),
                         "gps_coordinates": unit_data.get("gps_coordinates"),
+                        "location_name": unit_data.get("location_name"),
                         "gst": unit_data.get("gst"),
                         "phone_number": unit_data.get("phone_number"),
                         "position": unit_data.get("position")
                     })
-                    
-                    # Add users for this unit
-                    if unit_data.get("assigned_users"):
-                        for user_data in unit_data["assigned_users"]:
-                            # Create the assigned user as a child table entry
-                            unit_doc.append("assigned_users", {
-                                "email": user_data.get("email"),
-                                "first_name": user_data.get("first_name"),
-                                "user_role": user_data.get("user_role")
-                            })
-                            
-                            # Force the child table to be saved properly
-                            unit_doc.flags.ignore_validate = True
+            
+            # Add users
+            if form_data.get("assigned_users"):
+                for user_data in form_data["assigned_users"]:
+                    # Create the assigned user as a child table entry
+                    doc.append("assigned_users", {
+                        "assigned_unit": user_data.get("assigned_unit"),  # Store unit name directly
+                        "email": user_data.get("email"),
+                        "first_name": user_data.get("first_name"),
+                        "user_role": user_data.get("user_role")
+                    })
             
             frappe.logger().info(f"✅ Successfully created new application: {doc.name}")
         
@@ -242,7 +290,17 @@ def save_step_data(step_data):
         doc = frappe.get_doc("Onboarding Form", doc_name)
         
         # Update fields based on step number
-        if step_number == 2:
+        if step_number == 1:
+            # Step 1: Contact Details
+            doc.first_name = step_data.get("first_name")
+            doc.middle_name = step_data.get("middle_name")
+            doc.last_name = step_data.get("last_name")
+            doc.phone_number = step_data.get("phone_number")
+            doc.email = step_data.get("email")
+            doc.position = step_data.get("position")
+            doc.current_step = 1
+            
+        elif step_number == 2:
             # Step 2: Company Details
             doc.company_name = step_data.get("company_name")
             doc.address = step_data.get("address")
@@ -260,8 +318,9 @@ def save_step_data(step_data):
             # Step 3: Units & Users
             # Clear existing units and users
             doc.units = []
+            doc.assigned_users = []
             
-            # Add new units and users
+            # Add new units
             if step_data.get("units"):
                 for unit_data in step_data["units"]:
                     # Debug logging for unit data in step save
@@ -276,23 +335,26 @@ def save_step_data(step_data):
                         "size_of_unit": unit_data.get("size_of_unit"),
                         "address": unit_data.get("address"),
                         "gps_coordinates": unit_data.get("gps_coordinates"),
+                        "location_name": unit_data.get("location_name"),
                         "gst": unit_data.get("gst"),
                         "phone_number": unit_data.get("phone_number"),
                         "position": unit_data.get("position")
                     })
-                    
-                    # Add users for this unit
-                    if unit_data.get("assigned_users"):
-                        for user_data in unit_data["assigned_users"]:
-                            # Create the assigned user as a child table entry
-                            unit_doc.append("assigned_users", {
-                                "email": user_data.get("email"),
-                                "first_name": user_data.get("first_name"),
-                                "user_role": user_data.get("user_role")
-                            })
-                            
-                            # Force the child table to be saved properly
-                            unit_doc.flags.ignore_validate = True
+            
+            # Add new users
+            if step_data.get("assigned_users"):
+                for user_data in step_data["assigned_users"]:
+                    # Debug logging for user data in step save
+                    frappe.logger().info(f"🔍 Step User Data Debug:")
+                    frappe.logger().info(f"   User email: {user_data.get('email')}")
+                    frappe.logger().info(f"   Assigned unit: {user_data.get('assigned_unit')}")
+                    # Create user as child table entry
+                    doc.append("assigned_users", {
+                        "assigned_unit": user_data.get("assigned_unit"),
+                        "email": user_data.get("email"),
+                        "first_name": user_data.get("first_name"),
+                        "user_role": user_data.get("user_role")
+                    })
             
             doc.current_step = 3
         
@@ -479,7 +541,7 @@ def save_verified_email_to_doctype(email, session_data):
             frappe.logger().info(f"📋 Application data from session: {application_data}")
             
             basic_fields = [
-                "first_name", "phone_number", "position"
+                "first_name", "middle_name", "last_name", "phone_number", "position"
             ]
             for field in basic_fields:
                 if field in application_data and application_data[field]:
@@ -522,7 +584,7 @@ def save_verified_email_to_doctype(email, session_data):
                     f.write(f"📋 Application data: {json.dumps(application_data)}\n")
                 
                 basic_fields = [
-                    "first_name", "phone_number", "position"
+                    "first_name", "middle_name", "last_name", "phone_number", "position"
                 ]
                 for field in basic_fields:
                     if field in application_data and application_data[field]:
@@ -759,3 +821,55 @@ def upload_file():
     except Exception as e:
         frappe.log_error(f"File upload error: {str(e)}", "Onboarding File Upload")
         return {"success": False, "message": f"Upload failed: {str(e)}"} 
+
+@frappe.whitelist(allow_guest=True)
+def get_saved_data():
+    """Get saved form data for the current session"""
+    try:
+        # Get session data
+        session_data = frappe.get_session()
+        if not session_data:
+            return {
+                "success": False,
+                "message": "No session found"
+            }
+        
+        # Get the email from session
+        email = session_data.get('email')
+        if not email:
+            return {
+                "success": False,
+                "message": "No email found in session"
+            }
+        
+        # Check if there's an existing application
+        existing_applications = frappe.get_all(
+            "Onboarding Form",
+            filters={"email": email},
+            fields=["name", "first_name", "middle_name", "last_name", "phone_number", "position", 
+                   "company_name", "address", "gps_coordinates", "location_name", "cin", "gst_number", 
+                   "industry_type", "website", "letter_of_authorisation"],
+            order_by="creation desc",
+            limit=1
+        )
+        
+        if existing_applications:
+            application = existing_applications[0]
+            frappe.logger().info(f"Retrieved saved data for email: {email}")
+            return {
+                "success": True,
+                "data": application
+            }
+        else:
+            frappe.logger().info(f"No saved data found for email: {email}")
+            return {
+                "success": True,
+                "data": None
+            }
+            
+    except Exception as e:
+        frappe.log_error(f"Error getting saved data: {str(e)}")
+        return {
+            "success": False,
+            "message": f"Error retrieving saved data: {str(e)}"
+        } 
