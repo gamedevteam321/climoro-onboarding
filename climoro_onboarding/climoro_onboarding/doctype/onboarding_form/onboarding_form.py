@@ -1,4 +1,6 @@
 import frappe
+from frappe import _
+from frappe.utils import now
 from frappe.model.document import Document
 from datetime import datetime
 
@@ -8,14 +10,51 @@ class OnboardingForm(Document):
         self.created_at = datetime.now()
     
     def before_save(self):
-        """Set modification timestamp"""
+        """Set modification timestamp and update summary fields"""
         self.modified_at = datetime.now()
+        self.update_summary_fields()
     
     def validate(self):
         """Validate the application data"""
         self.validate_email()
         self.validate_phone()
         self.validate_company_details()
+    
+    def update_summary_fields(self):
+        """Update the summary fields with current data"""
+        try:
+            # Calculate total units
+            self.total_units = len(self.units) if self.units else 0
+            
+            # Calculate total users across all units
+            total_users = 0
+            units_summary_parts = []
+            
+            if self.units:
+                for unit in self.units:
+                    unit_users = len(unit.assigned_users) if unit.assigned_users else 0
+                    total_users += unit_users
+                    
+                    # Create summary for this unit
+                    unit_summary = f"{unit.name_of_unit} ({unit.type_of_unit})"
+                    if unit_users > 0:
+                        unit_summary += f" - {unit_users} users"
+                    units_summary_parts.append(unit_summary)
+            
+            self.total_users = total_users
+            
+            # Create units summary text
+            if units_summary_parts:
+                self.units_summary = " | ".join(units_summary_parts)
+            else:
+                self.units_summary = "No units added"
+                
+        except Exception as e:
+            frappe.log_error(f"Error updating summary fields: {str(e)}")
+            # Set default values if calculation fails
+            self.total_units = 0
+            self.total_users = 0
+            self.units_summary = "Error calculating summary"
     
     def validate_email(self):
         """Validate email format"""
@@ -51,24 +90,43 @@ class OnboardingForm(Document):
         self.send_admin_notification()
     
     def send_admin_notification(self):
-        """Send notification to admin about new application"""
+        """Send notification to admin about new submission"""
         try:
-            frappe.sendmail(
-                recipients=["admin@climoro.com"],
-                subject=f"New Climoro Onboarding Form: {self.company_name}",
-                message=f"""
-                A new onboarding form has been submitted:
-                
-                Company: {self.company_name}
-                Contact: {self.first_name}
-                Email: {self.email}
-                Phone: {self.phone_number}
-                
-                Application ID: {self.name}
-                """
-            )
+            # Create notification for admin
+            notification = frappe.get_doc({
+                "doctype": "Notification Log",
+                "subject": f"New Onboarding Application: {self.company_name}",
+                "for_user": "Administrator",
+                "type": "Mention",
+                "document_type": "Onboarding Form",
+                "document_name": self.name
+            })
+            notification.insert(ignore_permissions=True)
         except Exception as e:
-            frappe.log_error(f"Failed to send admin notification: {str(e)}") 
+            frappe.log_error(f"Error sending admin notification: {str(e)}")
+
+@frappe.whitelist()
+def refresh_all_summaries():
+    """Refresh summary fields for all Onboarding Form documents"""
+    try:
+        forms = frappe.get_all("Onboarding Form", fields=["name"])
+        updated_count = 0
+        
+        for form in forms:
+            try:
+                doc = frappe.get_doc("Onboarding Form", form.name)
+                doc.update_summary_fields()
+                doc.save(ignore_permissions=True)
+                updated_count += 1
+            except Exception as e:
+                frappe.log_error(f"Error updating summary for {form.name}: {str(e)}")
+        
+        frappe.db.commit()
+        return f"Updated {updated_count} forms"
+        
+    except Exception as e:
+        frappe.log_error(f"Error in refresh_all_summaries: {str(e)}")
+        return f"Error: {str(e)}"
 
     def approve_application(self, approver=None):
         """Approve the onboarding application, create company and users, send approval email, and update status"""
@@ -154,9 +212,20 @@ class OnboardingForm(Document):
             user_doc.save(ignore_permissions=True)
         else:
             # Create new user with Super Admin role
-            first_name = self.first_name or email.split('@')[0]
-            if ' ' in first_name:
-                first_name = first_name.split(' ')[0]
+            # Use the first_name from form, or generate a proper name from email
+            if self.first_name and self.first_name.strip():
+                first_name = self.first_name.strip()
+                # Take only the first part if it contains spaces
+                if ' ' in first_name:
+                    first_name = first_name.split(' ')[0]
+            else:
+                # Generate a proper name from email prefix
+                email_prefix = email.split('@')[0]
+                # Convert to title case and replace common prefixes
+                first_name = email_prefix.replace('_', ' ').replace('-', ' ').title()
+                # Take only the first part if it contains spaces
+                if ' ' in first_name:
+                    first_name = first_name.split(' ')[0]
             
             user_doc = frappe.get_doc({
                 "doctype": "User",
@@ -207,9 +276,20 @@ class OnboardingForm(Document):
             user_doc.save(ignore_permissions=True)
         else:
             # Create new user with the specified role
-            first_name = assigned_user.first_name or email.split('@')[0]
-            if ' ' in first_name:
-                first_name = first_name.split(' ')[0]
+            # Use the first_name from assigned_user, or generate a proper name from email
+            if assigned_user.first_name and assigned_user.first_name.strip():
+                first_name = assigned_user.first_name.strip()
+                # Take only the first part if it contains spaces
+                if ' ' in first_name:
+                    first_name = first_name.split(' ')[0]
+            else:
+                # Generate a proper name from email prefix
+                email_prefix = email.split('@')[0]
+                # Convert to title case and replace common prefixes
+                first_name = email_prefix.replace('_', ' ').replace('-', ' ').title()
+                # Take only the first part if it contains spaces
+                if ' ' in first_name:
+                    first_name = first_name.split(' ')[0]
             
             user_doc = frappe.get_doc({
                 "doctype": "User",
@@ -413,4 +493,73 @@ class OnboardingForm(Document):
                 """
             )
         except Exception as e:
-            frappe.log_error(f"Failed to send rejection email: {str(e)}") 
+            frappe.log_error(f"Failed to send rejection email: {str(e)}")
+
+    def get_units_count(self):
+        """Get the number of units in this onboarding form"""
+        return len(self.units) if self.units else 0
+    
+    def get_users_count(self):
+        """Get the total number of users (main user + all unit users)"""
+        total_users = 1  # Main user (form submitter)
+        
+        if self.units:
+            for unit in self.units:
+                if hasattr(unit, 'assigned_users') and unit.assigned_users:
+                    total_users += len(unit.assigned_users)
+        
+        return total_users
+    
+    def get_units_summary(self):
+        """Get a summary of all units and their users"""
+        summary = []
+        
+        if self.units:
+            for unit in self.units:
+                unit_info = {
+                    'name': unit.name_of_unit,
+                    'type': unit.type_of_unit,
+                    'size': unit.size_of_unit,
+                    'address': unit.address,
+                    'users_count': 0,
+                    'users': []
+                }
+                
+                if hasattr(unit, 'assigned_users') and unit.assigned_users:
+                    unit_info['users_count'] = len(unit.assigned_users)
+                    for user in unit.assigned_users:
+                        unit_info['users'].append({
+                            'email': user.email,
+                            'first_name': user.first_name,
+                            'role': user.user_role
+                        })
+                
+                summary.append(unit_info)
+        
+        return summary 
+
+@frappe.whitelist(allow_guest=True)
+def get_google_maps_api_key():
+	"""Get Google Maps API key from site config securely"""
+	try:
+		# Get the API key from site config
+		api_key = frappe.conf.get("google_maps_api_key")
+		
+		if not api_key:
+			frappe.log_error("Google Maps API key not found in site config", "Maps Configuration Error")
+			return {
+				"success": False,
+				"message": "Google Maps API key not configured"
+			}
+		
+		return {
+			"success": True,
+			"api_key": api_key
+		}
+		
+	except Exception as e:
+		frappe.log_error(f"Error getting Google Maps API key: {str(e)}", "Maps Configuration Error")
+		return {
+			"success": False,
+			"message": "Error retrieving Maps configuration"
+		} 

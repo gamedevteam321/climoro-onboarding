@@ -14,9 +14,12 @@
   "name_of_unit",
   "size_of_unit",
   "address",
+  "gps_coordinates",
+  "location_name",
   "gst",
   "phone_number",
   "position",
+  "section_break_users",
   "assigned_users"
  ],
  "fields": [
@@ -70,6 +73,16 @@
    "reqd": 1
   },
   {
+   "fieldname": "gps_coordinates",
+   "fieldtype": "Data",
+   "label": "GPS Coordinates"
+  },
+  {
+   "fieldname": "location_name",
+   "fieldtype": "Data",
+   "label": "Location Name"
+  },
+  {
    "fieldname": "gst",
    "fieldtype": "Data",
    "label": "GST (optional)"
@@ -85,10 +98,17 @@
    "label": "Position"
   },
   {
+   "fieldname": "section_break_users",
+   "fieldtype": "Section Break",
+   "label": "Assigned Users"
+  },
+  {
    "fieldname": "assigned_users",
    "fieldtype": "Table",
    "label": "Assigned Users",
-   "options": "Assigned User"
+   "options": "Assigned User",
+   "collapsible": 0,
+   "collapsible_depends_on": ""
   }
  ],
  "index_web_pages_for_search": 1,

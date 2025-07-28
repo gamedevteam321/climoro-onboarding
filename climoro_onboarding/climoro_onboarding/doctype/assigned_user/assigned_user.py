@@ -14,5 +14,5 @@ class AssignedUser(Document):
         if self.first_name and len(self.first_name.strip()) < 2:
             frappe.throw("First name must be at least 2 characters long")
         
-        if self.user_role and self.user_role not in ["Admin", "Manager", "Employee", "Viewer"]:
+        if self.user_role and self.user_role not in ["Unit Manager", "Data Analyst"]:
             frappe.throw("Please select a valid user role") 

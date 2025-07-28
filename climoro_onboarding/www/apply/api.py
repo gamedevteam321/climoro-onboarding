@@ -15,6 +15,12 @@ def submit_onboarding_form(form_data):
         if isinstance(form_data, str):
             form_data = json.loads(form_data)
         
+        # Debug logging for GPS coordinates
+        frappe.logger().info(f"🔍 GPS Coordinates Debug:")
+        frappe.logger().info(f"   Form data keys: {list(form_data.keys())}")
+        frappe.logger().info(f"   GPS coordinates value: '{form_data.get('gps_coordinates')}'")
+        frappe.logger().info(f"   GPS coordinates type: {type(form_data.get('gps_coordinates'))}")
+        
         email = form_data.get("email")
         
         # Check if there's an existing draft application for this email
@@ -42,6 +48,10 @@ def submit_onboarding_form(form_data):
             doc.position = form_data.get("position")
             doc.company_name = form_data.get("company_name")
             doc.address = form_data.get("address")
+            doc.gps_coordinates = form_data.get("gps_coordinates")
+            doc.location_name = form_data.get("location_name")
+            frappe.logger().info(f"📍 Setting GPS coordinates on doc: '{form_data.get('gps_coordinates')}'")
+            frappe.logger().info(f"📍 Setting location name on doc: '{form_data.get('location_name')}'")
             doc.cin = form_data.get("cin")
             doc.gst_number = form_data.get("gst_number")
             doc.industry_type = form_data.get("industry_type")
@@ -55,6 +65,11 @@ def submit_onboarding_form(form_data):
             # Add new units and users
             if form_data.get("units"):
                 for unit_data in form_data["units"]:
+                    # Debug logging for unit data
+                    frappe.logger().info(f"🔍 Unit Data Debug:")
+                    frappe.logger().info(f"   Unit name: {unit_data.get('name_of_unit')}")
+                    frappe.logger().info(f"   GPS coordinates: {unit_data.get('gps_coordinates')}")
+                    frappe.logger().info(f"   Location name: {unit_data.get('location_name')}")
                     # Create unit document
                     unit_doc = frappe.get_doc({
                         "doctype": "Company Unit",
@@ -65,6 +80,8 @@ def submit_onboarding_form(form_data):
                         "name_of_unit": unit_data.get("name_of_unit"),
                         "size_of_unit": unit_data.get("size_of_unit"),
                         "address": unit_data.get("address"),
+                        "gps_coordinates": unit_data.get("gps_coordinates"),
+                        "location_name": unit_data.get("location_name"),
                         "gst": unit_data.get("gst"),
                         "phone_number": unit_data.get("phone_number"),
                         "position": unit_data.get("position")
@@ -73,16 +90,11 @@ def submit_onboarding_form(form_data):
                     # Add users for this unit BEFORE appending to parent
                     if unit_data.get("assigned_users"):
                         for user_data in unit_data["assigned_users"]:
-                            user_doc = frappe.get_doc({
-                                "doctype": "Assigned User",
-                                "parent": unit_doc.name,
-                                "parenttype": "Company Unit",
-                                "parentfield": "assigned_users",
+                            unit_doc.append("assigned_users", {
                                 "email": user_data.get("email"),
                                 "first_name": user_data.get("first_name"),
                                 "user_role": user_data.get("user_role")
                             })
-                            unit_doc.append("assigned_users", user_doc)
                     
                     # Now append the unit (with its users) to the parent
                     doc.append("units", unit_doc)
@@ -105,6 +117,8 @@ def submit_onboarding_form(form_data):
                 "position": form_data.get("position"),
                 "company_name": form_data.get("company_name"),
                 "address": form_data.get("address"),
+                "gps_coordinates": form_data.get("gps_coordinates"),
+                "location_name": form_data.get("location_name"),
                 "cin": form_data.get("cin"),
                 "gst_number": form_data.get("gst_number"),
                 "industry_type": form_data.get("industry_type"),
@@ -113,42 +127,36 @@ def submit_onboarding_form(form_data):
                 "current_step": 3
             })
             
+            frappe.logger().info(f"📍 Creating new doc with GPS coordinates: '{form_data.get('gps_coordinates')}'")
             doc.insert()
             
             # Add units and users
             if form_data.get("units"):
                 for unit_data in form_data["units"]:
-                    # Create unit document
-                    unit_doc = frappe.get_doc({
-                        "doctype": "Company Unit",
-                        "parent": doc.name,
-                        "parenttype": "Onboarding Form",
-                        "parentfield": "units",
+                    # Create unit as child table entry
+                    unit_doc = doc.append("units", {
                         "type_of_unit": unit_data.get("type_of_unit"),
                         "name_of_unit": unit_data.get("name_of_unit"),
                         "size_of_unit": unit_data.get("size_of_unit"),
                         "address": unit_data.get("address"),
+                        "gps_coordinates": unit_data.get("gps_coordinates"),
                         "gst": unit_data.get("gst"),
                         "phone_number": unit_data.get("phone_number"),
                         "position": unit_data.get("position")
                     })
                     
-                    # Add users for this unit BEFORE inserting
+                    # Add users for this unit
                     if unit_data.get("assigned_users"):
                         for user_data in unit_data["assigned_users"]:
-                            user_doc = frappe.get_doc({
-                                "doctype": "Assigned User",
-                                "parent": unit_doc.name,
-                                "parenttype": "Company Unit",
-                                "parentfield": "assigned_users",
+                            # Create the assigned user as a child table entry
+                            unit_doc.append("assigned_users", {
                                 "email": user_data.get("email"),
                                 "first_name": user_data.get("first_name"),
                                 "user_role": user_data.get("user_role")
                             })
-                            unit_doc.append("assigned_users", user_doc)
-                    
-                    # Now insert the unit (with its users)
-                    unit_doc.insert()
+                            
+                            # Force the child table to be saved properly
+                            unit_doc.flags.ignore_validate = True
             
             frappe.logger().info(f"✅ Successfully created new application: {doc.name}")
         
@@ -238,6 +246,10 @@ def save_step_data(step_data):
             # Step 2: Company Details
             doc.company_name = step_data.get("company_name")
             doc.address = step_data.get("address")
+            doc.gps_coordinates = step_data.get("gps_coordinates")
+            doc.location_name = step_data.get("location_name")
+            frappe.logger().info(f"📍 Setting GPS coordinates on doc: '{step_data.get('gps_coordinates')}'")
+            frappe.logger().info(f"📍 Setting location name on doc: '{step_data.get('location_name')}'")
             doc.cin = step_data.get("cin")
             doc.gst_number = step_data.get("gst_number")
             doc.industry_type = step_data.get("industry_type")
@@ -252,37 +264,35 @@ def save_step_data(step_data):
             # Add new units and users
             if step_data.get("units"):
                 for unit_data in step_data["units"]:
-                    # Create unit document
-                    unit_doc = frappe.get_doc({
-                        "doctype": "Company Unit",
-                        "parent": doc.name,
-                        "parenttype": "Onboarding Form",
-                        "parentfield": "units",
+                    # Debug logging for unit data in step save
+                    frappe.logger().info(f"🔍 Step Unit Data Debug:")
+                    frappe.logger().info(f"   Unit name: {unit_data.get('name_of_unit')}")
+                    frappe.logger().info(f"   GPS coordinates: {unit_data.get('gps_coordinates')}")
+                    frappe.logger().info(f"   Location name: {unit_data.get('location_name')}")
+                    # Create unit as child table entry
+                    unit_doc = doc.append("units", {
                         "type_of_unit": unit_data.get("type_of_unit"),
                         "name_of_unit": unit_data.get("name_of_unit"),
                         "size_of_unit": unit_data.get("size_of_unit"),
                         "address": unit_data.get("address"),
+                        "gps_coordinates": unit_data.get("gps_coordinates"),
                         "gst": unit_data.get("gst"),
                         "phone_number": unit_data.get("phone_number"),
                         "position": unit_data.get("position")
                     })
                     
-                    # Add users for this unit BEFORE appending to parent
+                    # Add users for this unit
                     if unit_data.get("assigned_users"):
                         for user_data in unit_data["assigned_users"]:
-                            user_doc = frappe.get_doc({
-                                "doctype": "Assigned User",
-                                "parent": unit_doc.name,
-                                "parenttype": "Company Unit",
-                                "parentfield": "assigned_users",
+                            # Create the assigned user as a child table entry
+                            unit_doc.append("assigned_users", {
                                 "email": user_data.get("email"),
                                 "first_name": user_data.get("first_name"),
                                 "user_role": user_data.get("user_role")
                             })
-                            unit_doc.append("assigned_users", user_doc)
-                    
-                    # Now append the unit (with its users) to the parent
-                    doc.append("units", unit_doc)
+                            
+                            # Force the child table to be saved properly
+                            unit_doc.flags.ignore_validate = True
             
             doc.current_step = 3
         

@@ -63,8 +63,23 @@
                     <input type="text" id="company_name" name="company_name" required>
                 </div>
                 <div class="form-group">
-                    <label for="address">Address *</label>
-                    <textarea id="address" name="address" required></textarea>
+                    <label for="address">Address <span class="required-asterisk">*</span></label>
+                    <textarea id="address" name="address" rows="3" placeholder="Enter your complete address" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="gps_coordinates">Map Location (Area/Building) <span class="required-asterisk">*</span></label>
+                    <div class="gps-container">
+                        <input type="text" id="gps_coordinates" name="gps_coordinates" placeholder="e.g., 28.6139, 77.2090 (type manually or use map)" readonly>
+                        <button type="button" id="map_search_btn" class="btn btn-secondary map-select-btn" onclick="openMapModal()">📍 Map</button>
+                    </div>
+                    <small style="color: #6c757d; margin-top: 5px; display: block;">
+                        💡 <strong>Tip:</strong> Click "📍 Map" to select your location visually, or type coordinates manually.
+                        <br>📍 <strong>Example:</strong> 28.6139, 77.2090 (New Delhi) | You can get coordinates from Google Maps by right-clicking any location.
+                    </small>
+                </div>
+                <div class="form-group">
+                    <label for="location_name">Location Name</label>
+                    <input type="text" id="location_name" name="location_name" class="form-control" placeholder="Full location name will be set automatically" readonly>
                 </div>
                 <div class="form-group">
                     <label for="cin">CIN *</label>
@@ -158,6 +173,22 @@
                 <textarea class="unit-address" required></textarea>
             </div>
             <div class="form-group">
+                <label>Map Location (Area/Building) *</label>
+                <div class="gps-container">
+                    <input type="text" class="unit-gps-coordinates" placeholder="e.g., 28.6139, 77.2090 (type manually or use map)" readonly>
+                    <button type="button" class="btn btn-secondary map-select-btn unit-map-btn">
+                        <i class="fa fa-map-marker"></i> 📍 Map
+                    </button>
+                </div>
+                <small style="color: #6c757d; margin-top: 5px; display: block;">
+                    💡 <strong>Tip:</strong> Click "📍 Map" to select your location visually, or type coordinates manually.
+                </small>
+            </div>
+            <div class="form-group">
+                <label>Location Name</label>
+                <input type="text" class="unit-location-name" placeholder="Full location name will be set automatically" readonly>
+            </div>
+            <div class="form-group">
                 <label>GST (optional)</label>
                 <input type="text" class="unit-gst">
             </div>
@@ -210,6 +241,35 @@
         <button type="button" class="remove-user-btn btn btn-sm btn-danger">Remove User</button>
     </div>
 </template>
+
+<!-- Map Modal -->
+<div id="mapModal" class="map-modal">
+    <div class="map-modal-content">
+        <div class="map-modal-header">
+            <h3>🗺️ Select Area/Building Location</h3>
+            <button type="button" class="map-modal-close" onclick="closeMapModal()">&times;</button>
+        </div>
+        
+        <div class="map-search-container">
+            <input type="text" id="mapSearchInput" class="map-search-input" placeholder="Search for area, building, or landmark...">
+        </div>
+        
+        <div id="map" class="map-container">
+            <div class="map-loading">
+                <i class="fa fa-spinner fa-spin"></i> Loading Google Maps...
+            </div>
+        </div>
+        
+        <div id="coordinatesDisplay" class="coordinates-display">
+            Click on the map to select a location, then click "Confirm Location" to save
+        </div>
+        
+        <div class="map-buttons">
+            <button type="button" class="btn btn-secondary" onclick="closeMapModal()">Cancel</button>
+            <button type="button" class="btn btn-primary" onclick="confirmLocation()">Confirm Location</button>
+        </div>
+    </div>
+</div>
 
 {% endblock %}
 
@@ -457,6 +517,218 @@ body {
 .form-group input[type="file"]:hover {
     border-color: var(--primary-color);
     background-color: rgba(94, 100, 255, 0.05);
+}
+
+/* GPS Coordinates Styles */
+.gps-coordinates-container {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+}
+
+.gps-coordinates-container input {
+    flex: 1;
+    background-color: var(--light-color);
+    cursor: not-allowed;
+}
+
+.gps-coordinates-container input:not([readonly]) {
+    background-color: var(--card-background);
+    cursor: text;
+}
+
+.map-select-btn {
+    white-space: nowrap;
+    padding: 12px 16px;
+    font-size: 13px;
+    min-width: 140px;
+}
+
+.map-select-btn i {
+    margin-right: 5px;
+}
+
+/* Map Modal Styles */
+.map-modal {
+    display: none;
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+}
+
+.map-modal-content {
+    background-color: var(--card-background);
+    margin: 5% auto;
+    padding: 25px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 800px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    position: relative;
+    max-height: 80vh;
+    overflow: hidden;
+}
+
+.map-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.map-modal-header h3 {
+    margin: 0;
+    color: var(--text-color);
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.map-modal-close {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.map-modal-close:hover {
+    background-color: var(--light-color);
+    color: var(--text-color);
+}
+
+.map-search-container {
+    margin-bottom: 15px;
+}
+
+.map-search-input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 14px;
+    transition: border-color 0.3s ease;
+}
+
+.map-search-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(94, 100, 255, 0.1);
+}
+
+/* Google Places Autocomplete Styles */
+.pac-container {
+    z-index: 10001 !important;
+    border-radius: 8px !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+    border: 1px solid var(--border-color) !important;
+    font-family: inherit !important;
+}
+
+.pac-item {
+    padding: 12px 16px !important;
+    border-bottom: 1px solid var(--border-color) !important;
+    cursor: pointer !important;
+    transition: background-color 0.2s ease !important;
+}
+
+.pac-item:hover {
+    background-color: var(--light-color) !important;
+}
+
+.pac-item:last-child {
+    border-bottom: none !important;
+}
+
+.pac-item-query {
+    font-weight: 500 !important;
+    color: var(--text-color) !important;
+}
+
+.pac-matched {
+    font-weight: 600 !important;
+    color: var(--primary-color) !important;
+}
+
+.pac-secondary-text {
+    color: var(--text-muted) !important;
+    font-size: 13px !important;
+}
+
+.map-container {
+    width: 100%;
+    height: 400px;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    margin-bottom: 15px;
+    overflow: hidden;
+}
+
+.coordinates-display {
+    background: var(--light-color);
+    padding: 12px 16px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    border-left: 4px solid var(--primary-color);
+}
+
+.map-modal-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+}
+
+.map-modal-actions .btn {
+    flex: 1;
+    max-width: 150px;
+}
+
+.map-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 400px;
+    background: var(--light-color);
+    border-radius: 8px;
+    font-size: 16px;
+    color: var(--text-muted);
+}
+
+.map-error {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 400px;
+    background: var(--light-color);
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+}
+
+.map-error h4 {
+    color: var(--danger-color);
+    margin-bottom: 10px;
+}
+
+.map-error .manual-entry-help {
+    background: var(--card-background);
+    padding: 15px;
+    border-radius: 6px;
+    margin-top: 15px;
+    border: 1px solid var(--border-color);
 }
 
 /* Navigation Buttons */
@@ -929,6 +1201,35 @@ body {
     transform: translateY(-50%);
     color: var(--danger-color);
     font-weight: bold;
+}
+
+/* GPS Container Styling */
+.gps-container {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.gps-container input {
+    flex: 1;
+    min-width: 200px;
+}
+
+.gps-container button {
+    white-space: nowrap;
+    min-width: 80px;
+}
+
+.map-buttons {
+    position: absolute !important;
+    bottom: 12px !important;
+    left: 20px !important;
+    right: 20px !important;
+    padding: 16px !important;
+    text-align: right !important;
+    border-top: 1px solid #e9ecef !important;
+    background: white !important;
+    border-radius: 0 0 8px 8px !important;
 }
 </style>
 {% endblock %}
@@ -1868,6 +2169,7 @@ class OnboardingForm {
         // Populate Step 2 fields if available
         if (data.company_name) document.getElementById('company_name').value = data.company_name;
         if (data.address) document.getElementById('address').value = data.address;
+        if (data.gps_coordinates) document.getElementById('gps_coordinates').value = data.gps_coordinates;
         if (data.cin) document.getElementById('cin').value = data.cin;
         if (data.gst_number) document.getElementById('gst_number').value = data.gst_number;
     }
@@ -1880,6 +2182,7 @@ class OnboardingForm {
             stepData.step_number = this.currentStep;
             
             console.log('📋 Step data to save:', stepData);
+            console.log('🔍 Step data location name:', stepData.location_name);
             
             // Get CSRF token
             let csrfToken = frappe?.csrf_token;
@@ -1964,6 +2267,8 @@ class OnboardingForm {
             // Step 2: Company Details
             stepData.company_name = document.getElementById('company_name').value;
             stepData.address = document.getElementById('address').value;
+            stepData.gps_coordinates = document.getElementById('gps_coordinates').value;
+            stepData.location_name = document.getElementById('location_name').value;
             stepData.cin = document.getElementById('cin').value;
             stepData.gst_number = document.getElementById('gst_number').value;
             stepData.industry_type = document.getElementById('industry_type').value;
@@ -1981,6 +2286,8 @@ class OnboardingForm {
                     name_of_unit: unit.querySelector('.unit-name').value,
                     size_of_unit: parseFloat(unit.querySelector('.unit-size').value),
                     address: unit.querySelector('.unit-address').value,
+                    gps_coordinates: unit.querySelector('.unit-gps-coordinates').value,
+                    location_name: unit.querySelector('.unit-location-name').value,
                     gst: unit.querySelector('.unit-gst').value,
                     phone_number: unit.querySelector('.unit-phone').value,
                     position: unit.querySelector('.unit-position').value,
@@ -2073,6 +2380,8 @@ class OnboardingForm {
             // Step 2: Company Details
             company_name: document.getElementById('company_name').value,
             address: document.getElementById('address').value,
+            gps_coordinates: document.getElementById('gps_coordinates').value,
+            location_name: document.getElementById('location_name').value,
             cin: document.getElementById('cin').value,
             gst_number: document.getElementById('gst_number').value,
             industry_type: document.getElementById('industry_type').value,
@@ -2083,6 +2392,16 @@ class OnboardingForm {
             units: []
         };
         
+        // Debug logging for GPS coordinates and location name
+        console.log('🔍 Frontend GPS Coordinates Debug:');
+        console.log('   GPS coordinates value:', formData.gps_coordinates);
+        console.log('   GPS coordinates type:', typeof formData.gps_coordinates);
+        console.log('   GPS coordinates length:', formData.gps_coordinates ? formData.gps_coordinates.length : 0);
+        console.log('🔍 Frontend Location Name Debug:');
+        console.log('   Location name value:', formData.location_name);
+        console.log('   Location name type:', typeof formData.location_name);
+        console.log('   Location name length:', formData.location_name ? formData.location_name.length : 0);
+        
         // Collect units and users data
         const units = this.unitsContainer.querySelectorAll('.unit-container');
         units.forEach(unit => {
@@ -2091,6 +2410,8 @@ class OnboardingForm {
                 name_of_unit: unit.querySelector('.unit-name').value,
                 size_of_unit: parseFloat(unit.querySelector('.unit-size').value),
                 address: unit.querySelector('.unit-address').value,
+                gps_coordinates: unit.querySelector('.unit-gps-coordinates').value,
+                location_name: unit.querySelector('.unit-location-name').value,
                 gst: unit.querySelector('.unit-gst').value,
                 phone_number: unit.querySelector('.unit-phone').value,
                 position: unit.querySelector('.unit-position').value,
@@ -2109,6 +2430,12 @@ class OnboardingForm {
             });
             
             formData.units.push(unitData);
+            
+            // Debug logging for unit location names
+            console.log('🔍 Unit Location Name Debug:');
+            console.log('   Unit:', unitData.name_of_unit);
+            console.log('   Location name value:', unitData.location_name);
+            console.log('   Location name type:', typeof unitData.location_name);
         });
         
         return formData;
@@ -2498,7 +2825,497 @@ class OnboardingForm {
 // Initialize the form when page loads
 document.addEventListener('DOMContentLoaded', () => {
     window.onboardingForm = new OnboardingForm();
+    
+    // Initialize Google Maps functionality
+    initializeGoogleMaps();
 });
+
+// Google Maps Variables
+let map;
+let selectedMarker;
+let selectedCoordinates = null;
+let selectedLocationName = null;
+let searchBox;
+let currentMapField = null;
+
+// Google Maps Functions
+function initializeGoogleMaps() {
+    // Add click handlers to map buttons
+    document.addEventListener('click', function(e) {
+        if (e.target.closest('.map-select-btn')) {
+            const button = e.target.closest('.map-select-btn');
+            const isUnitMap = button.classList.contains('unit-map-btn');
+            
+            if (isUnitMap) {
+                // Handle unit map button
+                const unit = button.closest('.unit-container');
+                const gpsField = unit.querySelector('.unit-gps-coordinates');
+                openMapModal(gpsField, 'unit');
+            } else {
+                // Handle main form map button
+                const gpsField = document.getElementById('gps_coordinates');
+                openMapModal(gpsField, 'main');
+            }
+        }
+    });
+}
+
+function openMapModal(field, type) {
+    currentMapField = { field, type };
+    
+    const modal = document.getElementById('mapModal');
+    modal.style.display = 'block';
+    
+    // Load Google Maps
+    loadGoogleMaps()
+        .then(() => {
+            console.log('Google Maps loaded successfully, initializing map...');
+            initMap();
+            
+            // If there's already a selected location, enable the confirm button
+            if (selectedCoordinates) {
+                const confirmBtn = document.getElementById('confirmLocationBtn');
+                if (confirmBtn) {
+                    confirmBtn.disabled = false;
+                    confirmBtn.style.opacity = '1';
+                    confirmBtn.style.cursor = 'pointer';
+                    confirmBtn.style.backgroundColor = '#28a745';
+                    confirmBtn.style.borderColor = '#28a745';
+                    confirmBtn.innerHTML = '<i class="fa fa-check"></i> Confirm Location';
+                    console.log('✅ Confirm button enabled for existing location');
+                }
+            }
+        })
+        .catch((error) => {
+            console.error('Failed to load Google Maps:', error);
+            showMapError(error.message);
+        });
+}
+
+function loadGoogleMaps() {
+    return new Promise((resolve, reject) => {
+        // Check if Google Maps is already loaded
+        if (typeof google !== 'undefined' && google.maps) {
+            console.log('✅ Google Maps already available');
+            console.log('Places API available:', !!google.maps.places);
+            resolve();
+            return;
+        }
+        
+        console.log('🔄 Loading Google Maps...');
+        
+        // Get API key from server
+        fetch('/api/method/climoro_onboarding.climoro_onboarding.doctype.onboarding_form.onboarding_form.get_google_maps_api_key')
+            .then(response => {
+                console.log('📡 API response status:', response.status);
+                return response.json();
+            })
+            .then(data => {
+                console.log('📡 API response data:', data);
+                
+                if (data.message && data.message.success) {
+                    const apiKey = data.message.api_key;
+                    console.log('🔑 API key retrieved successfully');
+                    
+                    // Check if script already exists
+                    const existingScript = document.querySelector('script[src*="maps.googleapis.com"]');
+                    if (existingScript) {
+                        console.log('📜 Google Maps script already exists, waiting for load...');
+                        // Wait for existing script to load
+                        const checkGoogleMaps = setInterval(() => {
+                            if (typeof google !== 'undefined' && google.maps) {
+                                clearInterval(checkGoogleMaps);
+                                console.log('✅ Google Maps loaded from existing script');
+                                console.log('Places API available:', !!google.maps.places);
+                                resolve();
+                            }
+                        }, 100);
+                        
+                        setTimeout(() => {
+                            clearInterval(checkGoogleMaps);
+                            reject(new Error('Google Maps loading timeout'));
+                        }, 10000);
+                        return;
+                    }
+                    
+                    // Create callback function
+                    window.mapCallback = function() {
+                        console.log('🎯 Google Maps callback triggered');
+                        console.log('Google Maps loaded:', typeof google !== 'undefined' && !!google.maps);
+                        console.log('Places API loaded:', !!google.maps.places);
+                        resolve();
+                    };
+                    
+                    // Create and load script
+                    const script = document.createElement('script');
+                    script.async = true;
+                    script.defer = true;
+                    script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places&callback=mapCallback`;
+                    script.onerror = (error) => {
+                        console.error('❌ Script load error:', error);
+                        reject(new Error('Failed to load Google Maps script'));
+                    };
+                    
+                    console.log('📜 Loading script:', script.src);
+                    document.head.appendChild(script);
+                    
+                } else {
+                    console.error('❌ Failed to get API key:', data);
+                    reject(new Error('Failed to get API key: ' + (data.message?.message || 'Unknown error')));
+                }
+            })
+            .catch(error => {
+                console.error('❌ Error fetching API key:', error);
+                reject(new Error('Error fetching API key: ' + error.message));
+            });
+    });
+}
+
+function initMap() {
+    console.log('🗺️ initMap called');
+    
+    try {
+        // Check if Google Maps is loaded
+        if (typeof google === 'undefined' || !google.maps) {
+            console.error('❌ Google Maps API not loaded');
+            return;
+        }
+        
+        console.log('✅ Google Maps API loaded successfully');
+        console.log('🔍 Places API available:', !!google.maps.places);
+        
+        // Initialize map centered on India
+        const mapElement = document.getElementById('map');
+        if (!mapElement) {
+            console.error('❌ Map element not found');
+            return;
+        }
+        
+        // Clear loading message
+        mapElement.innerHTML = '';
+        
+        map = new google.maps.Map(mapElement, {
+            center: { lat: 20.5937, lng: 78.9629 }, // India center
+            zoom: 5,
+            mapTypeControl: true,
+            streetViewControl: true,
+            fullscreenControl: true
+        });
+        
+        console.log('✅ Map initialized successfully');
+        
+        // Initialize Places search with Autocomplete
+        const searchInput = document.getElementById('mapSearchInput');
+        console.log('🔍 Search input found:', !!searchInput);
+        console.log('🔍 Places API available:', !!google.maps.places);
+        
+        if (searchInput && google.maps.places) {
+            try {
+                // Create Autocomplete instead of SearchBox for better dropdown functionality
+                const autocomplete = new google.maps.places.Autocomplete(searchInput, {
+                    types: ['geocode', 'establishment'],
+                    componentRestrictions: { country: 'in' }, // Restrict to India
+                    fields: ['place_id', 'geometry', 'name', 'formatted_address']
+                });
+                
+                console.log('✅ Autocomplete created successfully');
+                
+                // Listen for place selection
+                autocomplete.addListener('place_changed', () => {
+                    console.log('🔍 Place changed event triggered');
+                    const place = autocomplete.getPlace();
+                    console.log('🔍 Selected place:', place);
+                    
+                    if (!place.geometry || !place.geometry.location) {
+                        console.log('❌ Place has no geometry or location');
+                        showNotification('No location found for this search. Please try a different search term.', 'warning');
+                        return;
+                    }
+                    
+                    // Store location name
+                    selectedLocationName = place.name || place.formatted_address;
+                    
+                    // Center map on selected place
+                    map.setCenter(place.geometry.location);
+                    map.setZoom(15);
+                    
+                    // Add marker at selected place
+                    addMarkerAtLocation(place.geometry.location);
+                    
+                    console.log('✅ Place selected and map updated');
+                    showNotification(`Location found: ${selectedLocationName}. Click "Confirm Location" to save.`, 'success');
+                });
+                
+                // Add Enter key handler for manual address entry
+                searchInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        const address = searchInput.value.trim();
+                        if (address) {
+                            // Use Geocoder to convert address to coordinates
+                            const geocoder = new google.maps.Geocoder();
+                            geocoder.geocode({ address: address }, (results, status) => {
+                                if (status === 'OK' && results[0]) {
+                                    const location = results[0].geometry.location;
+                                    selectedLocationName = results[0].formatted_address;
+                                    map.setCenter(location);
+                                    map.setZoom(15);
+                                    addMarkerAtLocation(location);
+                                    showNotification(`Location found: ${selectedLocationName}. Click "Confirm Location" to save.`, 'success');
+                                } else {
+                                    showNotification('Could not find this address. Please try a different search term.', 'warning');
+                                }
+                            });
+                        }
+                    }
+                });
+                
+                // Also create SearchBox for additional functionality
+                searchBox = new google.maps.places.SearchBox(searchInput);
+                console.log('✅ SearchBox created successfully');
+                
+                // Bias search results to current map viewport
+                map.addListener('bounds_changed', () => {
+                    if (searchBox && map.getBounds()) {
+                        searchBox.setBounds(map.getBounds());
+                    }
+                });
+                
+                // Listen for place search results (backup)
+                searchBox.addListener('places_changed', () => {
+                    console.log('🔍 Places changed event triggered (SearchBox)');
+                    const places = searchBox.getPlaces();
+                    console.log('🔍 Number of places found:', places.length);
+                    
+                    if (places.length === 0) {
+                        console.log('🔍 No places found');
+                        return;
+                    }
+                    
+                    const place = places[0];
+                    console.log('🔍 Selected place:', place.name);
+                    console.log('🔍 Place geometry:', !!place.geometry);
+                    console.log('🔍 Place location:', !!place.geometry?.location);
+                    
+                    if (!place.geometry || !place.geometry.location) {
+                        console.log('❌ Place has no geometry or location');
+                        return;
+                    }
+                    
+                    // Center map on selected place
+                    map.setCenter(place.geometry.location);
+                    map.setZoom(15);
+                    
+                    // Add marker at selected place
+                    addMarkerAtLocation(place.geometry.location);
+                    
+                    console.log('✅ Place selected and map updated');
+                });
+                
+                console.log('✅ Places search initialized successfully with Autocomplete');
+            } catch (placesError) {
+                console.error('❌ Error initializing Places search:', placesError);
+            }
+        } else {
+            console.warn('⚠️ Places API not available or search input not found');
+            console.warn('Search input:', !!searchInput);
+            console.warn('Places API:', !!google.maps.places);
+        }
+        
+        // Add click listener to map
+        map.addListener('click', (event) => {
+            console.log('🗺️ Map clicked at:', event.latLng.toString());
+            addMarkerAtLocation(event.latLng);
+        });
+        
+    } catch (error) {
+        console.error('❌ Error initializing map:', error);
+    }
+}
+
+function addMarkerAtLocation(location) {
+    console.log('📍 Adding marker at location:', location.toString());
+    
+    // Remove existing marker
+    if (selectedMarker) {
+        selectedMarker.setMap(null);
+    }
+    
+    // Add new marker
+    selectedMarker = new google.maps.Marker({
+        position: location,
+        map: map,
+        title: 'Selected Location'
+    });
+    
+    // Store coordinates
+    selectedCoordinates = {
+        lat: location.lat(),
+        lng: location.lng()
+    };
+    
+    // Get location name using reverse geocoding
+    const geocoder = new google.maps.Geocoder();
+    geocoder.geocode({ location: location }, (results, status) => {
+        if (status === 'OK' && results[0]) {
+            selectedCoordinates.locationName = results[0].formatted_address;
+            console.log('📍 Location name:', selectedCoordinates.locationName);
+            
+            // Update coordinates display with location name
+            const coordinatesText = `${selectedCoordinates.lat.toFixed(6)}, ${selectedCoordinates.lng.toFixed(6)}`;
+            const coordinatesDisplay = document.getElementById('coordinatesDisplay');
+            if (coordinatesDisplay) {
+                coordinatesDisplay.textContent = `Selected: ${coordinatesText}\nLocation: ${selectedCoordinates.locationName}`;
+                console.log('📍 Updated coordinates display with location name');
+            }
+        } else {
+            console.log('📍 Could not get location name');
+        }
+    });
+    
+    // Update coordinates display immediately
+    const coordinatesText = `${selectedCoordinates.lat.toFixed(6)}, ${selectedCoordinates.lng.toFixed(6)}`;
+    const coordinatesDisplay = document.getElementById('coordinatesDisplay');
+    if (coordinatesDisplay) {
+        coordinatesDisplay.textContent = `Selected: ${coordinatesText}\nGetting location name...`;
+        console.log('📍 Updated coordinates display');
+    }
+    
+    console.log('✅ Location selected');
+}
+
+function closeMapModal() {
+    document.getElementById('mapModal').style.display = 'none';
+}
+
+function confirmLocation() {
+    console.log('🔘 Confirm Location clicked');
+    console.log('Selected coordinates:', selectedCoordinates);
+    
+    if (selectedCoordinates) {
+        const coordinatesText = `${selectedCoordinates.lat.toFixed(6)}, ${selectedCoordinates.lng.toFixed(6)}`;
+        console.log('Setting coordinates:', coordinatesText);
+        
+        // Update the GPS coordinates field
+        if (currentMapField && currentMapField.field) {
+            currentMapField.field.value = coordinatesText;
+            
+            // Trigger change event to ensure form validation updates
+            const event = new Event('input', { bubbles: true });
+            currentMapField.field.dispatchEvent(event);
+        }
+        
+        // Update the location name field if it exists
+        if (selectedCoordinates.locationName) {
+            const locationNameField = document.getElementById('location_name');
+            if (locationNameField) {
+                locationNameField.value = selectedCoordinates.locationName;
+                console.log('📍 Setting location name:', selectedCoordinates.locationName);
+                
+                // Trigger change event
+                const event = new Event('input', { bubbles: true });
+                locationNameField.dispatchEvent(event);
+            }
+            
+            // For unit fields, find the corresponding location name field
+            if (currentMapField && currentMapField.type === 'unit') {
+                const unitContainer = currentMapField.field.closest('.unit-container');
+                if (unitContainer) {
+                    const unitLocationNameField = unitContainer.querySelector('.unit-location-name');
+                    if (unitLocationNameField) {
+                        unitLocationNameField.value = selectedCoordinates.locationName;
+                        console.log('📍 Setting unit location name:', selectedCoordinates.locationName);
+                        
+                        // Trigger change event
+                        const event = new Event('input', { bubbles: true });
+                        unitLocationNameField.dispatchEvent(event);
+                    }
+                }
+            }
+        }
+        
+        closeMapModal();
+        
+        // Show success message
+        const message = selectedCoordinates.locationName 
+            ? `Location selected: ${selectedCoordinates.locationName} (${coordinatesText})`
+            : `Location selected: ${coordinatesText}`;
+        showNotification(message, 'success');
+        
+        console.log('✅ Location confirmed successfully');
+    } else {
+        console.log('❌ No coordinates selected');
+        showNotification('Please click on the map to select a location first.', 'error');
+    }
+}
+
+function enableManualEntry() {
+    if (!currentMapField) return;
+    
+    // Enable manual entry
+    currentMapField.field.removeAttribute('readonly');
+    currentMapField.field.focus();
+    currentMapField.field.placeholder = 'Enter coordinates manually (e.g., 28.6139, 77.2090)';
+    
+    // Show help message
+    showNotification('You can now enter coordinates manually. Format: latitude, longitude', 'info');
+}
+
+function showMapError(message) {
+    const mapElement = document.getElementById('map');
+    if (mapElement) {
+        mapElement.innerHTML = `
+            <div class="map-error">
+                <h4>📍 Map Loading Issue</h4>
+                <p>${message}</p>
+                <div class="manual-entry-help">
+                    <strong>✅ Alternative: Manual Entry</strong><br>
+                    You can enter coordinates directly in the GPS field below:<br>
+                    <code style="background: white; padding: 2px 5px;">28.6139, 77.2090</code> (latitude, longitude)<br>
+                    <small>💡 Get coordinates from Google Maps by right-clicking any location</small>
+                </div>
+            </div>
+        `;
+    }
+}
+
+function showNotification(message, type = 'info') {
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.className = `notification notification-${type}`;
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 15px 20px;
+        border-radius: 6px;
+        color: white;
+        font-weight: 500;
+        z-index: 10001;
+        max-width: 300px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        animation: slideIn 0.3s ease;
+    `;
+    
+    // Set background color based on type
+    const colors = {
+        success: '#28a745',
+        error: '#dc3545',
+        info: '#17a2b8',
+        warning: '#ffc107'
+    };
+    notification.style.backgroundColor = colors[type] || colors.info;
+    
+    notification.textContent = message;
+    
+    // Add to page
+    document.body.appendChild(notification);
+    
+    // Remove after 3 seconds
+    setTimeout(() => {
+        notification.remove();
+    }, 3000);
+}
 
 // Add slideIn animation
 const style = document.createElement('style');
@@ -2515,5 +3332,7 @@ style.textContent = `
 }
 `;
 document.head.appendChild(style);
+
+
 </script>
 {% endblock %} 

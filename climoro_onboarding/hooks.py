@@ -43,9 +43,10 @@ app_license = "mit"
 # page_js = {"page" : "public/js/file.js"}
 
 # include js in doctype views
-doctype_js = {
-    "Onboarding Form": "public/js/onboarding_form.js"
-}
+# Commented out to avoid duplicate map buttons in frontend web form
+# doctype_js = {
+#     "Onboarding Form": "public/js/onboarding_form.js"
+# }
 
 # Svg Icons
 # ------------------
