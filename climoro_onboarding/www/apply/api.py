@@ -53,6 +53,13 @@ def submit_onboarding_form(form_data):
         frappe.logger().info(f"   GPS coordinates value: '{form_data.get('gps_coordinates')}'")
         frappe.logger().info(f"   GPS coordinates type: {type(form_data.get('gps_coordinates'))}")
         
+        # Debug logging for industry fields
+        frappe.logger().info(f"🔍 Industry Fields Debug:")
+        frappe.logger().info(f"   Industry type: '{form_data.get('industry_type')}'")
+        frappe.logger().info(f"   Sub-industry type: '{form_data.get('sub_industry_type')}'")
+        frappe.logger().info(f"   All form_data keys: {list(form_data.keys())}")
+        frappe.logger().info(f"   Form_data type: {type(form_data)}")
+        
         email = form_data.get("email")
         
         # Check if there's an existing draft application for this email
@@ -89,6 +96,9 @@ def submit_onboarding_form(form_data):
             doc.cin = form_data.get("cin")
             doc.gst_number = form_data.get("gst_number")
             doc.industry_type = form_data.get("industry_type")
+            doc.sub_industry_type = form_data.get("sub_industry_type")
+            frappe.logger().info(f"🏭 Setting industry_type: '{form_data.get('industry_type')}'")
+            frappe.logger().info(f"🏭 Setting sub_industry_type: '{form_data.get('sub_industry_type')}'")
             doc.website = form_data.get("website")
             doc.letter_of_authorisation = form_data.get("letter_of_authorisation")
             doc.status = "Submitted"
@@ -172,7 +182,9 @@ def submit_onboarding_form(form_data):
                 "cin": form_data.get("cin"),
                 "gst_number": form_data.get("gst_number"),
                 "industry_type": form_data.get("industry_type"),
+                "sub_industry_type": form_data.get("sub_industry_type"),
                 "website": form_data.get("website"),
+                "letter_of_authorisation": form_data.get("letter_of_authorisation"),
                 "status": "Submitted",
                 "current_step": 3
             })
@@ -312,6 +324,7 @@ def save_step_data(step_data):
             doc.cin = step_data.get("cin")
             doc.gst_number = step_data.get("gst_number")
             doc.industry_type = step_data.get("industry_type")
+            doc.sub_industry_type = step_data.get("sub_industry_type")
             doc.website = step_data.get("website")
             doc.letter_of_authorisation = step_data.get("letter_of_authorisation")
             doc.current_step = 2

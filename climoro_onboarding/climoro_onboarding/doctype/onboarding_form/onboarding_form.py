@@ -538,28 +538,172 @@ def refresh_all_summaries():
         
         return summary 
 
-@frappe.whitelist(allow_guest=True)
+@frappe.whitelist()
+def get_sub_industry_options(industry_type):
+    """Get sub-industry options based on selected industry type"""
+    
+    industry_sub_types = {
+        "Energy": [
+            "Oil & Gas Extraction",
+            "Oil Refining",
+            "Natural Gas Transmission & Distribution",
+            "Coal Mining & Processing",
+            "Renewable Energy (Solar, Wind, Hydro, etc.)",
+            "Power Generation (Thermal)",
+            "Transmission & Distribution (Electric Utilities)"
+        ],
+        "Manufacturing": [
+            "Cement & Lime Production",
+            "Iron & Steel",
+            "Aluminum",
+            "Chemicals & Fertilizers",
+            "Glass & Ceramics",
+            "Paper & Pulp",
+            "Food & Beverage",
+            "Textiles & Apparel",
+            "Plastics & Rubber",
+            "Electronics & Electrical Equipment",
+            "Machinery & Tools",
+            "Automobile & Parts Manufacturing"
+        ],
+        "Construction": [
+            "Commercial Construction",
+            "Residential Construction",
+            "Infrastructure (Roads, Bridges, etc.)",
+            "Cement/Concrete On-site Mixing",
+            "Demolition & Waste Handling"
+        ],
+        "Transportation & Logistics": [
+            "Freight (Road, Rail, Air, Sea)",
+            "Passenger Transport (Buses, Airlines, Rail)",
+            "Warehousing & Distribution",
+            "Shipping & Port Operations",
+            "Courier & Postal Services"
+        ],
+        "Retail & Consumer Goods": [
+            "Fashion & Apparel",
+            "Food Retail & Supermarkets",
+            "Electronics & Appliances",
+            "E-commerce",
+            "Department Stores"
+        ],
+        "Chemical & Petrochemical": [
+            "Basic Chemicals",
+            "Specialty Chemicals",
+            "Agrochemicals",
+            "Petrochemical Derivatives",
+            "Pharmaceuticals"
+        ],
+        "Financial & Insurance Services": [
+            "Banks & Lending Institutions",
+            "Investment Firms",
+            "Insurance",
+            "Asset Management",
+            "Fintech"
+        ],
+        "Real Estate & Property Management": [
+            "Commercial Real Estate",
+            "Residential Real Estate",
+            "Property Development",
+            "Facility Management"
+        ],
+        "Services": [
+            "IT & Data Centers",
+            "Hospitality (Hotels, Resorts)",
+            "Education (Universities, Schools)",
+            "Healthcare (Hospitals, Clinics)",
+            "Professional Services (Legal, Consulting)"
+        ],
+        "Agriculture, Forestry & Land Use": [
+            "Crop Cultivation",
+            "Livestock (Cattle, Poultry, etc.)",
+            "Dairy Farming",
+            "Aquaculture",
+            "Agroforestry",
+            "Timber & Logging",
+            "Land Restoration"
+        ],
+        "Waste Management": [
+            "Solid Waste Collection",
+            "Landfilling",
+            "Waste-to-Energy",
+            "Composting",
+            "Wastewater Treatment",
+            "Recycling Operations"
+        ],
+        "Water Supply & Treatment": [
+            "Water Utilities",
+            "Desalination Plants",
+            "Irrigation Systems",
+            "Stormwater Management"
+        ],
+        "Telecommunications": [
+            "Data Transmission Services",
+            "Mobile Network Operations",
+            "Satellite Communications",
+            "Cable & Broadcasting"
+        ],
+        "Government & Public Administration": [
+            "Defense & Military Operations",
+            "Municipal Services",
+            "Urban Planning",
+            "Public Infrastructure"
+        ],
+        "Aviation & Aerospace": [
+            "Commercial Airlines",
+            "Private Aviation",
+            "Aircraft Manufacturing",
+            "Airport Operations"
+        ],
+        "Mining & Quarrying": [
+            "Metal Ore Mining",
+            "Non-metallic Mineral Extraction",
+            "Rare Earth Elements",
+            "Quarry Operations"
+        ],
+        "Fossil Fuel Supply Chain": [
+            "Exploration & Production",
+            "Midstream (Pipelines, Storage)",
+            "Downstream (Retail Fuel, Gas Stations)"
+        ],
+        "Fisheries & Marine": [
+            "Industrial Fishing",
+            "Aquaculture",
+            "Seafood Processing",
+            "Marine Transport"
+        ],
+        "Media, Entertainment & Culture": [
+            "Streaming Services",
+            "Publishing",
+            "Events & Exhibitions",
+            "Film Production"
+        ],
+        "Carbon Market & Climate Services": [
+            "Project Developers (RE, Cookstoves, AFOLU)",
+            "MRV Providers",
+            "Carbon Credit Traders & Registries",
+            "Environmental Consulting"
+        ]
+    }
+    
+    if industry_type and industry_type in industry_sub_types:
+        return industry_sub_types[industry_type]
+    else:
+        return []
+
+@frappe.whitelist()
 def get_google_maps_api_key():
-	"""Get Google Maps API key from site config securely"""
-	try:
-		# Get the API key from site config
-		api_key = frappe.conf.get("google_maps_api_key")
-		
-		if not api_key:
-			frappe.log_error("Google Maps API key not found in site config", "Maps Configuration Error")
-			return {
-				"success": False,
-				"message": "Google Maps API key not configured"
-			}
-		
-		return {
-			"success": True,
-			"api_key": api_key
-		}
-		
-	except Exception as e:
-		frappe.log_error(f"Error getting Google Maps API key: {str(e)}", "Maps Configuration Error")
-		return {
-			"success": False,
-			"message": "Error retrieving Maps configuration"
-		} 
+    """Get Google Maps API key from site configuration"""
+    try:
+        api_key = frappe.conf.get('google_maps_api_key')
+        if not api_key:
+            # Try to get from common site config
+            api_key = frappe.get_site_config().get('google_maps_api_key')
+        
+        if api_key:
+            return {"success": True, "api_key": api_key}
+        else:
+            return {"success": False, "message": "Google Maps API key not configured"}
+    except Exception as e:
+        frappe.log_error(f"Error getting Google Maps API key: {str(e)}")
+        return {"success": False, "message": f"Error: {str(e)}"} 
