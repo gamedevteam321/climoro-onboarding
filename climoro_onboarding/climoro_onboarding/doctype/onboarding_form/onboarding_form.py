@@ -105,29 +105,6 @@ class OnboardingForm(Document):
         except Exception as e:
             frappe.log_error(f"Error sending admin notification: {str(e)}")
 
-@frappe.whitelist()
-def refresh_all_summaries():
-    """Refresh summary fields for all Onboarding Form documents"""
-    try:
-        forms = frappe.get_all("Onboarding Form", fields=["name"])
-        updated_count = 0
-        
-        for form in forms:
-            try:
-                doc = frappe.get_doc("Onboarding Form", form.name)
-                doc.update_summary_fields()
-                doc.save(ignore_permissions=True)
-                updated_count += 1
-            except Exception as e:
-                frappe.log_error(f"Error updating summary for {form.name}: {str(e)}")
-        
-        frappe.db.commit()
-        return f"Updated {updated_count} forms"
-        
-    except Exception as e:
-        frappe.log_error(f"Error in refresh_all_summaries: {str(e)}")
-        return f"Error: {str(e)}"
-
     def approve_application(self, approver=None):
         """Approve the onboarding application, create company and users, send approval email, and update status"""
         self.status = "Approved"
@@ -209,6 +186,10 @@ def refresh_all_summaries():
             
             # Assign the company to the user
             user_doc.company = company_name
+            
+            # Block all modules for existing user
+            self._block_all_modules_for_user(user_doc)
+            
             user_doc.save(ignore_permissions=True)
         else:
             # Create new user with Super Admin role
@@ -239,23 +220,33 @@ def refresh_all_summaries():
                     {"role": "Super Admin"},
                 ]
             })
+            
+            # Block all modules for new user
+            self._block_all_modules_for_user(user_doc)
+            
             user_doc.insert(ignore_permissions=True)
         
-        # Create Employee record
-        self._create_employee_record(email, company_name, "Super Admin")
-        
-        frappe.logger().info(f"Created main user: {email} with Super Admin role")
+        frappe.logger().info(f"Created main user: {email} with Super Admin role (all modules blocked)")
         return email
 
     def _create_unit_users(self, company_name):
         """Create users for each assigned user in each unit"""
-        if not self.units:
+        if not self.assigned_users:
             return
         
-        for unit in self.units:
-            if unit.assigned_users:
-                for assigned_user in unit.assigned_users:
-                    self._create_single_unit_user(assigned_user, company_name, unit)
+        for assigned_user in self.assigned_users:
+            # Find the corresponding unit for this assigned user
+            unit_name = assigned_user.assigned_unit
+            unit = None
+            
+            # Find the unit by name
+            if self.units:
+                for u in self.units:
+                    if u.name_of_unit == unit_name:
+                        unit = u
+                        break
+            
+            self._create_single_unit_user(assigned_user, company_name, unit)
 
     def _create_single_unit_user(self, assigned_user, company_name, unit):
         """Create a single user for an assigned user in a unit"""
@@ -273,6 +264,10 @@ def refresh_all_summaries():
             
             # Assign the company to the user
             user_doc.company = company_name
+            
+            # Block all modules for existing user
+            self._block_all_modules_for_user(user_doc)
+            
             user_doc.save(ignore_permissions=True)
         else:
             # Create new user with the specified role
@@ -303,63 +298,35 @@ def refresh_all_summaries():
                     {"role": user_role},
                 ]
             })
+            
+            # Block all modules for new user
+            self._block_all_modules_for_user(user_doc)
+            
             user_doc.insert(ignore_permissions=True)
         
-        # Create Employee record
-        self._create_employee_record(email, company_name, user_role, unit)
-        
-        frappe.logger().info(f"Created unit user: {email} with role {user_role}")
+        frappe.logger().info(f"Created unit user: {email} with role {user_role} (all modules blocked)")
 
-    def _create_employee_record(self, email, company_name, role, unit=None):
-        """Create Employee record for user"""
+    def _block_all_modules_for_user(self, user_doc):
+        """Block all available modules for a user"""
         try:
-            # Check if Employee record already exists for this user
-            existing_employee = frappe.db.get_value("Employee", {"user_id": email}, "name")
-            if existing_employee:
-                frappe.logger().info(f"Employee record already exists for {email}: {existing_employee}")
-                return existing_employee
+            # Get all available modules from the system
+            from frappe.config import get_modules_from_all_apps
+            all_modules = get_modules_from_all_apps()
             
-            # Get user data
-            if unit:
-                # For unit users, use assigned user data
-                first_name = unit.get("first_name", email.split('@')[0])
-                designation = role
-                department = "Operations"
-            else:
-                # For main user, use form data
-                first_name = self.first_name or email.split('@')[0]
-                designation = role
-                department = "Management"
+            # Clear existing blocked modules
+            user_doc.set("block_modules", [])
             
-            # Create Employee record
-            employee_doc = frappe.get_doc({
-                "doctype": "Employee",
-                "first_name": first_name,
-                "employee_name": first_name,
-                "date_of_joining": frappe.utils.today(),
-                "company": company_name,
-                "status": 'Active',
-                "user_id": email,
-                "personal_email": email,
-                "company_email": email,
-                "designation": designation,
-                "department": department,
-                "employee_number": frappe.generate_hash()[:8].upper(),
-            })
+            # Add all modules to blocked modules
+            for module_data in all_modules:
+                module_name = module_data.get("module_name")
+                if module_name:
+                    user_doc.append("block_modules", {"module": module_name})
             
-            # Use flags to bypass validations that might cause issues
-            employee_doc.flags.ignore_validate = True
-            employee_doc.flags.ignore_links = True
-            employee_doc.flags.ignore_permissions = True
-            
-            employee_doc.insert(ignore_permissions=True)
-            frappe.logger().info(f"Created Employee record for {email}: {employee_doc.name}")
-            
-            return employee_doc.name
+            frappe.logger().info(f"Blocked {len(all_modules)} modules for user {user_doc.email}")
             
         except Exception as e:
-            frappe.log_error(f"Failed to create Employee record for {email}: {str(e)}")
-            return None
+            frappe.log_error(f"Error blocking modules for user {user_doc.email}: {str(e)}")
+            # Continue with user creation even if module blocking fails
 
     def _generate_company_abbr(self, company_name):
         """Generate company abbreviation"""
@@ -457,14 +424,23 @@ def refresh_all_summaries():
         total_users = 1  # Main user
         users_details = ""
         
-        if self.units:
-            for unit in self.units:
-                if unit.assigned_users:
-                    total_users += len(unit.assigned_users)
-                    users_details += f"<h4>Unit: {unit.name_of_unit}</h4><ul>"
-                    for assigned_user in unit.assigned_users:
-                        users_details += f"<li>{assigned_user.email} ({assigned_user.user_role})</li>"
-                    users_details += "</ul>"
+        if self.assigned_users:
+            total_users += len(self.assigned_users)
+            
+            # Group users by unit
+            unit_users = {}
+            for assigned_user in self.assigned_users:
+                unit_name = assigned_user.assigned_unit
+                if unit_name not in unit_users:
+                    unit_users[unit_name] = []
+                unit_users[unit_name].append(assigned_user)
+            
+            # Create details for each unit
+            for unit_name, users in unit_users.items():
+                users_details += f"<h4>Unit: {unit_name}</h4><ul>"
+                for assigned_user in users:
+                    users_details += f"<li>{assigned_user.email} ({assigned_user.user_role})</li>"
+                users_details += "</ul>"
         
         if users_details:
             users_details = f"""
@@ -503,10 +479,8 @@ def refresh_all_summaries():
         """Get the total number of users (main user + all unit users)"""
         total_users = 1  # Main user (form submitter)
         
-        if self.units:
-            for unit in self.units:
-                if hasattr(unit, 'assigned_users') and unit.assigned_users:
-                    total_users += len(unit.assigned_users)
+        if self.assigned_users:
+            total_users += len(self.assigned_users)
         
         return total_users
     
@@ -536,7 +510,56 @@ def refresh_all_summaries():
                 
                 summary.append(unit_info)
         
-        return summary 
+        return summary
+
+@frappe.whitelist()
+def refresh_all_summaries():
+    """Refresh summary fields for all Onboarding Form documents"""
+    try:
+        forms = frappe.get_all("Onboarding Form", fields=["name"])
+        updated_count = 0
+        
+        for form in forms:
+            try:
+                doc = frappe.get_doc("Onboarding Form", form.name)
+                doc.update_summary_fields()
+                doc.save(ignore_permissions=True)
+                updated_count += 1
+            except Exception as e:
+                frappe.log_error(f"Error updating summary for {form.name}: {str(e)}")
+        
+        frappe.db.commit()
+        return f"Updated {updated_count} forms"
+        
+    except Exception as e:
+        frappe.log_error(f"Error in refresh_all_summaries: {str(e)}")
+        return f"Error: {str(e)}"
+
+@frappe.whitelist()
+def approve_application(docname):
+    """Approve the onboarding application"""
+    try:
+        print(f"=== DEBUG: Starting approval for {docname} ===")
+        doc = frappe.get_doc("Onboarding Form", docname)
+        print(f"=== DEBUG: Current status before approval: {doc.status} ===")
+        doc.approve_application()
+        print(f"=== DEBUG: Status after approval: {doc.status} ===")
+        return {"success": True, "message": "Application approved successfully"}
+    except Exception as e:
+        print(f"=== DEBUG: Error in approval: {str(e)} ===")
+        frappe.log_error(f"Error approving application {docname}: {str(e)}")
+        return {"success": False, "message": str(e)}
+
+@frappe.whitelist()
+def reject_application(docname, reason=None):
+    """Reject the onboarding application"""
+    try:
+        doc = frappe.get_doc("Onboarding Form", docname)
+        doc.reject_application(reason=reason)
+        return {"success": True, "message": "Application rejected successfully"}
+    except Exception as e:
+        frappe.log_error(f"Error rejecting application {docname}: {str(e)}")
+        return {"success": False, "message": str(e)}
 
 @frappe.whitelist(allow_guest=True)
 def get_google_maps_api_key():

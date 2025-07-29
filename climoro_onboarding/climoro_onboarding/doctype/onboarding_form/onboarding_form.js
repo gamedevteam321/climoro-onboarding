@@ -10,28 +10,193 @@ let currentMapField = null;
 
 frappe.ui.form.on('Onboarding Form', {
 	refresh: function(frm) {
-		// Add map functionality to GPS coordinates field
-		addMapToField(frm, 'gps_coordinates');
+		console.log('=== DEBUG: Form refresh triggered ===');
+		console.log('Form name:', frm.doc.name);
+		console.log('Form status:', frm.doc.status);
+		
+		// Temporarily disable map functionality to avoid errors
+		// const gpsField = frm.get_field('gps_coordinates');
+		// if (gpsField && gpsField.$wrapper) {
+		// 	addMapToField(frm, 'gps_coordinates');
+		// }
 		
 		// Add map functionality to company units
-		if (frm.doc.units && frm.doc.units.length > 0) {
-			frm.doc.units.forEach((unit, index) => {
-				addMapToChildTableField(frm, 'units', index, 'gps_coordinates');
-			});
+		// if (frm.doc.units && frm.doc.units.length > 0) {
+		// 	frm.doc.units.forEach((unit, index) => {
+		// 		addMapToChildTableField(frm, 'units', index, 'gps_coordinates');
+		// 	});
+		// }
+
+		// --- Approve/Reject logic for admin ---
+		console.log('=== DEBUG: Checking Approve/Reject conditions ===');
+		console.log('Status:', frm.doc.status);
+		console.log('Current user:', frappe.session.user);
+		console.log('frappe.user_roles exists:', !!frappe.user_roles);
+		console.log('User roles:', frappe.user_roles);
+		console.log('Is System Manager:', frappe.user_roles && frappe.user_roles.includes('System Manager'));
+		console.log('Is Administrator:', frappe.user_roles && frappe.user_roles.includes('Administrator'));
+		
+		// Check if user has any admin-like roles
+		const adminRoles = ['System Manager', 'Administrator', 'Super Admin'];
+		const hasAdminRole = frappe.user_roles && frappe.user_roles.some(role => adminRoles.includes(role));
+		console.log('Has any admin role:', hasAdminRole);
+		
+		if (
+			frm.doc.status === 'Submitted' &&
+			hasAdminRole
+		) {
+			console.log('=== DEBUG: Adding Approve/Reject buttons ===');
+			
+			// Add Approve button
+			frm.add_custom_button(__('Approve'), function() {
+				console.log('=== DEBUG: Approve button clicked ===');
+				
+				// Show loading popup using helper function
+				const processingPopup = showProcessingPopup(
+					'Processing Onboarding Approval',
+					'Creating company and user accounts...',
+					'#007bff'
+				);
+				
+				frappe.call({
+					method: 'climoro_onboarding.climoro_onboarding.doctype.onboarding_form.onboarding_form.approve_application',
+					args: { docname: frm.doc.name },
+					callback: function(r) {
+						console.log('=== DEBUG: Approve callback response ===', r);
+						console.log('=== DEBUG: Response message ===', r.message);
+						console.log('=== DEBUG: Response success ===', r.message && r.message.success);
+						console.log('=== DEBUG: Response exc ===', r.exc);
+						
+						// Hide loading popup and spinner
+						processingPopup.hide();
+						
+						if (!r.exc && r.message && r.message.success) {
+							frappe.show_alert({ 
+								message: __('🎉 Application Approved Successfully! Company and users have been created.'), 
+								indicator: 'green' 
+							});
+							// Force reload the document to show updated status
+							frm.reload_doc();
+						} else {
+							console.error('=== DEBUG: Approve failed ===', r.exc || (r.message && r.message.message));
+							frappe.show_alert({ 
+								message: __('❌ Approval failed: ' + (r.exc || (r.message && r.message.message))), 
+								indicator: 'red' 
+							});
+						}
+					},
+					error: function(xhr, status, error) {
+						console.error('=== DEBUG: Approve error ===', {xhr, status, error});
+						
+						// Hide loading popup and spinner
+						processingPopup.hide();
+						
+						frappe.show_alert({ 
+							message: __('❌ Approval failed: ' + error), 
+							indicator: 'red' 
+						});
+					}
+				});
+			}, __('Actions'));
+
+			// Add Reject button
+			frm.add_custom_button(__('Reject'), function() {
+				console.log('=== DEBUG: Reject button clicked ===');
+				frappe.prompt([
+					{
+						fieldtype: 'Small Text',
+						label: 'Reason for Rejection',
+						fieldname: 'reason',
+						reqd: 1
+					}
+				], function(values) {
+					console.log('=== DEBUG: Reject reason provided ===', values);
+					
+					// Show loading popup using helper function
+					const processingPopup = showProcessingPopup(
+						'Processing Application Rejection',
+						'Sending rejection notification...',
+						'#dc3545'
+					);
+					
+					frappe.call({
+						method: 'climoro_onboarding.climoro_onboarding.doctype.onboarding_form.onboarding_form.reject_application',
+						args: { docname: frm.doc.name, reason: values.reason },
+						callback: function(r) {
+							console.log('=== DEBUG: Reject callback response ===', r);
+							
+							// Hide loading popup and spinner
+							processingPopup.hide();
+							
+							if (!r.exc) {
+								frappe.show_alert({ 
+									message: __('❌ Application Rejected Successfully! Rejection email has been sent.'), 
+									indicator: 'red' 
+								});
+								frm.reload_doc();
+							} else {
+								frappe.show_alert({ 
+									message: __('❌ Rejection failed: ' + (r.exc || 'Unknown error')), 
+									indicator: 'red' 
+								});
+							}
+						},
+						error: function(xhr, status, error) {
+							console.error('=== DEBUG: Reject error ===', {xhr, status, error});
+							
+							// Hide loading popup and spinner
+							processingPopup.hide();
+							
+							frappe.show_alert({ 
+								message: __('❌ Rejection failed: ' + error), 
+								indicator: 'red' 
+							});
+						}
+					});
+				});
+			}, __('Actions'));
+			
+			console.log('=== DEBUG: Approve/Reject buttons added successfully ===');
+		} else {
+			console.log('=== DEBUG: Conditions not met for Approve/Reject buttons ===');
+			console.log('Status check failed:', frm.doc.status !== 'Submitted');
+			console.log('Admin role check failed:', !hasAdminRole);
 		}
+		
+		// Enhance table display with delay to ensure tables are loaded
+		setTimeout(() => enhanceTableDisplay(frm), 500);
 	},
 	
 	units_add: function(frm, cdt, cdn) {
-		// Add map functionality when new unit is added
-		const row = locals[cdt][cdn];
-		if (row) {
-			setTimeout(() => {
-				const index = frm.doc.units.findIndex(unit => unit.name === row.name);
-				if (index !== -1) {
-					addMapToChildTableField(frm, 'units', index, 'gps_coordinates');
-				}
-			}, 100);
-		}
+		// Temporarily disable map functionality
+		// const row = locals[cdt][cdn];
+		// if (row) {
+		// 	setTimeout(() => {
+		// 		const index = frm.doc.units.findIndex(unit => unit.name === row.name);
+		// 		if (index !== -1) {
+		// 			addMapToChildTableField(frm, 'units', index, 'gps_coordinates');
+		// 		}
+		// 	}, 100);
+		// }
+		
+		// Re-enhance table when new unit is added
+		setTimeout(() => enhanceTableDisplay(frm), 100);
+	},
+	
+	assigned_users_add: function(frm, cdt, cdn) {
+		// Temporarily disable map functionality
+		// const row = locals[cdt][cdn];
+		// if (row) {
+		// 	setTimeout(() => {
+		// 		const index = frm.doc.assigned_users.findIndex(user => user.name === row.name);
+		// 		if (index !== -1) {
+		// 			addMapToChildTableField(frm, 'assigned_users', index, 'gps_coordinates');
+		// 		}
+		// 	}, 100);
+		// }
+		
+		// Re-enhance table when new user is added
+		setTimeout(() => enhanceTableDisplay(frm), 100);
 	}
 });
 
@@ -380,4 +545,276 @@ function showMapError(message) {
 			'</div>' +
 			'</div>';
 	}
-} 
+}
+
+// Enhanced Table Display Functions
+function enhanceTableDisplay(frm) {
+	// Add custom CSS for enhanced table display
+	addCustomCSS();
+	
+	// Enhance Units table
+	if (frm.get_field('units')) {
+		enhanceUnitsTable(frm);
+	}
+	
+	// Enhance Assigned Users table
+	if (frm.get_field('assigned_users')) {
+		enhanceAssignedUsersTable(frm);
+	}
+}
+
+function addCustomCSS() {
+	// Add custom CSS if not already added
+	if (!document.getElementById('enhanced-table-css')) {
+		const css = `
+			<style id="enhanced-table-css">
+				.enhanced-unit-info {
+					background: #f8f9fa;
+					border: 1px solid #dee2e6;
+					border-radius: 4px;
+					padding: 8px;
+					margin: 4px 0;
+				}
+				.enhanced-user-info {
+					background: #e3f2fd;
+					border: 1px solid #bbdefb;
+					border-radius: 4px;
+					padding: 8px;
+					margin: 4px 0;
+				}
+				.unit-badge {
+					display: inline-block;
+					padding: 2px 6px;
+					font-size: 10px;
+					font-weight: 500;
+					border-radius: 3px;
+					margin-left: 8px;
+				}
+				.user-badge {
+					display: inline-block;
+					padding: 2px 6px;
+					font-size: 10px;
+					font-weight: 500;
+					border-radius: 3px;
+					margin-left: 8px;
+				}
+				.badge-office { background: #007bff; color: white; }
+				.badge-warehouse { background: #ffc107; color: #212529; }
+				.badge-factory { background: #dc3545; color: white; }
+				.badge-franchise { background: #28a745; color: white; }
+				.badge-manager { background: #007bff; color: white; }
+				.badge-analyst { background: #17a2b8; color: white; }
+				.info-icon {
+					color: #6c757d;
+					margin-right: 4px;
+				}
+			</style>
+		`;
+		document.head.insertAdjacentHTML('beforeend', css);
+	}
+}
+
+function enhanceUnitsTable(frm) {
+	const unitsGrid = frm.get_field('units');
+	if (!unitsGrid || !unitsGrid.grid) return;
+	
+	// Add custom formatter for units table
+	unitsGrid.grid.grid_rows.forEach((row, index) => {
+		try {
+			// Get the row data
+			const rowData = row.doc;
+			if (!rowData) return;
+			
+			// Create enhanced display for the row
+			const enhancedInfo = createUnitInfoDisplay(rowData);
+			
+			// Find the first editable field to add the enhanced info
+			const firstField = row.get_field('name_of_unit') || row.get_field('type_of_unit');
+			if (firstField && firstField.$wrapper) {
+				// Add enhanced info below the field
+				const infoDiv = document.createElement('div');
+				infoDiv.className = 'enhanced-unit-info';
+				infoDiv.innerHTML = enhancedInfo;
+				firstField.$wrapper.after(infoDiv);
+			}
+		} catch (error) {
+			console.log('Error enhancing unit row:', error);
+		}
+	});
+}
+
+function enhanceAssignedUsersTable(frm) {
+	const usersGrid = frm.get_field('assigned_users');
+	if (!usersGrid || !usersGrid.grid) return;
+	
+	// Add custom formatter for assigned users table
+	usersGrid.grid.grid_rows.forEach((row, index) => {
+		try {
+			// Get the row data
+			const rowData = row.doc;
+			if (!rowData) return;
+			
+			// Create enhanced display for the row
+			const enhancedInfo = createUserInfoDisplay(rowData);
+			
+			// Find the first editable field to add the enhanced info
+			const firstField = row.get_field('first_name') || row.get_field('email');
+			if (firstField && firstField.$wrapper) {
+				// Add enhanced info below the field
+				const infoDiv = document.createElement('div');
+				infoDiv.className = 'enhanced-user-info';
+				infoDiv.innerHTML = enhancedInfo;
+				firstField.$wrapper.after(infoDiv);
+			}
+		} catch (error) {
+			console.log('Error enhancing user row:', error);
+		}
+	});
+}
+
+function createUnitInfoDisplay(unitData) {
+	const typeBadge = getUnitTypeBadge(unitData.type_of_unit);
+	const sizeInfo = unitData.size_of_unit ? `${parseFloat(unitData.size_of_unit).toLocaleString()} sq ft` : '';
+	const locationInfo = unitData.location_name || '';
+	const addressInfo = unitData.address || '';
+	const phoneInfo = unitData.phone_number || '';
+	
+	return `
+		<div style="font-size: 12px;">
+			<div style="margin-bottom: 4px;">
+				<strong>${unitData.name_of_unit || 'Unit Name'}</strong>
+								${typeBadge}
+			</div>
+			${sizeInfo ? `<div><i class="fa fa-arrows-alt info-icon"></i>${sizeInfo}</div>` : ''}
+			${locationInfo ? `<div><i class="fa fa-map-marker info-icon"></i>${locationInfo}</div>` : ''}
+			${addressInfo ? `<div><i class="fa fa-home info-icon"></i>${addressInfo}</div>` : ''}
+			${phoneInfo ? `<div><i class="fa fa-phone info-icon"></i>${phoneInfo}</div>` : ''}
+		</div>
+	`;
+}
+
+function createUserInfoDisplay(userData) {
+	const roleBadge = getUserRoleBadge(userData.user_role);
+	const emailInfo = userData.email || '';
+	const unitInfo = userData.assigned_unit || '';
+	
+	return `
+		<div style="font-size: 12px;">
+			<div style="margin-bottom: 4px;">
+				<strong>${userData.first_name || 'User Name'}</strong>
+								${roleBadge}
+			</div>
+			${emailInfo ? `<div><i class="fa fa-envelope info-icon"></i>${emailInfo}</div>` : ''}
+			${unitInfo ? `<div><i class="fa fa-building info-icon"></i>${unitInfo}</div>` : ''}
+		</div>
+	`;
+}
+
+function getUnitTypeBadge(unitType) {
+	if (!unitType) return '';
+	const badgeClass = getUnitTypeBadgeClass(unitType);
+	return `<span class="unit-badge ${badgeClass}">${unitType}</span>`;
+}
+
+function getUserRoleBadge(userRole) {
+	if (!userRole) return '';
+	const badgeClass = getUserRoleBadgeClass(userRole);
+	return `<span class="user-badge ${badgeClass}">${userRole}</span>`;
+}
+
+function getUnitTypeBadgeClass(unitType) {
+	const badgeClasses = {
+		'Office': 'badge-office',
+		'Warehouse': 'badge-warehouse',
+		'Factory': 'badge-factory',
+		'Franchise': 'badge-franchise'
+	};
+	return badgeClasses[unitType] || 'badge-secondary';
+}
+
+function getUserRoleBadgeClass(userRole) {
+	switch(userRole) {
+		case 'Unit Manager':
+			return 'badge-primary';
+		case 'Data Analyst':
+			return 'badge-info';
+		case 'Super Admin':
+			return 'badge-success';
+		default:
+			return 'badge-secondary';
+	}
+}
+
+// Helper function to show loading popup with spinner
+function showProcessingPopup(title, subtitle, spinnerColor = '#007bff') {
+	// Show loading popup
+	const loadingDialog = frappe.show_alert({
+		message: subtitle,
+		indicator: 'blue'
+	}, 0); // 0 means don't auto-hide
+	
+	// Show spinner overlay
+	const spinnerOverlay = $(`
+		<div class="processing-overlay" style="
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background: rgba(0, 0, 0, 0.5);
+			z-index: 9999;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			flex-direction: column;
+		">
+			<div class="spinner" style="
+				width: 50px;
+				height: 50px;
+				border: 5px solid #f3f3f3;
+				border-top: 5px solid ${spinnerColor};
+				border-radius: 50%;
+				animation: spin 1s linear infinite;
+				margin-bottom: 20px;
+			"></div>
+			<div style="
+				color: white;
+				font-size: 18px;
+				font-weight: bold;
+				text-align: center;
+				max-width: 400px;
+				line-height: 1.4;
+			">
+				${title}<br>
+				<small style="font-size: 14px; opacity: 0.8;">
+					${subtitle}<br>
+					This may take a few moments.
+				</small>
+			</div>
+		</div>
+	`);
+	
+	// Add CSS animation if not already present
+	if (!$('#spinner-css').length) {
+		$('head').append(`
+			<style id="spinner-css">
+				@keyframes spin {
+					0% { transform: rotate(0deg); }
+					100% { transform: rotate(360deg); }
+				}
+			</style>
+		`);
+	}
+	
+	$('body').append(spinnerOverlay);
+	
+	// Return object with hide method
+	return {
+		hide: function() {
+			loadingDialog.hide();
+			spinnerOverlay.remove();
+		}
+	};
+}
+
+ 

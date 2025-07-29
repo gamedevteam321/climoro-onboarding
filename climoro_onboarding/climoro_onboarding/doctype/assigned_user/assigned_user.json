@@ -68,6 +68,12 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
+ "list_fields": [
+  "first_name",
+  "email",
+  "user_role",
+  "assigned_unit"
+ ],
  "modified": "2024-01-01 12:00:00.000000",
  "modified_by": "Administrator",
  "module": "Climoro Onboarding",

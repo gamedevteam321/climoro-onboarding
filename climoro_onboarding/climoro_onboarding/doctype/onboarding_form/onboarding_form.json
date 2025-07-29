@@ -1,16 +1,4 @@
 {
- "actions": [
-  {
-   "label": "Approve",
-   "action": "approve_application",
-   "type": "Primary"
-  },
-  {
-   "label": "Reject",
-   "action": "reject_application",
-   "type": "Danger"
-  }
- ],
  "allow_rename": 1,
  "autoname": "naming_series:",
  "creation": "2024-01-01 12:00:00.000000",
