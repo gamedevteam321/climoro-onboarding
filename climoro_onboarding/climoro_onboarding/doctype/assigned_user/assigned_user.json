@@ -38,7 +38,7 @@
    "fieldname": "user_role",
    "fieldtype": "Select",
    "label": "User Role",
-   "options": "Admin\nManager\nEmployee\nViewer",
+   "options": "Unit Manager\nData Analyst",
    "reqd": 1
   },
   {
