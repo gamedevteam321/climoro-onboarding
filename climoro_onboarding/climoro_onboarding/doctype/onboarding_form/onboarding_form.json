@@ -28,6 +28,7 @@
   "cin",
   "gst_number",
   "industry_type",
+  "sub_industry_type",
   "website",
   "letter_of_authorisation",
   "section_break_units",
@@ -189,7 +190,14 @@
    "fieldname": "industry_type",
    "fieldtype": "Select",
    "label": "Industry Type",
-   "options": "Manufacturing\nTechnology\nHealthcare\nFinance\nRetail\nOther"
+   "options": "Energy\nManufacturing\nConstruction\nTransportation & Logistics\nRetail & Consumer Goods\nChemical & Petrochemical\nFinancial & Insurance Services\nReal Estate & Property Management\nServices\nAgriculture, Forestry & Land Use\nWaste Management\nWater Supply & Treatment\nTelecommunications\nGovernment & Public Administration\nAviation & Aerospace\nMining & Quarrying\nFossil Fuel Supply Chain\nFisheries & Marine\nMedia, Entertainment & Culture\nCarbon Market & Climate Services"
+  },
+  {
+   "fieldname": "sub_industry_type",
+   "fieldtype": "Select",
+   "label": "Sub-Industry Type",
+   "depends_on": "eval:doc.industry_type",
+   "options": "Select Industry Type First"
   },
   {
    "fieldname": "website",

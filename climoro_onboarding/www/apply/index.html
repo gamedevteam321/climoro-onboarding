@@ -99,14 +99,34 @@
                 </div>
                 <div class="form-group">
                     <label for="industry_type">Industry Type *</label>
-                    <select id="industry_type" name="industry_type" required>
+                    <select id="industry_type" name="industry_type" required onchange="updateSubIndustryOptions()">
                         <option value="">Select Industry Type</option>
+                        <option value="Energy">Energy</option>
                         <option value="Manufacturing">Manufacturing</option>
-                        <option value="Technology">Technology</option>
-                        <option value="Healthcare">Healthcare</option>
-                        <option value="Finance">Finance</option>
-                        <option value="Retail">Retail</option>
-                        <option value="Other">Other</option>
+                        <option value="Construction">Construction</option>
+                        <option value="Transportation & Logistics">Transportation & Logistics</option>
+                        <option value="Retail & Consumer Goods">Retail & Consumer Goods</option>
+                        <option value="Chemical & Petrochemical">Chemical & Petrochemical</option>
+                        <option value="Financial & Insurance Services">Financial & Insurance Services</option>
+                        <option value="Real Estate & Property Management">Real Estate & Property Management</option>
+                        <option value="Services">Services</option>
+                        <option value="Agriculture, Forestry & Land Use">Agriculture, Forestry & Land Use</option>
+                        <option value="Waste Management">Waste Management</option>
+                        <option value="Water Supply & Treatment">Water Supply & Treatment</option>
+                        <option value="Telecommunications">Telecommunications</option>
+                        <option value="Government & Public Administration">Government & Public Administration</option>
+                        <option value="Aviation & Aerospace">Aviation & Aerospace</option>
+                        <option value="Mining & Quarrying">Mining & Quarrying</option>
+                        <option value="Fossil Fuel Supply Chain">Fossil Fuel Supply Chain</option>
+                        <option value="Fisheries & Marine">Fisheries & Marine</option>
+                        <option value="Media, Entertainment & Culture">Media, Entertainment & Culture</option>
+                        <option value="Carbon Market & Climate Services">Carbon Market & Climate Services</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="sub_industry_type">Sub-Industry Type *</label>
+                    <select id="sub_industry_type" name="sub_industry_type" required>
+                        <option value="">Select Industry Type First</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -1243,6 +1263,118 @@ body {
     background: white !important;
     border-radius: 0 0 8px 8px !important;
 }
+
+/* Acknowledgment Page Styles */
+.acknowledgment-page {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: white;
+    z-index: 9999;
+    overflow-y: auto;
+    padding: 20px;
+}
+
+.acknowledgment-container {
+    max-width: 600px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    border: 1px solid #e9ecef;
+}
+
+.acknowledgment-header {
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    color: white;
+    padding: 40px;
+    text-align: center;
+}
+
+.success-icon {
+    font-size: 60px;
+    margin-bottom: 20px;
+}
+
+.acknowledgment-header h1 {
+    font-size: 32px;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.acknowledgment-header p {
+    font-size: 18px;
+    opacity: 0.9;
+    margin: 0;
+}
+
+.acknowledgment-footer {
+    background: #f8f9fa;
+    padding: 40px;
+    text-align: center;
+}
+
+.acknowledgment-footer p {
+    margin: 15px 0;
+    font-size: 18px;
+    color: #333;
+    font-weight: 500;
+}
+
+.status-badge {
+    background: #28a745;
+    color: white;
+    padding: 8px 20px;
+    border-radius: 25px;
+    font-size: 16px;
+    font-weight: 600;
+    display: inline-block;
+}
+
+.acknowledgment-actions {
+    padding: 30px 40px;
+    text-align: center;
+    background: white;
+}
+
+.acknowledgment-actions .btn {
+    padding: 15px 30px;
+    font-size: 16px;
+    border-radius: 8px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.3s ease;
+    font-weight: 600;
+}
+
+.acknowledgment-actions .btn-primary {
+    background: #007bff;
+    color: white;
+    border: none;
+}
+
+.acknowledgment-actions .btn-primary:hover {
+    background: #0056b3;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 123, 255, 0.3);
+}
+
+/* Print styles */
+@media print {
+    .acknowledgment-page {
+        position: static;
+        background: white;
+    }
+    
+    .acknowledgment-actions {
+        display: none;
+    }
+}
 </style>
 {% endblock %}
 
@@ -1387,7 +1519,16 @@ class OnboardingForm {
                 
                 if (savedData.industry_type) {
                     const industryField = document.getElementById('industry_type');
-                    if (industryField) industryField.value = savedData.industry_type;
+                    if (industryField) {
+                        industryField.value = savedData.industry_type;
+                        // Trigger the change event to update sub-industry options
+                        updateSubIndustryOptions();
+                    }
+                }
+                
+                if (savedData.sub_industry_type) {
+                    const subIndustryField = document.getElementById('sub_industry_type');
+                    if (subIndustryField) subIndustryField.value = savedData.sub_industry_type;
                 }
                 
                 if (savedData.website) {
@@ -2429,6 +2570,7 @@ class OnboardingForm {
             stepData.cin = document.getElementById('cin').value;
             stepData.gst_number = document.getElementById('gst_number').value;
             stepData.industry_type = document.getElementById('industry_type').value;
+            stepData.sub_industry_type = document.getElementById('sub_industry_type').value;
             stepData.website = document.getElementById('website').value;
             stepData.letter_of_authorisation = document.getElementById('letter_of_authorisation').getAttribute('data-file-url') || '';
         } else if (targetStep === 3) {
@@ -2529,10 +2671,8 @@ class OnboardingForm {
             const result = await response.json();
             
             if (result.message && result.message.success) {
-                this.showSuccessMessage(result.message.message);
-                setTimeout(() => {
-                    window.location.href = '/';
-                }, 2000);
+                // Show acknowledgment page instead of redirecting
+                this.showAcknowledgmentPage(formData, result.message);
             } else {
                 this.showErrorMessage(result.message ? result.message.message : 'Unknown error occurred');
             }
@@ -2600,6 +2740,7 @@ class OnboardingForm {
             cin: savedData?.cin || document.getElementById('cin').value,
             gst_number: savedData?.gst_number || document.getElementById('gst_number').value,
             industry_type: savedData?.industry_type || document.getElementById('industry_type').value,
+            sub_industry_type: savedData?.sub_industry_type || document.getElementById('sub_industry_type').value,
             website: savedData?.website || document.getElementById('website').value,
             letter_of_authorisation: savedData?.letter_of_authorisation || document.getElementById('letter_of_authorisation').getAttribute('data-file-url') || '',
             
@@ -2608,11 +2749,22 @@ class OnboardingForm {
             assigned_users: []
         };
         
-        // Debug: Log the collected last_name value
-        console.log('🔍 Collected last_name value:', formData.last_name);
-        console.log('🔍 Collected last_name type:', typeof formData.last_name);
-        console.log('🔍 Collected last_name length:', formData.last_name ? formData.last_name.length : 0);
-        console.log('🔍 Saved data used for last_name:', !!savedData?.last_name);
+                    // Debug: Log the collected last_name value
+            console.log('🔍 Collected last_name value:', formData.last_name);
+            console.log('🔍 Collected last_name type:', typeof formData.last_name);
+            console.log('🔍 Collected last_name length:', formData.last_name ? formData.last_name.length : 0);
+            console.log('🔍 Saved data used for last_name:', !!savedData?.last_name);
+            console.log('🔍 Saved data last_name value:', savedData?.last_name);
+            console.log('🔍 Current last_name field value:', document.getElementById('last_name')?.value);
+        
+                    // Debug: Log the collected sub_industry_type value
+            console.log('🔍 Collected sub_industry_type value:', formData.sub_industry_type);
+            console.log('🔍 Collected sub_industry_type type:', typeof formData.sub_industry_type);
+            console.log('🔍 Sub-industry field element:', document.getElementById('sub_industry_type'));
+            console.log('🔍 Sub-industry field value:', document.getElementById('sub_industry_type')?.value);
+            
+            // Debug: Log the complete formData object
+            console.log('🔍 Complete formData object:', JSON.stringify(formData, null, 2));
         
         // Collect units data
         const units = document.querySelectorAll('.unit-container');
@@ -2711,6 +2863,34 @@ class OnboardingForm {
         setTimeout(() => {
             errorDiv.remove();
         }, 5000);
+    }
+    
+    showAcknowledgmentPage(formData, result) {
+        console.log('🎉 Showing acknowledgment page');
+        console.log('📋 Form data:', formData);
+        console.log('📋 Result:', result);
+        
+        // Hide the main form
+        document.getElementById('onboarding-form').style.display = 'none';
+        
+        // Set application ID and submission date
+        const applicationId = result.application_id || 'N/A';
+        document.getElementById('ack-application-id').textContent = applicationId;
+        
+        const submissionDate = new Date().toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+        document.getElementById('ack-submission-date').textContent = submissionDate;
+        
+        // Show the acknowledgment page
+        document.getElementById('acknowledgmentPage').style.display = 'block';
+        
+        // Scroll to top
+        window.scrollTo(0, 0);
     }
     
     // File Upload Functions
@@ -3586,6 +3766,219 @@ style.textContent = `
 }
 `;
 document.head.appendChild(style);
+
+// Industry and Sub-Industry mapping
+const industrySubTypes = {
+    "Energy": [
+        "Oil & Gas Extraction",
+        "Oil Refining",
+        "Natural Gas Transmission & Distribution",
+        "Coal Mining & Processing",
+        "Renewable Energy (Solar, Wind, Hydro, etc.)",
+        "Power Generation (Thermal)",
+        "Transmission & Distribution (Electric Utilities)"
+    ],
+    "Manufacturing": [
+        "Cement & Lime Production",
+        "Iron & Steel",
+        "Aluminum",
+        "Chemicals & Fertilizers",
+        "Glass & Ceramics",
+        "Paper & Pulp",
+        "Food & Beverage",
+        "Textiles & Apparel",
+        "Plastics & Rubber",
+        "Electronics & Electrical Equipment",
+        "Machinery & Tools",
+        "Automobile & Parts Manufacturing"
+    ],
+    "Construction": [
+        "Commercial Construction",
+        "Residential Construction",
+        "Infrastructure (Roads, Bridges, etc.)",
+        "Cement/Concrete On-site Mixing",
+        "Demolition & Waste Handling"
+    ],
+    "Transportation & Logistics": [
+        "Freight (Road, Rail, Air, Sea)",
+        "Passenger Transport (Buses, Airlines, Rail)",
+        "Warehousing & Distribution",
+        "Shipping & Port Operations",
+        "Courier & Postal Services"
+    ],
+    "Retail & Consumer Goods": [
+        "Fashion & Apparel",
+        "Food Retail & Supermarkets",
+        "Electronics & Appliances",
+        "E-commerce",
+        "Department Stores"
+    ],
+    "Chemical & Petrochemical": [
+        "Basic Chemicals",
+        "Specialty Chemicals",
+        "Agrochemicals",
+        "Petrochemical Derivatives",
+        "Pharmaceuticals"
+    ],
+    "Financial & Insurance Services": [
+        "Banks & Lending Institutions",
+        "Investment Firms",
+        "Insurance",
+        "Asset Management",
+        "Fintech"
+    ],
+    "Real Estate & Property Management": [
+        "Commercial Real Estate",
+        "Residential Real Estate",
+        "Property Development",
+        "Facility Management"
+    ],
+    "Services": [
+        "IT & Data Centers",
+        "Hospitality (Hotels, Resorts)",
+        "Education (Universities, Schools)",
+        "Healthcare (Hospitals, Clinics)",
+        "Professional Services (Legal, Consulting)"
+    ],
+    "Agriculture, Forestry & Land Use": [
+        "Crop Cultivation",
+        "Livestock (Cattle, Poultry, etc.)",
+        "Dairy Farming",
+        "Aquaculture",
+        "Agroforestry",
+        "Timber & Logging",
+        "Land Restoration"
+    ],
+    "Waste Management": [
+        "Solid Waste Collection",
+        "Landfilling",
+        "Waste-to-Energy",
+        "Composting",
+        "Wastewater Treatment",
+        "Recycling Operations"
+    ],
+    "Water Supply & Treatment": [
+        "Water Utilities",
+        "Desalination Plants",
+        "Irrigation Systems",
+        "Stormwater Management"
+    ],
+    "Telecommunications": [
+        "Data Transmission Services",
+        "Mobile Network Operations",
+        "Satellite Communications",
+        "Cable & Broadcasting"
+    ],
+    "Government & Public Administration": [
+        "Defense & Military Operations",
+        "Municipal Services",
+        "Urban Planning",
+        "Public Infrastructure"
+    ],
+    "Aviation & Aerospace": [
+        "Commercial Airlines",
+        "Private Aviation",
+        "Aircraft Manufacturing",
+        "Airport Operations"
+    ],
+    "Mining & Quarrying": [
+        "Metal Ore Mining",
+        "Non-metallic Mineral Extraction",
+        "Rare Earth Elements",
+        "Quarry Operations"
+    ],
+    "Fossil Fuel Supply Chain": [
+        "Exploration & Production",
+        "Midstream (Pipelines, Storage)",
+        "Downstream (Retail Fuel, Gas Stations)"
+    ],
+    "Fisheries & Marine": [
+        "Industrial Fishing",
+        "Aquaculture",
+        "Seafood Processing",
+        "Marine Transport"
+    ],
+    "Media, Entertainment & Culture": [
+        "Streaming Services",
+        "Publishing",
+        "Events & Exhibitions",
+        "Film Production"
+    ],
+    "Carbon Market & Climate Services": [
+        "Project Developers (RE, Cookstoves, AFOLU)",
+        "MRV Providers",
+        "Carbon Credit Traders & Registries",
+        "Environmental Consulting"
+    ]
+};
+
+// Function to update sub-industry options based on selected industry
+function updateSubIndustryOptions() {
+    const industrySelect = document.getElementById('industry_type');
+    const subIndustrySelect = document.getElementById('sub_industry_type');
+    
+    // Clear existing options
+    subIndustrySelect.innerHTML = '<option value="">Select Sub-Industry Type</option>';
+    
+    const selectedIndustry = industrySelect.value;
+    
+    if (selectedIndustry && industrySubTypes[selectedIndustry]) {
+        // Add options for the selected industry
+        industrySubTypes[selectedIndustry].forEach(subType => {
+            const option = document.createElement('option');
+            option.value = subType;
+            option.textContent = subType;
+            subIndustrySelect.appendChild(option);
+        });
+        
+        // Enable the sub-industry select
+        subIndustrySelect.disabled = false;
+        console.log(`✅ Updated sub-industry options for: ${selectedIndustry}`);
+    } else {
+        // Disable the sub-industry select if no industry is selected
+        subIndustrySelect.disabled = true;
+        subIndustrySelect.innerHTML = '<option value="">Select Industry Type First</option>';
+        console.log('❌ No industry selected or industry not found');
+    }
+}
+
+// Initialize sub-industry select as disabled on page load
+document.addEventListener('DOMContentLoaded', function() {
+    const subIndustrySelect = document.getElementById('sub_industry_type');
+    if (subIndustrySelect) {
+        subIndustrySelect.disabled = true;
+    }
+});
+
+    // Add acknowledgment page HTML
+    document.addEventListener('DOMContentLoaded', function() {
+        const acknowledgmentHTML = `
+            <div id="acknowledgmentPage" class="acknowledgment-page" style="display: none;">
+                <div class="acknowledgment-container">
+                    <div class="acknowledgment-header">
+                        <div class="success-icon">✅</div>
+                        <h1>Application Submitted Successfully!</h1>
+                        <p>Thank you for submitting your onboarding application. We have received your information and will process it shortly.</p>
+                    </div>
+                    
+                    <div class="acknowledgment-footer">
+                        <p><strong>Application ID:</strong> <span id="ack-application-id"></span></p>
+                        <p><strong>Submission Date:</strong> <span id="ack-submission-date"></span></p>
+                        <p><strong>Status:</strong> <span class="status-badge">Submitted</span></p>
+                    </div>
+                    
+                    <div class="acknowledgment-actions">
+                        <button type="button" class="btn btn-primary" onclick="window.location.href='/'">
+                            <i class="fas fa-home"></i> Go to Home
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        // Append the acknowledgment HTML to the body
+        document.body.insertAdjacentHTML('beforeend', acknowledgmentHTML);
+    });
 
 
 </script>
