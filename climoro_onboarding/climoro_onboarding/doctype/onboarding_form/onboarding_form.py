@@ -19,6 +19,7 @@ class OnboardingForm(Document):
         self.validate_email()
         self.validate_phone()
         self.validate_company_details()
+        self.validate_sub_industry_type()
     
     def update_summary_fields(self):
         """Update the summary fields with current data"""
@@ -83,6 +84,27 @@ class OnboardingForm(Document):
         
         if self.gst_number and len(self.gst_number.strip()) < 10:
             frappe.throw("GST Number must be at least 10 characters long")
+    
+    def validate_sub_industry_type(self):
+        """Validate sub-industry type against the selected industry type"""
+        if not self.sub_industry_type:
+            return  # Allow empty sub-industry type
+        
+        if not self.industry_type:
+            frappe.throw("Industry Type must be selected before selecting Sub-Industry Type")
+        
+        # Get valid sub-industry options for the selected industry type
+        valid_options = get_sub_industry_options(self.industry_type)
+        
+        # Debug logging
+        frappe.logger().info(f"🔍 Sub-Industry Validation Debug:")
+        frappe.logger().info(f"   Industry Type: '{self.industry_type}'")
+        frappe.logger().info(f"   Sub-Industry Type: '{self.sub_industry_type}'")
+        frappe.logger().info(f"   Valid Options: {valid_options}")
+        frappe.logger().info(f"   Is Valid: {self.sub_industry_type in valid_options}")
+        
+        if self.sub_industry_type not in valid_options:
+            frappe.throw(f"Sub-Industry Type '{self.sub_industry_type}' is not valid for Industry Type '{self.industry_type}'. Please select a valid option.")
     
     def on_submit(self):
         """Handle application submission"""
@@ -714,7 +736,7 @@ def get_sub_industry_options(industry_type):
     else:
         return []
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_google_maps_api_key():
     """Get Google Maps API key from site configuration"""
     try:

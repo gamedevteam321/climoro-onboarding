@@ -197,7 +197,7 @@
    "fieldtype": "Select",
    "label": "Sub-Industry Type",
    "depends_on": "eval:doc.industry_type",
-   "options": "Select Industry Type First"
+   "options": ""
   },
   {
    "fieldname": "website",

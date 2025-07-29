@@ -178,7 +178,9 @@ doctype_js = {
 # -------------------
 # Methods that can be called from client-side
 whitelisted_methods = [
-    "climoro_onboarding.climoro_onboarding.climoro_onboarding.onboarding_form.onboarding_form.send_admin_notification",
+    "climoro_onboarding.climoro_onboarding.doctype.onboarding_form.onboarding_form.send_admin_notification",
+    "climoro_onboarding.climoro_onboarding.doctype.onboarding_form.onboarding_form.get_google_maps_api_key",
+    "climoro_onboarding.climoro_onboarding.doctype.onboarding_form.onboarding_form.get_sub_industry_options",
     "climoro_onboarding.www.apply.api.submit_onboarding_form",
     "climoro_onboarding.www.apply.api.get_existing_application",
     "climoro_onboarding.www.apply.api.save_step_data",

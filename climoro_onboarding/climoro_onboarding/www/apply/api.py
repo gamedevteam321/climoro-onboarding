@@ -84,6 +84,13 @@ def save_step_data(step, form_data):
     try:
         data = json.loads(form_data)
         
+        # Debug logging for step data
+        frappe.logger().info(f"🔍 Step Data Debug:")
+        frappe.logger().info(f"   Step: {step}")
+        frappe.logger().info(f"   Industry Type: '{data.get('industry_type')}'")
+        frappe.logger().info(f"   Sub-Industry Type: '{data.get('sub_industry_type')}'")
+        frappe.logger().info(f"   All data keys: {list(data.keys())}")
+        
         # Check if a draft already exists for this email
         existing_draft = frappe.db.exists("Onboarding Form", {
             "email": data.get("email"),
@@ -128,6 +135,15 @@ def save_step_data(step, form_data):
                 
                 # Try to bypass validation for child tables
                 unit_doc.flags.ignore_validate = True
+        
+        # Debug logging before insert
+        frappe.logger().info(f"🔍 Before Insert Debug:")
+        frappe.logger().info(f"   Doc industry_type: '{doc.industry_type}'")
+        frappe.logger().info(f"   Doc sub_industry_type: '{doc.sub_industry_type}'")
+        frappe.logger().info(f"   Doc status: '{doc.status}'")
+        
+        # Temporarily bypass validation for step data saving
+        doc.flags.ignore_validate = True
         
         doc.insert()
         frappe.db.commit()

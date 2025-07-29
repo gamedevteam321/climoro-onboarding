@@ -1,4 +1,14 @@
 // Client-side script for Onboarding Form doctype
+// Copyright (c) 2024, Climoro Onboarding and contributors
+// For license information, please see license.txt
+
+// Google Maps Variables
+// let map;
+// let selectedMarker;
+// let selectedCoordinates = null;
+// let searchBox;
+// let currentMapField = null;
+
 console.log('🔧 Onboarding Form JS loaded');
 
 frappe.ui.form.on('Onboarding Form', {
