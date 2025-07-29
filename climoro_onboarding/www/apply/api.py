@@ -90,6 +90,7 @@ def submit_onboarding_form(form_data):
             doc.gst_number = form_data.get("gst_number")
             doc.industry_type = form_data.get("industry_type")
             doc.website = form_data.get("website")
+            doc.letter_of_authorisation = form_data.get("letter_of_authorisation")
             doc.status = "Submitted"
             doc.current_step = 3
             
@@ -312,6 +313,7 @@ def save_step_data(step_data):
             doc.gst_number = step_data.get("gst_number")
             doc.industry_type = step_data.get("industry_type")
             doc.website = step_data.get("website")
+            doc.letter_of_authorisation = step_data.get("letter_of_authorisation")
             doc.current_step = 2
             
         elif step_number == 3:
