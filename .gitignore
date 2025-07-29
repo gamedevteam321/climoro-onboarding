@@ -1,48 +1,25 @@
-# Python
-__pycache__/
-**/__pycache__/
-*.py[cod]
-*$py.class
-*.so
-.Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
+# Frappe specific files and directories
+*.pyc
+*.log
+*.sqlite
+.bench/
+assets/
+patches/
+private/
+public/files/
+site_config.json
+sites/
+storage/
+tmp/
 
-# Virtual environments
+# Python specific files and directories
+__pycache__/
+.env
 venv/
 env/
-ENV/
 
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
-
-# OS
+# IDE and OS specific files
 .DS_Store
+.idea/
+.vscode/
 Thumbs.db
-
-# Frappe specific
-sites/
-*.log
-.env
-.env.local
-
-# Temporary files
-*.tmp
-*.temp 
