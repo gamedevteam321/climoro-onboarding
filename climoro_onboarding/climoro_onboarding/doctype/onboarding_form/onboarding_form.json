@@ -35,6 +35,53 @@
   "units_tab",
   "units",
   "assigned_users",
+  "section_break_ghg_accounting",
+  "ghg_accounting_tab",
+  "purpose_of_reporting",
+  "gases_to_report",
+  "scopes_to_report",
+  "scope_1_options",
+  "scope_2_options",
+  "scope_3_options",
+  "reduction_options",
+  "section_break_reduction_form",
+  "reduction_form_tab",
+  "section_a_emissions_inventory",
+  "base_year",
+  "base_year_reason",
+  "ghg_boundary_approach",
+  "emissions_exclusions",
+  "section_b_scope_1_targets",
+  "scope_1_target_type",
+  "scope_1_intensity_reduction",
+  "scope_1_reduction_percentage",
+  "scope_1_target_year",
+  "scope_1_mitigation_strategies",
+  "section_c_scope_2_targets",
+  "scope_2_target_type",
+  "scope_2_intensity_reduction",
+  "scope_2_reduction_percentage",
+  "scope_2_target_year",
+  "scope_2_mitigation_strategies",
+  "section_d_scope_3_targets",
+  "scope_3_categories_included",
+  "scope_3_target_type",
+  "scope_3_intensity_reduction",
+  "scope_3_reduction_percentage",
+  "scope_3_target_year",
+  "scope_3_mitigation_strategies",
+  "section_e_reductions",
+  "reduction_target_type",
+  "land_sector_removals",
+  "residual_emissions_strategy",
+  "section_f_monitoring",
+  "monitoring_frequency",
+  "monitoring_frequency_other",
+  "assurance_validation",
+  "ghg_tracking_tools",
+  "ghg_software_name",
+  "recalculation_policy",
+  "progress_communication",
   "created_at",
   "modified_at"
  ],
@@ -233,6 +280,327 @@
    "options": "Assigned User",
    "collapsible": 0,
    "collapsible_depends_on": ""
+  },
+  {
+   "fieldname": "section_break_ghg_accounting",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "ghg_accounting_tab",
+   "fieldtype": "Tab Break",
+   "label": "GHG Accounting"
+  },
+  {
+   "fieldname": "purpose_of_reporting",
+   "label": "Purpose of Reporting",
+   "fieldtype": "Select",
+   "options": "Regulatory Compliance\nVoluntary Reporting\nInternal Assessment\nCarbon Trading\nOther"
+  },
+  {
+   "fieldname": "gases_to_report",
+   "label": "Gases to be Reported",
+   "fieldtype": "MultiSelect",
+   "options": "CO2\nCH4\nN2O\nHFCs\nPFCs\nSF6\nNF3"
+  },
+  {
+   "fieldname": "scopes_to_report",
+   "label": "Scopes to Report",
+   "fieldtype": "MultiSelect",
+   "options": "Scope 1\nScope 2\nScope 3\nReductions"
+  },
+  {
+   "fieldname": "scope_1_options",
+   "label": "Scope 1 Options",
+   "fieldtype": "MultiSelect",
+   "options": "Process\nStationary\nMobile\nFugitive",
+   "hidden": 1,
+   "depends_on": "eval:doc.scopes_to_report && doc.scopes_to_report.includes('Scope 1')"
+  },
+  {
+   "fieldname": "scope_2_options",
+   "label": "Scope 2 Options",
+   "fieldtype": "MultiSelect",
+   "options": "Electricity\nHeating\nCooling",
+   "hidden": 1,
+   "depends_on": "eval:doc.scopes_to_report && doc.scopes_to_report.includes('Scope 2')"
+  },
+  {
+   "fieldname": "scope_3_options",
+   "label": "Scope 3 Options",
+   "fieldtype": "MultiSelect",
+   "options": "Upstream\nDownstream",
+   "hidden": 1,
+   "depends_on": "eval:doc.scopes_to_report && doc.scopes_to_report.includes('Scope 3')"
+  },
+  {
+   "fieldname": "reduction_options",
+   "label": "Reduction Options",
+   "fieldtype": "MultiSelect",
+   "options": "Energy Efficiency\nRenewable Energy\nProcess Optimization\nWaste Management\nTransportation\nOther",
+   "hidden": 1,
+   "depends_on": "eval:doc.scopes_to_report && doc.scopes_to_report.includes('Reductions')"
+  },
+  {
+   "fieldname": "section_break_reduction_form",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "reduction_form_tab",
+   "fieldtype": "Tab Break",
+   "label": "Reduction Form (Step 5)"
+  },
+  {
+   "fieldname": "section_a_emissions_inventory",
+   "fieldtype": "Section Break",
+   "label": "Section A: Emissions Inventory Setup",
+   "description": "General setup information"
+  },
+  {
+   "fieldname": "base_year",
+   "label": "Base Year",
+   "fieldtype": "Int",
+   "description": "Select the base year for emissions calculations"
+  },
+  {
+   "fieldname": "base_year_reason",
+   "label": "Reason for Base Year Selection",
+   "fieldtype": "Small Text",
+   "description": "Explain why this year was chosen as the base year"
+  },
+  {
+   "fieldname": "ghg_boundary_approach",
+   "label": "GHG Boundary Approach",
+   "fieldtype": "MultiSelect",
+   "options": "Operational Control\nFinancial Control\nEquity Share"
+  },
+  {
+   "fieldname": "emissions_exclusions",
+   "label": "Emissions Exclusions (if any)",
+   "fieldtype": "Small Text",
+   "description": "List any emissions that are excluded from calculations and reasons"
+  },
+  {
+   "fieldname": "section_b_scope_1_targets",
+   "fieldtype": "Section Break",
+   "label": "Section B: Scope 1 Emissions Reduction Targets",
+   "hidden": 1,
+   "depends_on": "eval:doc.scopes_to_report && doc.scopes_to_report.includes('Scope 1')"
+  },
+  {
+   "fieldname": "scope_1_target_type",
+   "label": "Scope 1 Target Type",
+   "fieldtype": "MultiSelect",
+   "options": "Near-term Target (5–10 years)\nLong-term Net-Zero Target (by 2050 or earlier)\nBoth",
+   "hidden": 1,
+   "depends_on": "eval:doc.scopes_to_report && doc.scopes_to_report.includes('Scope 1')"
+  },
+  {
+   "fieldname": "scope_1_intensity_reduction",
+   "label": "Scope 1 Intensity Reduction",
+   "fieldtype": "Check",
+   "description": "Reduce Scope 1 emissions intensity by percentage",
+   "hidden": 1,
+   "depends_on": "eval:doc.scopes_to_report && doc.scopes_to_report.includes('Scope 1')"
+  },
+  {
+   "fieldname": "scope_1_reduction_percentage",
+   "label": "Scope 1 Reduction Percentage",
+   "fieldtype": "Float",
+   "depends_on": "eval:doc.scopes_to_report && doc.scopes_to_report.includes('Scope 1') && doc.scope_1_intensity_reduction",
+   "hidden": 1
+  },
+  {
+   "fieldname": "scope_1_target_year",
+   "label": "Scope 1 Target Year",
+   "fieldtype": "Int",
+   "depends_on": "eval:doc.scopes_to_report && doc.scopes_to_report.includes('Scope 1') && doc.scope_1_intensity_reduction",
+   "hidden": 1
+  },
+  {
+   "fieldname": "scope_1_mitigation_strategies",
+   "label": "Scope 1 Mitigation Strategies",
+   "fieldtype": "MultiSelect",
+   "options": "Energy efficiency improvements\nOnsite renewable energy (e.g., rooftop solar)\nFuel switching to clean alternatives\nProcess optimization\nEquipment upgrades\nFugitive emissions control",
+   "hidden": 1,
+   "depends_on": "eval:doc.scopes_to_report && doc.scopes_to_report.includes('Scope 1')"
+  },
+  {
+   "fieldname": "section_c_scope_2_targets",
+   "fieldtype": "Section Break",
+   "label": "Section C: Scope 2 Emissions Reduction Targets",
+   "hidden": 1,
+   "depends_on": "eval:doc.scopes_to_report && doc.scopes_to_report.includes('Scope 2')"
+  },
+  {
+   "fieldname": "scope_2_target_type",
+   "label": "Scope 2 Target Type",
+   "fieldtype": "MultiSelect",
+   "options": "Near-term Target (5–10 years)\nLong-term Net-Zero Target (by 2050 or earlier)\nBoth",
+   "hidden": 1,
+   "depends_on": "eval:doc.scopes_to_report && doc.scopes_to_report.includes('Scope 2')"
+  },
+  {
+   "fieldname": "scope_2_intensity_reduction",
+   "label": "Scope 2 Intensity Reduction",
+   "fieldtype": "Check",
+   "description": "Reduce Scope 2 emissions intensity by percentage",
+   "hidden": 1,
+   "depends_on": "eval:doc.scopes_to_report && doc.scopes_to_report.includes('Scope 2')"
+  },
+  {
+   "fieldname": "scope_2_reduction_percentage",
+   "label": "Scope 2 Reduction Percentage",
+   "fieldtype": "Float",
+   "depends_on": "eval:doc.scopes_to_report && doc.scopes_to_report.includes('Scope 2') && doc.scope_2_intensity_reduction",
+   "hidden": 1
+  },
+  {
+   "fieldname": "scope_2_target_year",
+   "label": "Scope 2 Target Year",
+   "fieldtype": "Int",
+   "depends_on": "eval:doc.scopes_to_report && doc.scopes_to_report.includes('Scope 2') && doc.scope_2_intensity_reduction",
+   "hidden": 1
+  },
+  {
+   "fieldname": "scope_2_mitigation_strategies",
+   "label": "Scope 2 Mitigation Strategies",
+   "fieldtype": "MultiSelect",
+   "options": "Offsite renewable procurement\nGreen power purchase agreements\nEnergy efficiency improvements\nDemand response programs\nGrid decarbonization support",
+   "hidden": 1,
+   "depends_on": "eval:doc.scopes_to_report && doc.scopes_to_report.includes('Scope 2')"
+  },
+  {
+   "fieldname": "section_d_scope_3_targets",
+   "fieldtype": "Section Break",
+   "label": "Section D: Scope 3 Emissions Reduction Targets",
+   "hidden": 1,
+   "depends_on": "eval:doc.scopes_to_report && doc.scopes_to_report.includes('Scope 3')"
+  },
+  {
+   "fieldname": "scope_3_categories_included",
+   "label": "Scope 3 Categories Included",
+   "fieldtype": "MultiSelect",
+   "options": "Purchased goods and services\nCapital goods\nFuel- and energy-related activities\nUpstream/downstream transportation and distribution\nWaste generated in operations\nBusiness travel / employee commuting\nUse of sold products\nEnd-of-life treatment of sold products\nLeased assets, franchises, or investments",
+   "hidden": 1,
+   "depends_on": "eval:doc.scopes_to_report && doc.scopes_to_report.includes('Scope 3')"
+  },
+  {
+   "fieldname": "scope_3_target_type",
+   "label": "Scope 3 Target Type",
+   "fieldtype": "MultiSelect",
+   "options": "Near-term Target (5–10 years)\nLong-term Net-Zero Target (by 2050 or earlier)\nBoth",
+   "hidden": 1,
+   "depends_on": "eval:doc.scopes_to_report && doc.scopes_to_report.includes('Scope 3')"
+  },
+  {
+   "fieldname": "scope_3_intensity_reduction",
+   "label": "Scope 3 Intensity Reduction",
+   "fieldtype": "Check",
+   "description": "Reduce Scope 3 emissions intensity by percentage",
+   "hidden": 1,
+   "depends_on": "eval:doc.scopes_to_report && doc.scopes_to_report.includes('Scope 3')"
+  },
+  {
+   "fieldname": "scope_3_reduction_percentage",
+   "label": "Scope 3 Reduction Percentage",
+   "fieldtype": "Float",
+   "depends_on": "eval:doc.scopes_to_report && doc.scopes_to_report.includes('Scope 3') && doc.scope_3_intensity_reduction",
+   "hidden": 1
+  },
+  {
+   "fieldname": "scope_3_target_year",
+   "label": "Scope 3 Target Year",
+   "fieldtype": "Int",
+   "depends_on": "eval:doc.scopes_to_report && doc.scopes_to_report.includes('Scope 3') && doc.scope_3_intensity_reduction",
+   "hidden": 1
+  },
+  {
+   "fieldname": "scope_3_mitigation_strategies",
+   "label": "Scope 3 Mitigation Strategies",
+   "fieldtype": "MultiSelect",
+   "options": "Supplier engagement\nLow-carbon input materials\nRedesign for use-phase reduction\nOptimize logistics\nCircular economy practices\nProduct lifecycle optimization",
+   "hidden": 1,
+   "depends_on": "eval:doc.scopes_to_report && doc.scopes_to_report.includes('Scope 3')"
+  },
+  {
+   "fieldname": "section_e_reductions",
+   "fieldtype": "Section Break",
+   "label": "Section E: Reduction Strategies",
+   "hidden": 1,
+   "depends_on": "eval:doc.scopes_to_report && doc.scopes_to_report.includes('Reductions')"
+  },
+  {
+   "fieldname": "reduction_target_type",
+   "label": "Reduction Target Type",
+   "fieldtype": "MultiSelect",
+   "options": "Near-term Target (5–10 years)\nLong-term Net-Zero Target (by 2050 or earlier)\nBoth",
+   "hidden": 1,
+   "depends_on": "eval:doc.scopes_to_report && doc.scopes_to_report.includes('Reductions')"
+  },
+  {
+   "fieldname": "land_sector_removals",
+   "label": "Land Sector & Removals (Optional)",
+   "fieldtype": "MultiSelect",
+   "options": "Afforestation / reforestation\nSoil carbon improvement\nUrban greening\nBiochar application\nCarbon capture or enhanced weathering\nCertified removals (DAC, agroforestry)",
+   "hidden": 1,
+   "depends_on": "eval:doc.scopes_to_report && doc.scopes_to_report.includes('Reductions')"
+  },
+  {
+   "fieldname": "residual_emissions_strategy",
+   "label": "Residual Emissions Strategy",
+   "fieldtype": "MultiSelect",
+   "options": "High-quality removal credits\nBeyond Value Chain Mitigation (BVCM)\nTemporary voluntary solutions",
+   "hidden": 1,
+   "depends_on": "eval:doc.scopes_to_report && doc.scopes_to_report.includes('Reductions')"
+  },
+  {
+   "fieldname": "section_f_monitoring",
+   "fieldtype": "Section Break",
+   "label": "Section F: Monitoring, Adjustments & Reporting"
+  },
+  {
+   "fieldname": "monitoring_frequency",
+   "label": "Monitoring Frequency",
+   "fieldtype": "MultiSelect",
+   "options": "Annual\nBiennial"
+  },
+  {
+   "fieldname": "monitoring_frequency_other",
+   "label": "Other Monitoring Frequency",
+   "fieldtype": "Data",
+   "depends_on": "eval:doc.monitoring_frequency && doc.monitoring_frequency.includes('Other')",
+   "description": "Specify other monitoring frequency"
+  },
+  {
+   "fieldname": "assurance_validation",
+   "label": "Assurance and Validation",
+   "fieldtype": "MultiSelect",
+   "options": "Internal assurance\nThird-party verification\nSubmitted to validation platform (e.g., SBTi)"
+  },
+  {
+   "fieldname": "ghg_tracking_tools",
+   "label": "GHG Tracking Tools Used",
+   "fieldtype": "MultiSelect",
+   "options": "Excel / spreadsheet\nGHG software\nWeb platform (e.g., CDP, Net-Zero Cloud)"
+  },
+  {
+   "fieldname": "ghg_software_name",
+   "label": "GHG Software Name",
+   "fieldtype": "Data",
+   "depends_on": "eval:doc.ghg_tracking_tools && doc.ghg_tracking_tools.includes('GHG software')",
+   "description": "Name of the GHG software used"
+  },
+  {
+   "fieldname": "recalculation_policy",
+   "label": "Recalculation Policy",
+   "fieldtype": "MultiSelect",
+   "options": "Structural changes\nMethodology changes\nBoundary/scope adjustments"
+  },
+  {
+   "fieldname": "progress_communication",
+   "label": "Progress Communication",
+   "fieldtype": "MultiSelect",
+   "options": "ESG dashboard\nAnnual sustainability report\nCDP/public disclosure\nSBTi registry updates"
   },
   {
    "fieldname": "created_at",

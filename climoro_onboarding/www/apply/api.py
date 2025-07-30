@@ -101,8 +101,60 @@ def submit_onboarding_form(form_data):
             frappe.logger().info(f"🏭 Setting sub_industry_type: '{form_data.get('sub_industry_type')}'")
             doc.website = form_data.get("website")
             doc.letter_of_authorisation = form_data.get("letter_of_authorisation")
+            
+            # GHG Accounting Fields (Step 4)
+            doc.purpose_of_reporting = form_data.get("purpose_of_reporting")
+            doc.gases_to_report = form_data.get("gases_to_report")
+            doc.scopes_to_report = form_data.get("scopes_to_report")
+            doc.scope_1_options = form_data.get("scope_1_options")
+            doc.scope_2_options = form_data.get("scope_2_options")
+            doc.scope_3_options = form_data.get("scope_3_options")
+            doc.reduction_options = form_data.get("reduction_options")
+            
+            # Reduction Form Fields (Step 5)
+            doc.base_year = form_data.get("base_year")
+            doc.base_year_reason = form_data.get("base_year_reason")
+            doc.ghg_boundary_approach = form_data.get("ghg_boundary_approach")
+            doc.emissions_exclusions = form_data.get("emissions_exclusions")
+            
+            # Scope 1 Fields
+            doc.scope_1_target_type = form_data.get("scope_1_target_type")
+            doc.scope_1_intensity_reduction = form_data.get("scope_1_intensity_reduction")
+            doc.scope_1_reduction_percentage = form_data.get("scope_1_reduction_percentage")
+            doc.scope_1_target_year = form_data.get("scope_1_target_year")
+            doc.scope_1_mitigation_strategies = form_data.get("scope_1_mitigation_strategies")
+            
+            # Scope 2 Fields
+            doc.scope_2_target_type = form_data.get("scope_2_target_type")
+            doc.scope_2_intensity_reduction = form_data.get("scope_2_intensity_reduction")
+            doc.scope_2_reduction_percentage = form_data.get("scope_2_reduction_percentage")
+            doc.scope_2_target_year = form_data.get("scope_2_target_year")
+            doc.scope_2_mitigation_strategies = form_data.get("scope_2_mitigation_strategies")
+            
+            # Scope 3 Fields
+            doc.scope_3_categories_included = form_data.get("scope_3_categories_included")
+            doc.scope_3_target_type = form_data.get("scope_3_target_type")
+            doc.scope_3_intensity_reduction = form_data.get("scope_3_intensity_reduction")
+            doc.scope_3_reduction_percentage = form_data.get("scope_3_reduction_percentage")
+            doc.scope_3_target_year = form_data.get("scope_3_target_year")
+            doc.scope_3_mitigation_strategies = form_data.get("scope_3_mitigation_strategies")
+            
+            # Reductions Fields
+            doc.reduction_target_type = form_data.get("reduction_target_type")
+            doc.land_sector_removals = form_data.get("land_sector_removals")
+            doc.residual_emissions_strategy = form_data.get("residual_emissions_strategy")
+            
+            # Monitoring Fields
+            doc.monitoring_frequency = form_data.get("monitoring_frequency")
+            doc.monitoring_frequency_other = form_data.get("monitoring_frequency_other")
+            doc.assurance_validation = form_data.get("assurance_validation")
+            doc.ghg_tracking_tools = form_data.get("ghg_tracking_tools")
+            doc.ghg_software_name = form_data.get("ghg_software_name")
+            doc.recalculation_policy = form_data.get("recalculation_policy")
+            doc.progress_communication = form_data.get("progress_communication")
+            
             doc.status = "Submitted"
-            doc.current_step = 3
+            doc.current_step = 5
             
             # Clear existing units and users
             doc.units = []
@@ -185,8 +237,60 @@ def submit_onboarding_form(form_data):
                 "sub_industry_type": form_data.get("sub_industry_type"),
                 "website": form_data.get("website"),
                 "letter_of_authorisation": form_data.get("letter_of_authorisation"),
+                
+                # GHG Accounting Fields (Step 4)
+                "purpose_of_reporting": form_data.get("purpose_of_reporting"),
+                "gases_to_report": form_data.get("gases_to_report"),
+                "scopes_to_report": form_data.get("scopes_to_report"),
+                "scope_1_options": form_data.get("scope_1_options"),
+                "scope_2_options": form_data.get("scope_2_options"),
+                "scope_3_options": form_data.get("scope_3_options"),
+                "reduction_options": form_data.get("reduction_options"),
+                
+                # Reduction Form Fields (Step 5)
+                "base_year": form_data.get("base_year"),
+                "base_year_reason": form_data.get("base_year_reason"),
+                "ghg_boundary_approach": form_data.get("ghg_boundary_approach"),
+                "emissions_exclusions": form_data.get("emissions_exclusions"),
+                
+                # Scope 1 Fields
+                "scope_1_target_type": form_data.get("scope_1_target_type"),
+                "scope_1_intensity_reduction": form_data.get("scope_1_intensity_reduction"),
+                "scope_1_reduction_percentage": form_data.get("scope_1_reduction_percentage"),
+                "scope_1_target_year": form_data.get("scope_1_target_year"),
+                "scope_1_mitigation_strategies": form_data.get("scope_1_mitigation_strategies"),
+                
+                # Scope 2 Fields
+                "scope_2_target_type": form_data.get("scope_2_target_type"),
+                "scope_2_intensity_reduction": form_data.get("scope_2_intensity_reduction"),
+                "scope_2_reduction_percentage": form_data.get("scope_2_reduction_percentage"),
+                "scope_2_target_year": form_data.get("scope_2_target_year"),
+                "scope_2_mitigation_strategies": form_data.get("scope_2_mitigation_strategies"),
+                
+                # Scope 3 Fields
+                "scope_3_categories_included": form_data.get("scope_3_categories_included"),
+                "scope_3_target_type": form_data.get("scope_3_target_type"),
+                "scope_3_intensity_reduction": form_data.get("scope_3_intensity_reduction"),
+                "scope_3_reduction_percentage": form_data.get("scope_3_reduction_percentage"),
+                "scope_3_target_year": form_data.get("scope_3_target_year"),
+                "scope_3_mitigation_strategies": form_data.get("scope_3_mitigation_strategies"),
+                
+                # Reductions Fields
+                "reduction_target_type": form_data.get("reduction_target_type"),
+                "land_sector_removals": form_data.get("land_sector_removals"),
+                "residual_emissions_strategy": form_data.get("residual_emissions_strategy"),
+                
+                # Monitoring Fields
+                "monitoring_frequency": form_data.get("monitoring_frequency"),
+                "monitoring_frequency_other": form_data.get("monitoring_frequency_other"),
+                "assurance_validation": form_data.get("assurance_validation"),
+                "ghg_tracking_tools": form_data.get("ghg_tracking_tools"),
+                "ghg_software_name": form_data.get("ghg_software_name"),
+                "recalculation_policy": form_data.get("recalculation_policy"),
+                "progress_communication": form_data.get("progress_communication"),
+                
                 "status": "Submitted",
-                "current_step": 3
+                "current_step": 5
             })
             
             frappe.logger().info(f"📍 Creating new doc with GPS coordinates: '{form_data.get('gps_coordinates')}'")

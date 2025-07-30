@@ -235,6 +235,69 @@ frappe.ui.form.on('Onboarding Form', {
 		
 		// Re-enhance table when new user is added
 		setTimeout(() => enhanceTableDisplay(frm), 100);
+	},
+	
+	// GHG Accounting Dynamic Behavior
+	scopes_to_report: function(frm) {
+		console.log('🌱 Scopes to report changed:', frm.get_value('scopes_to_report'));
+		// Update Step 5 visibility based on scope selections
+		updateStep5Visibility(frm);
+	},
+	
+	gases_to_report: function(frm) {
+		console.log('🌱 Gases to report changed:', frm.get_value('gases_to_report'));
+		// Handle NF3 visibility for semiconductor industry
+		let selected_gases = frm.get_value('gases_to_report') || [];
+		let industry_type = frm.get_value('industry_type');
+		
+		// Check if industry is semiconductor-related
+		if (industry_type && industry_type.toLowerCase().includes('semiconductor')) {
+			// NF3 is available for semiconductor industry
+			console.log('🌱 Semiconductor industry detected, NF3 available');
+		} else {
+			// Remove NF3 if not semiconductor industry
+			if (selected_gases.includes('NF3')) {
+				selected_gases = selected_gases.filter(gas => gas !== 'NF3');
+				frm.set_value('gases_to_report', selected_gases);
+				console.log('🌱 NF3 removed - not semiconductor industry');
+			}
+		}
+	},
+	
+	// Step 5 Dynamic Field Handlers
+	scope_1_intensity_reduction: function(frm) {
+		if (!frm.get_value('scope_1_intensity_reduction')) {
+			frm.set_value('scope_1_reduction_percentage', '');
+			frm.set_value('scope_1_target_year', '');
+		}
+	},
+	
+	scope_2_intensity_reduction: function(frm) {
+		if (!frm.get_value('scope_2_intensity_reduction')) {
+			frm.set_value('scope_2_reduction_percentage', '');
+			frm.set_value('scope_2_target_year', '');
+		}
+	},
+	
+	scope_3_intensity_reduction: function(frm) {
+		if (!frm.get_value('scope_3_intensity_reduction')) {
+			frm.set_value('scope_3_reduction_percentage', '');
+			frm.set_value('scope_3_target_year', '');
+		}
+	},
+	
+	ghg_tracking_tools: function(frm) {
+		let tools = frm.get_value('ghg_tracking_tools') || [];
+		if (!tools.includes('GHG software')) {
+			frm.set_value('ghg_software_name', '');
+		}
+	},
+	
+	monitoring_frequency: function(frm) {
+		let frequency = frm.get_value('monitoring_frequency') || [];
+		if (!frequency.includes('Other')) {
+			frm.set_value('monitoring_frequency_other', '');
+		}
 	}
 });
 
@@ -970,4 +1033,105 @@ function showProcessingPopup(title, subtitle, spinnerColor = '#007bff') {
 			spinnerOverlay.remove();
 		}
 	};
+}
+
+// Function to update Step 5 visibility based on Step 4 selections
+function updateStep5Visibility(frm) {
+	console.log('🌱 updateStep5Visibility called');
+	let selected_scopes = frm.get_value('scopes_to_report') || [];
+	console.log('🌱 Selected scopes:', selected_scopes);
+	
+	// Scope 1 fields
+	const scope1Fields = [
+		'section_b_scope_1_targets',
+		'scope_1_target_type',
+		'scope_1_intensity_reduction',
+		'scope_1_reduction_percentage',
+		'scope_1_target_year',
+		'scope_1_mitigation_strategies'
+	];
+	
+	scope1Fields.forEach(field => {
+		if (selected_scopes.includes('Scope 1')) {
+			frm.set_df_property(field, 'hidden', 0);
+			console.log('🌱 Showing field:', field);
+		} else {
+			frm.set_df_property(field, 'hidden', 1);
+			// Clear values when hidden
+			if (field !== 'section_b_scope_1_targets') {
+				frm.set_value(field, '');
+			}
+			console.log('🌱 Hiding field:', field);
+		}
+	});
+	
+	// Scope 2 fields
+	const scope2Fields = [
+		'section_c_scope_2_targets',
+		'scope_2_target_type',
+		'scope_2_intensity_reduction',
+		'scope_2_reduction_percentage',
+		'scope_2_target_year',
+		'scope_2_mitigation_strategies'
+	];
+	
+	scope2Fields.forEach(field => {
+		if (selected_scopes.includes('Scope 2')) {
+			frm.set_df_property(field, 'hidden', 0);
+			console.log('🌱 Showing field:', field);
+		} else {
+			frm.set_df_property(field, 'hidden', 1);
+			if (field !== 'section_c_scope_2_targets') {
+				frm.set_value(field, '');
+			}
+			console.log('🌱 Hiding field:', field);
+		}
+	});
+	
+	// Scope 3 fields
+	const scope3Fields = [
+		'section_d_scope_3_targets',
+		'scope_3_categories_included',
+		'scope_3_target_type',
+		'scope_3_intensity_reduction',
+		'scope_3_reduction_percentage',
+		'scope_3_target_year',
+		'scope_3_mitigation_strategies'
+	];
+	
+	scope3Fields.forEach(field => {
+		if (selected_scopes.includes('Scope 3')) {
+			frm.set_df_property(field, 'hidden', 0);
+			console.log('🌱 Showing field:', field);
+		} else {
+			frm.set_df_property(field, 'hidden', 1);
+			if (field !== 'section_d_scope_3_targets') {
+				frm.set_value(field, '');
+			}
+			console.log('🌱 Hiding field:', field);
+		}
+	});
+	
+	// Reductions fields
+	const reductionFields = [
+		'section_e_reductions',
+		'reduction_target_type',
+		'land_sector_removals',
+		'residual_emissions_strategy'
+	];
+	
+	reductionFields.forEach(field => {
+		if (selected_scopes.includes('Reductions')) {
+			frm.set_df_property(field, 'hidden', 0);
+			console.log('🌱 Showing field:', field);
+		} else {
+			frm.set_df_property(field, 'hidden', 1);
+			if (field !== 'section_e_reductions') {
+				frm.set_value(field, '');
+			}
+			console.log('🌱 Hiding field:', field);
+		}
+	});
+	
+	console.log('🌱 Step 5 visibility updated based on scopes:', selected_scopes);
 }

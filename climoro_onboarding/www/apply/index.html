@@ -8,7 +8,7 @@
             <img src="/assets/climoro_onboarding/images/climoro.png" alt="Climoro Logo" class="climoro-logo">
         </div>
         <h1>Climoro Onboarding Form</h1>
-        <p>Complete your company onboarding in 3 simple steps</p>
+        <p>Complete your company onboarding in 5 simple steps</p>
     </div>
 
     <!-- Progress Indicator -->
@@ -27,6 +27,16 @@
             <div class="onboarding-progress-step" data-step="3">
                 <div class="onboarding-step-number">3</div>
                 <div class="onboarding-step-label">Units & Users</div>
+            </div>
+            <div class="onboarding-progress-line"></div>
+            <div class="onboarding-progress-step" data-step="4">
+                <div class="onboarding-step-number">4</div>
+                <div class="onboarding-step-label">GHG Accounting</div>
+            </div>
+            <div class="onboarding-progress-line"></div>
+            <div class="onboarding-progress-step" data-step="5">
+                <div class="onboarding-step-number">5</div>
+                <div class="onboarding-step-label">Reduction Form</div>
             </div>
         </div>
     </div>
@@ -165,6 +175,292 @@
                         <!-- Units will be added here dynamically -->
                     </div>
                     <button type="button" id="add-unit-btn" class="btn btn-secondary">+ Add Unit</button>
+                </div>
+            </div>
+
+            <!-- Step 4: GHG Accounting -->
+            <div class="form-step" id="step-4">
+                <h2>GHG Accounting</h2>
+                
+                <div class="form-group">
+                    <label for="purpose_of_reporting">Purpose of Reporting *</label>
+                    <select id="purpose_of_reporting" name="purpose_of_reporting" required>
+                        <option value="">Select Purpose</option>
+                        <option value="Regulatory Compliance">Regulatory Compliance</option>
+                        <option value="Voluntary Reporting">Voluntary Reporting</option>
+                        <option value="Internal Assessment">Internal Assessment</option>
+                        <option value="Carbon Trading">Carbon Trading</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="gases_to_report">Gases to be Reported *</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="gases_to_report" value="CO2"> CO2
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="gases_to_report" value="CH4"> CH4
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="gases_to_report" value="N2O"> N2O
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="gases_to_report" value="HFCs"> HFCs
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="gases_to_report" value="PFCs"> PFCs
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="gases_to_report" value="SF6"> SF6
+                        </label>
+                        <label class="checkbox-label" id="nf3-checkbox" style="display: none;">
+                            <input type="checkbox" name="gases_to_report" value="NF3"> NF3 (Semiconductor Industry)
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="scopes_to_report">Scopes to Report *</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="scopes_to_report" value="Scope 1" onchange="toggleScopeOptions('scope1')"> Scope 1
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="scopes_to_report" value="Scope 2" onchange="toggleScopeOptions('scope2')"> Scope 2
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="scopes_to_report" value="Scope 3" onchange="toggleScopeOptions('scope3')"> Scope 3
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="scopes_to_report" value="Reductions" onchange="toggleScopeOptions('reductions')"> Reductions
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Dynamic Scope Options -->
+                <div id="scope1-options" class="scope-options" style="display: none;">
+                    <h4>Scope 1 Options</h4>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="scope_1_options" value="Process"> Process
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="scope_1_options" value="Stationary"> Stationary
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="scope_1_options" value="Mobile"> Mobile
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="scope_1_options" value="Fugitive"> Fugitive
+                        </label>
+                    </div>
+                </div>
+
+                <div id="scope2-options" class="scope-options" style="display: none;">
+                    <h4>Scope 2 Options</h4>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="scope_2_options" value="Electricity"> Electricity
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="scope_2_options" value="Heating"> Heating
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="scope_2_options" value="Cooling"> Cooling
+                        </label>
+                    </div>
+                </div>
+
+                <div id="scope3-options" class="scope-options" style="display: none;">
+                    <h4>Scope 3 Options</h4>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="scope_3_options" value="Upstream"> Upstream
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="scope_3_options" value="Downstream"> Downstream
+                        </label>
+                    </div>
+                </div>
+
+                <div id="reductions-options" class="scope-options" style="display: none;">
+                    <h4>Reduction Options</h4>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="reduction_options" value="Energy Efficiency"> Energy Efficiency
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="reduction_options" value="Renewable Energy"> Renewable Energy
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="reduction_options" value="Process Optimization"> Process Optimization
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="reduction_options" value="Waste Management"> Waste Management
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="reduction_options" value="Transportation"> Transportation
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="reduction_options" value="Other"> Other
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 5: Reduction Form -->
+            <div class="form-step" id="step-5">
+                <h2>Reduction Form (Step 5)</h2>
+                
+                <!-- Section A: Emissions Inventory Setup -->
+                <div class="section-container">
+                    <h3>Section A: Emissions Inventory Setup</h3>
+                    
+                    <div class="form-group">
+                        <label for="base_year">Base Year *</label>
+                        <input type="number" id="base_year" name="base_year" min="1990" max="2030" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="base_year_reason">Reason for Base Year Selection</label>
+                        <textarea id="base_year_reason" name="base_year_reason" rows="3" placeholder="Explain why this year was chosen as the base year"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="ghg_boundary_approach">GHG Boundary Approach</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="ghg_boundary_approach" value="Operational Control"> Operational Control
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="ghg_boundary_approach" value="Financial Control"> Financial Control
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="ghg_boundary_approach" value="Equity Share"> Equity Share
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="emissions_exclusions">Emissions Exclusions (if any)</label>
+                        <textarea id="emissions_exclusions" name="emissions_exclusions" rows="3" placeholder="List any emissions that are excluded from calculations and reasons"></textarea>
+                    </div>
+                </div>
+
+                <!-- Dynamic Sections based on Scope Selection -->
+                <div id="scope1-section" class="section-container" style="display: none;">
+                    <h3>Section B: Scope 1 Emissions Reduction Targets</h3>
+                    <!-- Scope 1 fields will be populated dynamically -->
+                </div>
+
+                <div id="scope2-section" class="section-container" style="display: none;">
+                    <h3>Section C: Scope 2 Emissions Reduction Targets</h3>
+                    <!-- Scope 2 fields will be populated dynamically -->
+                </div>
+
+                <div id="scope3-section" class="section-container" style="display: none;">
+                    <h3>Section D: Scope 3 Emissions Reduction Targets</h3>
+                    <!-- Scope 3 fields will be populated dynamically -->
+                </div>
+
+                <div id="reductions-section" class="section-container" style="display: none;">
+                    <h3>Section E: Reduction Strategies</h3>
+                    <!-- Reductions fields will be populated dynamically -->
+                </div>
+
+                <!-- Section F: Monitoring, Adjustments & Reporting -->
+                <div class="section-container">
+                    <h3>Section F: Monitoring, Adjustments & Reporting</h3>
+                    
+                    <div class="form-group">
+                        <label for="monitoring_frequency">Monitoring Frequency</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="monitoring_frequency" value="Annual"> Annual
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="monitoring_frequency" value="Biennial"> Biennial
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="monitoring_frequency" value="Other" onchange="toggleOtherFrequency()"> Other
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group" id="other-frequency-group" style="display: none;">
+                        <label for="monitoring_frequency_other">Other Monitoring Frequency</label>
+                        <input type="text" id="monitoring_frequency_other" name="monitoring_frequency_other" placeholder="Specify other monitoring frequency">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="assurance_validation">Assurance and Validation</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="assurance_validation" value="Internal assurance"> Internal assurance
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="assurance_validation" value="Third-party verification"> Third-party verification
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="assurance_validation" value="Submitted to validation platform (e.g., SBTi)"> Submitted to validation platform (e.g., SBTi)
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="ghg_tracking_tools">GHG Tracking Tools Used</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="ghg_tracking_tools" value="Excel / spreadsheet"> Excel / spreadsheet
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="ghg_tracking_tools" value="GHG software" onchange="toggleGHGSoftware()"> GHG software
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="ghg_tracking_tools" value="Web platform (e.g., CDP, Net-Zero Cloud)"> Web platform (e.g., CDP, Net-Zero Cloud)
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group" id="ghg-software-group" style="display: none;">
+                        <label for="ghg_software_name">GHG Software Name</label>
+                        <input type="text" id="ghg_software_name" name="ghg_software_name" placeholder="Name of the GHG software used">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="recalculation_policy">Recalculation Policy</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="recalculation_policy" value="Structural changes"> Structural changes
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="recalculation_policy" value="Methodology changes"> Methodology changes
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="recalculation_policy" value="Boundary/scope adjustments"> Boundary/scope adjustments
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="progress_communication">Progress Communication</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="progress_communication" value="ESG dashboard"> ESG dashboard
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="progress_communication" value="Annual sustainability report"> Annual sustainability report
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="progress_communication" value="CDP/public disclosure"> CDP/public disclosure
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="progress_communication" value="SBTi registry updates"> SBTi registry updates
+                            </label>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -1384,7 +1680,7 @@ body {
 class OnboardingForm {
     constructor() {
         this.currentStep = 1;
-        this.totalSteps = 3;
+        this.totalSteps = 5;
         this.unitCounter = 0;
         this.userCounters = {};
         
@@ -3979,6 +4275,448 @@ document.addEventListener('DOMContentLoaded', function() {
         // Append the acknowledgment HTML to the body
         document.body.insertAdjacentHTML('beforeend', acknowledgmentHTML);
     });
+
+// GHG Accounting Dynamic Functions
+
+// Function to toggle scope options visibility
+function toggleScopeOptions(scopeType) {
+    const optionsDiv = document.getElementById(scopeType + '-options');
+    const checkbox = document.querySelector(`input[name="scopes_to_report"][value="${scopeType === 'scope1' ? 'Scope 1' : scopeType === 'scope2' ? 'Scope 2' : scopeType === 'scope3' ? 'Scope 3' : 'Reductions'}"]`);
+    
+    if (checkbox && checkbox.checked) {
+        optionsDiv.style.display = 'block';
+        console.log('🌱 Showing options for:', scopeType);
+    } else {
+        optionsDiv.style.display = 'none';
+        console.log('🌱 Hiding options for:', scopeType);
+    }
+    
+    // Update Step 5 sections based on scope selection
+    updateStep5Sections();
+}
+
+// Function to update Step 5 sections based on scope selection
+function updateStep5Sections() {
+    const scopes = [];
+    document.querySelectorAll('input[name="scopes_to_report"]:checked').forEach(checkbox => {
+        scopes.push(checkbox.value);
+    });
+    
+    // Scope 1 section
+    const scope1Section = document.getElementById('scope1-section');
+    if (scopes.includes('Scope 1')) {
+        scope1Section.style.display = 'block';
+        populateScope1Fields();
+    } else {
+        scope1Section.style.display = 'none';
+    }
+    
+    // Scope 2 section
+    const scope2Section = document.getElementById('scope2-section');
+    if (scopes.includes('Scope 2')) {
+        scope2Section.style.display = 'block';
+        populateScope2Fields();
+    } else {
+        scope2Section.style.display = 'none';
+    }
+    
+    // Scope 3 section
+    const scope3Section = document.getElementById('scope3-section');
+    if (scopes.includes('Scope 3')) {
+        scope3Section.style.display = 'block';
+        populateScope3Fields();
+    } else {
+        scope3Section.style.display = 'none';
+    }
+    
+    // Reductions section
+    const reductionsSection = document.getElementById('reductions-section');
+    if (scopes.includes('Reductions')) {
+        reductionsSection.style.display = 'block';
+        populateReductionsFields();
+    } else {
+        reductionsSection.style.display = 'none';
+    }
+    
+    console.log('🌱 Updated Step 5 sections for scopes:', scopes);
+}
+
+// Function to populate Scope 1 fields
+function populateScope1Fields() {
+    const section = document.getElementById('scope1-section');
+    section.innerHTML = `
+        <h3>Section B: Scope 1 Emissions Reduction Targets</h3>
+        
+        <div class="form-group">
+            <label for="scope_1_target_type">Scope 1 Target Type</label>
+            <div class="checkbox-group">
+                <label class="checkbox-label">
+                    <input type="checkbox" name="scope_1_target_type" value="Near-term Target (5–10 years)"> Near-term Target (5–10 years)
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" name="scope_1_target_type" value="Long-term Net-Zero Target (by 2050 or earlier)"> Long-term Net-Zero Target (by 2050 or earlier)
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" name="scope_1_target_type" value="Both"> Both
+                </label>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label for="scope_1_intensity_reduction">Scope 1 Intensity Reduction</label>
+            <div class="checkbox-group">
+                <label class="checkbox-label">
+                    <input type="checkbox" name="scope_1_intensity_reduction" onchange="toggleScope1Fields()"> Reduce Scope 1 emissions intensity by percentage
+                </label>
+            </div>
+        </div>
+        
+        <div class="form-group" id="scope1-percentage-group" style="display: none;">
+            <label for="scope_1_reduction_percentage">Scope 1 Reduction Percentage</label>
+            <input type="number" id="scope_1_reduction_percentage" name="scope_1_reduction_percentage" min="0" max="100" step="0.1" placeholder="Enter percentage">
+        </div>
+        
+        <div class="form-group" id="scope1-year-group" style="display: none;">
+            <label for="scope_1_target_year">Scope 1 Target Year</label>
+            <input type="number" id="scope_1_target_year" name="scope_1_target_year" min="2024" max="2050" placeholder="Enter target year">
+        </div>
+        
+        <div class="form-group">
+            <label for="scope_1_mitigation_strategies">Scope 1 Mitigation Strategies</label>
+            <div class="checkbox-group">
+                <label class="checkbox-label">
+                    <input type="checkbox" name="scope_1_mitigation_strategies" value="Energy efficiency improvements"> Energy efficiency improvements
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" name="scope_1_mitigation_strategies" value="Onsite renewable energy (e.g., rooftop solar)"> Onsite renewable energy (e.g., rooftop solar)
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" name="scope_1_mitigation_strategies" value="Fuel switching to clean alternatives"> Fuel switching to clean alternatives
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" name="scope_1_mitigation_strategies" value="Process optimization"> Process optimization
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" name="scope_1_mitigation_strategies" value="Equipment upgrades"> Equipment upgrades
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" name="scope_1_mitigation_strategies" value="Fugitive emissions control"> Fugitive emissions control
+                </label>
+            </div>
+        </div>
+    `;
+}
+
+// Function to populate Scope 2 fields
+function populateScope2Fields() {
+    const section = document.getElementById('scope2-section');
+    section.innerHTML = `
+        <h3>Section C: Scope 2 Emissions Reduction Targets</h3>
+        
+        <div class="form-group">
+            <label for="scope_2_target_type">Scope 2 Target Type</label>
+            <div class="checkbox-group">
+                <label class="checkbox-label">
+                    <input type="checkbox" name="scope_2_target_type" value="Near-term Target (5–10 years)"> Near-term Target (5–10 years)
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" name="scope_2_target_type" value="Long-term Net-Zero Target (by 2050 or earlier)"> Long-term Net-Zero Target (by 2050 or earlier)
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" name="scope_2_target_type" value="Both"> Both
+                </label>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label for="scope_2_intensity_reduction">Scope 2 Intensity Reduction</label>
+            <div class="checkbox-group">
+                <label class="checkbox-label">
+                    <input type="checkbox" name="scope_2_intensity_reduction" onchange="toggleScope2Fields()"> Reduce Scope 2 emissions intensity by percentage
+                </label>
+            </div>
+        </div>
+        
+        <div class="form-group" id="scope2-percentage-group" style="display: none;">
+            <label for="scope_2_reduction_percentage">Scope 2 Reduction Percentage</label>
+            <input type="number" id="scope_2_reduction_percentage" name="scope_2_reduction_percentage" min="0" max="100" step="0.1" placeholder="Enter percentage">
+        </div>
+        
+        <div class="form-group" id="scope2-year-group" style="display: none;">
+            <label for="scope_2_target_year">Scope 2 Target Year</label>
+            <input type="number" id="scope_2_target_year" name="scope_2_target_year" min="2024" max="2050" placeholder="Enter target year">
+        </div>
+        
+        <div class="form-group">
+            <label for="scope_2_mitigation_strategies">Scope 2 Mitigation Strategies</label>
+            <div class="checkbox-group">
+                <label class="checkbox-label">
+                    <input type="checkbox" name="scope_2_mitigation_strategies" value="Offsite renewable procurement"> Offsite renewable procurement
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" name="scope_2_mitigation_strategies" value="Green power purchase agreements"> Green power purchase agreements
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" name="scope_2_mitigation_strategies" value="Energy efficiency improvements"> Energy efficiency improvements
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" name="scope_2_mitigation_strategies" value="Demand response programs"> Demand response programs
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" name="scope_2_mitigation_strategies" value="Grid decarbonization support"> Grid decarbonization support
+                </label>
+            </div>
+        </div>
+    `;
+}
+
+// Function to populate Scope 3 fields
+function populateScope3Fields() {
+    const section = document.getElementById('scope3-section');
+    section.innerHTML = `
+        <h3>Section D: Scope 3 Emissions Reduction Targets</h3>
+        
+        <div class="form-group">
+            <label for="scope_3_categories_included">Scope 3 Categories Included</label>
+            <div class="checkbox-group">
+                <label class="checkbox-label">
+                    <input type="checkbox" name="scope_3_categories_included" value="Purchased goods and services"> Purchased goods and services
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" name="scope_3_categories_included" value="Capital goods"> Capital goods
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" name="scope_3_categories_included" value="Fuel- and energy-related activities"> Fuel- and energy-related activities
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" name="scope_3_categories_included" value="Upstream/downstream transportation and distribution"> Upstream/downstream transportation and distribution
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" name="scope_3_categories_included" value="Waste generated in operations"> Waste generated in operations
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" name="scope_3_categories_included" value="Business travel / employee commuting"> Business travel / employee commuting
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" name="scope_3_categories_included" value="Use of sold products"> Use of sold products
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" name="scope_3_categories_included" value="End-of-life treatment of sold products"> End-of-life treatment of sold products
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" name="scope_3_categories_included" value="Leased assets, franchises, or investments"> Leased assets, franchises, or investments
+                </label>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label for="scope_3_target_type">Scope 3 Target Type</label>
+            <div class="checkbox-group">
+                <label class="checkbox-label">
+                    <input type="checkbox" name="scope_3_target_type" value="Near-term Target (5–10 years)"> Near-term Target (5–10 years)
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" name="scope_3_target_type" value="Long-term Net-Zero Target (by 2050 or earlier)"> Long-term Net-Zero Target (by 2050 or earlier)
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" name="scope_3_target_type" value="Both"> Both
+                </label>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label for="scope_3_intensity_reduction">Scope 3 Intensity Reduction</label>
+            <div class="checkbox-group">
+                <label class="checkbox-label">
+                    <input type="checkbox" name="scope_3_intensity_reduction" onchange="toggleScope3Fields()"> Reduce Scope 3 emissions intensity by percentage
+                </label>
+            </div>
+        </div>
+        
+        <div class="form-group" id="scope3-percentage-group" style="display: none;">
+            <label for="scope_3_reduction_percentage">Scope 3 Reduction Percentage</label>
+            <input type="number" id="scope_3_reduction_percentage" name="scope_3_reduction_percentage" min="0" max="100" step="0.1" placeholder="Enter percentage">
+        </div>
+        
+        <div class="form-group" id="scope3-year-group" style="display: none;">
+            <label for="scope_3_target_year">Scope 3 Target Year</label>
+            <input type="number" id="scope_3_target_year" name="scope_3_target_year" min="2024" max="2050" placeholder="Enter target year">
+        </div>
+        
+        <div class="form-group">
+            <label for="scope_3_mitigation_strategies">Scope 3 Mitigation Strategies</label>
+            <div class="checkbox-group">
+                <label class="checkbox-label">
+                    <input type="checkbox" name="scope_3_mitigation_strategies" value="Supplier engagement"> Supplier engagement
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" name="scope_3_mitigation_strategies" value="Low-carbon input materials"> Low-carbon input materials
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" name="scope_3_mitigation_strategies" value="Redesign for use-phase reduction"> Redesign for use-phase reduction
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" name="scope_3_mitigation_strategies" value="Optimize logistics"> Optimize logistics
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" name="scope_3_mitigation_strategies" value="Circular economy practices"> Circular economy practices
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" name="scope_3_mitigation_strategies" value="Product lifecycle optimization"> Product lifecycle optimization
+                </label>
+            </div>
+        </div>
+    `;
+}
+
+// Function to populate Reductions fields
+function populateReductionsFields() {
+    const section = document.getElementById('reductions-section');
+    section.innerHTML = `
+        <h3>Section E: Reduction Strategies</h3>
+        
+        <div class="form-group">
+            <label for="reduction_target_type">Reduction Target Type</label>
+            <div class="checkbox-group">
+                <label class="checkbox-label">
+                    <input type="checkbox" name="reduction_target_type" value="Near-term Target (5–10 years)"> Near-term Target (5–10 years)
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" name="reduction_target_type" value="Long-term Net-Zero Target (by 2050 or earlier)"> Long-term Net-Zero Target (by 2050 or earlier)
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" name="reduction_target_type" value="Both"> Both
+                </label>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label for="land_sector_removals">Land Sector & Removals (Optional)</label>
+            <div class="checkbox-group">
+                <label class="checkbox-label">
+                    <input type="checkbox" name="land_sector_removals" value="Afforestation / reforestation"> Afforestation / reforestation
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" name="land_sector_removals" value="Soil carbon improvement"> Soil carbon improvement
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" name="land_sector_removals" value="Urban greening"> Urban greening
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" name="land_sector_removals" value="Biochar application"> Biochar application
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" name="land_sector_removals" value="Carbon capture or enhanced weathering"> Carbon capture or enhanced weathering
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" name="land_sector_removals" value="Certified removals (DAC, agroforestry)"> Certified removals (DAC, agroforestry)
+                </label>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label for="residual_emissions_strategy">Residual Emissions Strategy</label>
+            <div class="checkbox-group">
+                <label class="checkbox-label">
+                    <input type="checkbox" name="residual_emissions_strategy" value="High-quality removal credits"> High-quality removal credits
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" name="residual_emissions_strategy" value="Beyond Value Chain Mitigation (BVCM)"> Beyond Value Chain Mitigation (BVCM)
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" name="residual_emissions_strategy" value="Temporary voluntary solutions"> Temporary voluntary solutions
+                </label>
+            </div>
+        </div>
+    `;
+}
+
+// Toggle functions for dynamic fields
+function toggleScope1Fields() {
+    const checkbox = document.querySelector('input[name="scope_1_intensity_reduction"]');
+    const percentageGroup = document.getElementById('scope1-percentage-group');
+    const yearGroup = document.getElementById('scope1-year-group');
+    
+    if (checkbox && checkbox.checked) {
+        percentageGroup.style.display = 'block';
+        yearGroup.style.display = 'block';
+    } else {
+        percentageGroup.style.display = 'none';
+        yearGroup.style.display = 'none';
+    }
+}
+
+function toggleScope2Fields() {
+    const checkbox = document.querySelector('input[name="scope_2_intensity_reduction"]');
+    const percentageGroup = document.getElementById('scope2-percentage-group');
+    const yearGroup = document.getElementById('scope2-year-group');
+    
+    if (checkbox && checkbox.checked) {
+        percentageGroup.style.display = 'block';
+        yearGroup.style.display = 'block';
+    } else {
+        percentageGroup.style.display = 'none';
+        yearGroup.style.display = 'none';
+    }
+}
+
+function toggleScope3Fields() {
+    const checkbox = document.querySelector('input[name="scope_3_intensity_reduction"]');
+    const percentageGroup = document.getElementById('scope3-percentage-group');
+    const yearGroup = document.getElementById('scope3-year-group');
+    
+    if (checkbox && checkbox.checked) {
+        percentageGroup.style.display = 'block';
+        yearGroup.style.display = 'block';
+    } else {
+        percentageGroup.style.display = 'none';
+        yearGroup.style.display = 'none';
+    }
+}
+
+function toggleOtherFrequency() {
+    const checkbox = document.querySelector('input[name="monitoring_frequency"][value="Other"]');
+    const otherGroup = document.getElementById('other-frequency-group');
+    
+    if (checkbox && checkbox.checked) {
+        otherGroup.style.display = 'block';
+    } else {
+        otherGroup.style.display = 'none';
+    }
+}
+
+function toggleGHGSoftware() {
+    const checkbox = document.querySelector('input[name="ghg_tracking_tools"][value="GHG software"]');
+    const softwareGroup = document.getElementById('ghg-software-group');
+    
+    if (checkbox && checkbox.checked) {
+        softwareGroup.style.display = 'block';
+    } else {
+        softwareGroup.style.display = 'none';
+    }
+}
+
+// Check for semiconductor industry to show NF3 option
+document.addEventListener('DOMContentLoaded', function() {
+    const industrySelect = document.getElementById('industry_type');
+    const nf3Checkbox = document.getElementById('nf3-checkbox');
+    
+    if (industrySelect && nf3Checkbox) {
+        industrySelect.addEventListener('change', function() {
+            const selectedIndustry = this.value;
+            if (selectedIndustry && selectedIndustry.toLowerCase().includes('semiconductor')) {
+                nf3Checkbox.style.display = 'block';
+            } else {
+                nf3Checkbox.style.display = 'none';
+                // Uncheck NF3 if not semiconductor industry
+                const nf3Input = nf3Checkbox.querySelector('input');
+                if (nf3Input) {
+                    nf3Input.checked = false;
+                }
+            }
+        });
+    }
+});
 
 
 </script>
