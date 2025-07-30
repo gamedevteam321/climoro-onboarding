@@ -103,6 +103,15 @@ def submit_onboarding_form(form_data):
             doc.letter_of_authorisation = form_data.get("letter_of_authorisation")
             
             # GHG Accounting Fields (Step 4)
+            frappe.logger().info(f"🌱 GHG Accounting Fields Debug:")
+            frappe.logger().info(f"   Purpose of reporting: '{form_data.get('purpose_of_reporting')}'")
+            frappe.logger().info(f"   Gases to report: '{form_data.get('gases_to_report')}'")
+            frappe.logger().info(f"   Scopes to report: '{form_data.get('scopes_to_report')}'")
+            frappe.logger().info(f"   Scope 1 options: '{form_data.get('scope_1_options')}'")
+            frappe.logger().info(f"   Scope 2 options: '{form_data.get('scope_2_options')}'")
+            frappe.logger().info(f"   Scope 3 options: '{form_data.get('scope_3_options')}'")
+            frappe.logger().info(f"   Reduction options: '{form_data.get('reduction_options')}'")
+            
             doc.purpose_of_reporting = form_data.get("purpose_of_reporting")
             doc.gases_to_report = form_data.get("gases_to_report")
             doc.scopes_to_report = form_data.get("scopes_to_report")
@@ -112,12 +121,25 @@ def submit_onboarding_form(form_data):
             doc.reduction_options = form_data.get("reduction_options")
             
             # Reduction Form Fields (Step 5)
+            frappe.logger().info(f"🌱 Reduction Form Fields Debug:")
+            frappe.logger().info(f"   Base year: '{form_data.get('base_year')}'")
+            frappe.logger().info(f"   Base year reason: '{form_data.get('base_year_reason')}'")
+            frappe.logger().info(f"   GHG boundary approach: '{form_data.get('ghg_boundary_approach')}'")
+            frappe.logger().info(f"   Emissions exclusions: '{form_data.get('emissions_exclusions')}'")
+            
             doc.base_year = form_data.get("base_year")
             doc.base_year_reason = form_data.get("base_year_reason")
             doc.ghg_boundary_approach = form_data.get("ghg_boundary_approach")
             doc.emissions_exclusions = form_data.get("emissions_exclusions")
             
             # Scope 1 Fields
+            frappe.logger().info(f"🌱 Scope 1 Fields Debug:")
+            frappe.logger().info(f"   Target type: '{form_data.get('scope_1_target_type')}'")
+            frappe.logger().info(f"   Intensity reduction: '{form_data.get('scope_1_intensity_reduction')}'")
+            frappe.logger().info(f"   Reduction percentage: '{form_data.get('scope_1_reduction_percentage')}'")
+            frappe.logger().info(f"   Target year: '{form_data.get('scope_1_target_year')}'")
+            frappe.logger().info(f"   Mitigation strategies: '{form_data.get('scope_1_mitigation_strategies')}'")
+            
             doc.scope_1_target_type = form_data.get("scope_1_target_type")
             doc.scope_1_intensity_reduction = form_data.get("scope_1_intensity_reduction")
             doc.scope_1_reduction_percentage = form_data.get("scope_1_reduction_percentage")

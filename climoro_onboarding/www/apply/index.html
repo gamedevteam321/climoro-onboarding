@@ -3040,6 +3040,57 @@ class OnboardingForm {
             website: savedData?.website || document.getElementById('website').value,
             letter_of_authorisation: savedData?.letter_of_authorisation || document.getElementById('letter_of_authorisation').getAttribute('data-file-url') || '',
             
+            // Step 4: GHG Accounting
+            purpose_of_reporting: this.getMultiSelectValue('purpose_of_reporting'),
+            gases_to_report: this.getCheckboxValues('gases_to_report'),
+            scopes_to_report: this.getCheckboxValues('scopes_to_report'),
+            scope_1_options: this.getCheckboxValues('scope_1_options'),
+            scope_2_options: this.getCheckboxValues('scope_2_options'),
+            scope_3_options: this.getCheckboxValues('scope_3_options'),
+            reduction_options: this.getCheckboxValues('reduction_options'),
+            
+            // Step 5: Reduction Form
+            base_year: document.getElementById('base_year')?.value || '',
+            base_year_reason: document.getElementById('base_year_reason')?.value || '',
+            ghg_boundary_approach: this.getCheckboxValues('ghg_boundary_approach'),
+            emissions_exclusions: document.getElementById('emissions_exclusions')?.value || '',
+            
+            // Scope 1 Fields
+            scope_1_target_type: this.getCheckboxValues('scope_1_target_type'),
+            scope_1_intensity_reduction: this.getCheckboxValue('scope_1_intensity_reduction'),
+            scope_1_reduction_percentage: document.getElementById('scope_1_reduction_percentage')?.value || '',
+            scope_1_target_year: document.getElementById('scope_1_target_year')?.value || '',
+            scope_1_mitigation_strategies: this.getCheckboxValues('scope_1_mitigation_strategies'),
+            
+            // Scope 2 Fields
+            scope_2_target_type: this.getCheckboxValues('scope_2_target_type'),
+            scope_2_intensity_reduction: this.getCheckboxValue('scope_2_intensity_reduction'),
+            scope_2_reduction_percentage: document.getElementById('scope_2_reduction_percentage')?.value || '',
+            scope_2_target_year: document.getElementById('scope_2_target_year')?.value || '',
+            scope_2_mitigation_strategies: this.getCheckboxValues('scope_2_mitigation_strategies'),
+            
+            // Scope 3 Fields
+            scope_3_categories_included: this.getCheckboxValues('scope_3_categories_included'),
+            scope_3_target_type: this.getCheckboxValues('scope_3_target_type'),
+            scope_3_intensity_reduction: this.getCheckboxValue('scope_3_intensity_reduction'),
+            scope_3_reduction_percentage: document.getElementById('scope_3_reduction_percentage')?.value || '',
+            scope_3_target_year: document.getElementById('scope_3_target_year')?.value || '',
+            scope_3_mitigation_strategies: this.getCheckboxValues('scope_3_mitigation_strategies'),
+            
+            // Reductions Fields
+            reduction_target_type: this.getCheckboxValues('reduction_target_type'),
+            land_sector_removals: this.getCheckboxValues('land_sector_removals'),
+            residual_emissions_strategy: this.getCheckboxValues('residual_emissions_strategy'),
+            
+            // Monitoring Fields
+            monitoring_frequency: this.getCheckboxValues('monitoring_frequency'),
+            monitoring_frequency_other: document.getElementById('monitoring_frequency_other')?.value || '',
+            assurance_validation: this.getCheckboxValues('assurance_validation'),
+            ghg_tracking_tools: this.getCheckboxValues('ghg_tracking_tools'),
+            ghg_software_name: document.getElementById('ghg_software_name')?.value || '',
+            recalculation_policy: this.getCheckboxValues('recalculation_policy'),
+            progress_communication: this.getCheckboxValues('progress_communication'),
+            
             // Step 3: Units and Users
             units: [],
             assigned_users: []
@@ -3061,6 +3112,15 @@ class OnboardingForm {
             
             // Debug: Log the complete formData object
             console.log('🔍 Complete formData object:', JSON.stringify(formData, null, 2));
+            
+            // Debug: Log GHG Accounting fields specifically
+            console.log('🌱 GHG Accounting Fields Debug:');
+            console.log('   Purpose of reporting:', formData.purpose_of_reporting);
+            console.log('   Gases to report:', formData.gases_to_report);
+            console.log('   Scopes to report:', formData.scopes_to_report);
+            console.log('   Base year:', formData.base_year);
+            console.log('   GHG boundary approach:', formData.ghg_boundary_approach);
+            console.log('   Monitoring frequency:', formData.monitoring_frequency);
         
         // Collect units data
         const units = document.querySelectorAll('.unit-container');
@@ -3099,6 +3159,24 @@ class OnboardingForm {
         });
         
         return formData;
+    }
+    
+    // Helper function to get checkbox values
+    getCheckboxValues(fieldName) {
+        const checkboxes = document.querySelectorAll(`input[name="${fieldName}"]:checked`);
+        return Array.from(checkboxes).map(checkbox => checkbox.value);
+    }
+    
+    // Helper function to get single checkbox value
+    getCheckboxValue(fieldName) {
+        const checkbox = document.querySelector(`input[name="${fieldName}"]:checked`);
+        return checkbox ? checkbox.value : '';
+    }
+    
+    // Helper function to get multi-select value
+    getMultiSelectValue(fieldName) {
+        const select = document.getElementById(fieldName);
+        return select ? select.value : '';
     }
     
     showLoading(show) {
@@ -4716,7 +4794,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-});
+    });
 
 
 </script>

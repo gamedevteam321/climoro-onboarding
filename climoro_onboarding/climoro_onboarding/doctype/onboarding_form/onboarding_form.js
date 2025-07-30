@@ -41,6 +41,9 @@ frappe.ui.form.on('Onboarding Form', {
 			updateSubIndustryOptions(frm);
 		});
 		
+		// Initialize GHG Accounting dynamic behavior
+		updateStep5Visibility(frm);
+		
 		// Temporarily disable map functionality to avoid errors
 		// const gpsField = frm.get_field('gps_coordinates');
 		// if (gpsField && gpsField.$wrapper) {
@@ -296,6 +299,66 @@ frappe.ui.form.on('Onboarding Form', {
 	monitoring_frequency: function(frm) {
 		let frequency = frm.get_value('monitoring_frequency') || [];
 		if (!frequency.includes('Other')) {
+			frm.set_value('monitoring_frequency_other', '');
+		}
+	},
+	
+	// GHG Accounting field event handlers
+	scopes_to_report: function(frm) {
+		console.log('🌱 scopes_to_report changed');
+		updateStep5Visibility(frm);
+	},
+	
+	gases_to_report: function(frm) {
+		console.log('🌱 gases_to_report changed');
+		// Check if NF3 should be hidden based on industry type
+		if (frm.doc.industry_type && frm.doc.industry_type !== 'Semiconductor') {
+			const currentGases = frm.get_value('gases_to_report') || [];
+			if (currentGases.includes('NF3')) {
+				// Remove NF3 from selection
+				const updatedGases = currentGases.filter(gas => gas !== 'NF3');
+				frm.set_value('gases_to_report', updatedGases);
+			}
+		}
+	},
+	
+	// Step 5 field event handlers
+	scope_1_intensity_reduction: function(frm) {
+		console.log('🌱 scope_1_intensity_reduction changed');
+		if (!frm.doc.scope_1_intensity_reduction) {
+			frm.set_value('scope_1_reduction_percentage', '');
+			frm.set_value('scope_1_target_year', '');
+		}
+	},
+	
+	scope_2_intensity_reduction: function(frm) {
+		console.log('🌱 scope_2_intensity_reduction changed');
+		if (!frm.doc.scope_2_intensity_reduction) {
+			frm.set_value('scope_2_reduction_percentage', '');
+			frm.set_value('scope_2_target_year', '');
+		}
+	},
+	
+	scope_3_intensity_reduction: function(frm) {
+		console.log('🌱 scope_3_intensity_reduction changed');
+		if (!frm.doc.scope_3_intensity_reduction) {
+			frm.set_value('scope_3_reduction_percentage', '');
+			frm.set_value('scope_3_target_year', '');
+		}
+	},
+	
+	ghg_tracking_tools: function(frm) {
+		console.log('🌱 ghg_tracking_tools changed');
+		const currentTools = frm.get_value('ghg_tracking_tools') || [];
+		if (!currentTools.includes('GHG software')) {
+			frm.set_value('ghg_software_name', '');
+		}
+	},
+	
+	monitoring_frequency: function(frm) {
+		console.log('🌱 monitoring_frequency changed');
+		const currentFrequency = frm.get_value('monitoring_frequency') || [];
+		if (!currentFrequency.includes('Other')) {
 			frm.set_value('monitoring_frequency_other', '');
 		}
 	}

@@ -312,33 +312,25 @@
    "fieldname": "scope_1_options",
    "label": "Scope 1 Options",
    "fieldtype": "MultiSelect",
-   "options": "Process\nStationary\nMobile\nFugitive",
-   "hidden": 1,
-   "depends_on": "eval:doc.scopes_to_report && doc.scopes_to_report.includes('Scope 1')"
+   "options": "Process\nStationary\nMobile\nFugitive"
   },
   {
    "fieldname": "scope_2_options",
    "label": "Scope 2 Options",
    "fieldtype": "MultiSelect",
-   "options": "Electricity\nHeating\nCooling",
-   "hidden": 1,
-   "depends_on": "eval:doc.scopes_to_report && doc.scopes_to_report.includes('Scope 2')"
+   "options": "Electricity\nHeating\nCooling"
   },
   {
    "fieldname": "scope_3_options",
    "label": "Scope 3 Options",
    "fieldtype": "MultiSelect",
-   "options": "Upstream\nDownstream",
-   "hidden": 1,
-   "depends_on": "eval:doc.scopes_to_report && doc.scopes_to_report.includes('Scope 3')"
+   "options": "Upstream\nDownstream"
   },
   {
    "fieldname": "reduction_options",
    "label": "Reduction Options",
    "fieldtype": "MultiSelect",
-   "options": "Energy Efficiency\nRenewable Energy\nProcess Optimization\nWaste Management\nTransportation\nOther",
-   "hidden": 1,
-   "depends_on": "eval:doc.scopes_to_report && doc.scopes_to_report.includes('Reductions')"
+   "options": "Energy Efficiency\nRenewable Energy\nProcess Optimization\nWaste Management\nTransportation\nOther"
   },
   {
    "fieldname": "section_break_reduction_form",
@@ -382,176 +374,130 @@
   {
    "fieldname": "section_b_scope_1_targets",
    "fieldtype": "Section Break",
-   "label": "Section B: Scope 1 Emissions Reduction Targets",
-   "hidden": 1,
-   "depends_on": "eval:doc.scopes_to_report && doc.scopes_to_report.includes('Scope 1')"
+   "label": "Section B: Scope 1 Emissions Reduction Targets"
   },
   {
    "fieldname": "scope_1_target_type",
    "label": "Scope 1 Target Type",
    "fieldtype": "MultiSelect",
-   "options": "Near-term Target (5–10 years)\nLong-term Net-Zero Target (by 2050 or earlier)\nBoth",
-   "hidden": 1,
-   "depends_on": "eval:doc.scopes_to_report && doc.scopes_to_report.includes('Scope 1')"
+   "options": "Near-term Target (5–10 years)\nLong-term Net-Zero Target (by 2050 or earlier)\nBoth"
   },
   {
    "fieldname": "scope_1_intensity_reduction",
    "label": "Scope 1 Intensity Reduction",
    "fieldtype": "Check",
-   "description": "Reduce Scope 1 emissions intensity by percentage",
-   "hidden": 1,
-   "depends_on": "eval:doc.scopes_to_report && doc.scopes_to_report.includes('Scope 1')"
+   "description": "Reduce Scope 1 emissions intensity by percentage"
   },
   {
    "fieldname": "scope_1_reduction_percentage",
    "label": "Scope 1 Reduction Percentage",
-   "fieldtype": "Float",
-   "depends_on": "eval:doc.scopes_to_report && doc.scopes_to_report.includes('Scope 1') && doc.scope_1_intensity_reduction",
-   "hidden": 1
+   "fieldtype": "Float"
   },
   {
    "fieldname": "scope_1_target_year",
    "label": "Scope 1 Target Year",
-   "fieldtype": "Int",
-   "depends_on": "eval:doc.scopes_to_report && doc.scopes_to_report.includes('Scope 1') && doc.scope_1_intensity_reduction",
-   "hidden": 1
+   "fieldtype": "Int"
   },
   {
    "fieldname": "scope_1_mitigation_strategies",
    "label": "Scope 1 Mitigation Strategies",
    "fieldtype": "MultiSelect",
-   "options": "Energy efficiency improvements\nOnsite renewable energy (e.g., rooftop solar)\nFuel switching to clean alternatives\nProcess optimization\nEquipment upgrades\nFugitive emissions control",
-   "hidden": 1,
-   "depends_on": "eval:doc.scopes_to_report && doc.scopes_to_report.includes('Scope 1')"
+   "options": "Energy efficiency improvements\nOnsite renewable energy (e.g., rooftop solar)\nFuel switching to clean alternatives\nProcess optimization\nEquipment upgrades\nFugitive emissions control"
   },
   {
    "fieldname": "section_c_scope_2_targets",
    "fieldtype": "Section Break",
-   "label": "Section C: Scope 2 Emissions Reduction Targets",
-   "hidden": 1,
-   "depends_on": "eval:doc.scopes_to_report && doc.scopes_to_report.includes('Scope 2')"
+   "label": "Section C: Scope 2 Emissions Reduction Targets"
   },
   {
    "fieldname": "scope_2_target_type",
    "label": "Scope 2 Target Type",
    "fieldtype": "MultiSelect",
-   "options": "Near-term Target (5–10 years)\nLong-term Net-Zero Target (by 2050 or earlier)\nBoth",
-   "hidden": 1,
-   "depends_on": "eval:doc.scopes_to_report && doc.scopes_to_report.includes('Scope 2')"
+   "options": "Near-term Target (5–10 years)\nLong-term Net-Zero Target (by 2050 or earlier)\nBoth"
   },
   {
    "fieldname": "scope_2_intensity_reduction",
    "label": "Scope 2 Intensity Reduction",
    "fieldtype": "Check",
-   "description": "Reduce Scope 2 emissions intensity by percentage",
-   "hidden": 1,
-   "depends_on": "eval:doc.scopes_to_report && doc.scopes_to_report.includes('Scope 2')"
+   "description": "Reduce Scope 2 emissions intensity by percentage"
   },
   {
    "fieldname": "scope_2_reduction_percentage",
    "label": "Scope 2 Reduction Percentage",
-   "fieldtype": "Float",
-   "depends_on": "eval:doc.scopes_to_report && doc.scopes_to_report.includes('Scope 2') && doc.scope_2_intensity_reduction",
-   "hidden": 1
+   "fieldtype": "Float"
   },
   {
    "fieldname": "scope_2_target_year",
    "label": "Scope 2 Target Year",
-   "fieldtype": "Int",
-   "depends_on": "eval:doc.scopes_to_report && doc.scopes_to_report.includes('Scope 2') && doc.scope_2_intensity_reduction",
-   "hidden": 1
+   "fieldtype": "Int"
   },
   {
    "fieldname": "scope_2_mitigation_strategies",
    "label": "Scope 2 Mitigation Strategies",
    "fieldtype": "MultiSelect",
-   "options": "Offsite renewable procurement\nGreen power purchase agreements\nEnergy efficiency improvements\nDemand response programs\nGrid decarbonization support",
-   "hidden": 1,
-   "depends_on": "eval:doc.scopes_to_report && doc.scopes_to_report.includes('Scope 2')"
+   "options": "Offsite renewable procurement\nGreen power purchase agreements\nEnergy efficiency improvements\nDemand response programs\nGrid decarbonization support"
   },
   {
    "fieldname": "section_d_scope_3_targets",
    "fieldtype": "Section Break",
-   "label": "Section D: Scope 3 Emissions Reduction Targets",
-   "hidden": 1,
-   "depends_on": "eval:doc.scopes_to_report && doc.scopes_to_report.includes('Scope 3')"
+   "label": "Section D: Scope 3 Emissions Reduction Targets"
   },
   {
    "fieldname": "scope_3_categories_included",
    "label": "Scope 3 Categories Included",
    "fieldtype": "MultiSelect",
-   "options": "Purchased goods and services\nCapital goods\nFuel- and energy-related activities\nUpstream/downstream transportation and distribution\nWaste generated in operations\nBusiness travel / employee commuting\nUse of sold products\nEnd-of-life treatment of sold products\nLeased assets, franchises, or investments",
-   "hidden": 1,
-   "depends_on": "eval:doc.scopes_to_report && doc.scopes_to_report.includes('Scope 3')"
+   "options": "Purchased goods and services\nCapital goods\nFuel- and energy-related activities\nUpstream/downstream transportation and distribution\nWaste generated in operations\nBusiness travel / employee commuting\nUse of sold products\nEnd-of-life treatment of sold products\nLeased assets, franchises, or investments"
   },
   {
    "fieldname": "scope_3_target_type",
    "label": "Scope 3 Target Type",
    "fieldtype": "MultiSelect",
-   "options": "Near-term Target (5–10 years)\nLong-term Net-Zero Target (by 2050 or earlier)\nBoth",
-   "hidden": 1,
-   "depends_on": "eval:doc.scopes_to_report && doc.scopes_to_report.includes('Scope 3')"
+   "options": "Near-term Target (5–10 years)\nLong-term Net-Zero Target (by 2050 or earlier)\nBoth"
   },
   {
    "fieldname": "scope_3_intensity_reduction",
    "label": "Scope 3 Intensity Reduction",
    "fieldtype": "Check",
-   "description": "Reduce Scope 3 emissions intensity by percentage",
-   "hidden": 1,
-   "depends_on": "eval:doc.scopes_to_report && doc.scopes_to_report.includes('Scope 3')"
+   "description": "Reduce Scope 3 emissions intensity by percentage"
   },
   {
    "fieldname": "scope_3_reduction_percentage",
    "label": "Scope 3 Reduction Percentage",
-   "fieldtype": "Float",
-   "depends_on": "eval:doc.scopes_to_report && doc.scopes_to_report.includes('Scope 3') && doc.scope_3_intensity_reduction",
-   "hidden": 1
+   "fieldtype": "Float"
   },
   {
    "fieldname": "scope_3_target_year",
    "label": "Scope 3 Target Year",
-   "fieldtype": "Int",
-   "depends_on": "eval:doc.scopes_to_report && doc.scopes_to_report.includes('Scope 3') && doc.scope_3_intensity_reduction",
-   "hidden": 1
+   "fieldtype": "Int"
   },
   {
    "fieldname": "scope_3_mitigation_strategies",
    "label": "Scope 3 Mitigation Strategies",
    "fieldtype": "MultiSelect",
-   "options": "Supplier engagement\nLow-carbon input materials\nRedesign for use-phase reduction\nOptimize logistics\nCircular economy practices\nProduct lifecycle optimization",
-   "hidden": 1,
-   "depends_on": "eval:doc.scopes_to_report && doc.scopes_to_report.includes('Scope 3')"
+   "options": "Supplier engagement\nLow-carbon input materials\nRedesign for use-phase reduction\nOptimize logistics\nCircular economy practices\nProduct lifecycle optimization"
   },
   {
    "fieldname": "section_e_reductions",
    "fieldtype": "Section Break",
-   "label": "Section E: Reduction Strategies",
-   "hidden": 1,
-   "depends_on": "eval:doc.scopes_to_report && doc.scopes_to_report.includes('Reductions')"
+   "label": "Section E: Reduction Strategies"
   },
   {
    "fieldname": "reduction_target_type",
    "label": "Reduction Target Type",
    "fieldtype": "MultiSelect",
-   "options": "Near-term Target (5–10 years)\nLong-term Net-Zero Target (by 2050 or earlier)\nBoth",
-   "hidden": 1,
-   "depends_on": "eval:doc.scopes_to_report && doc.scopes_to_report.includes('Reductions')"
+   "options": "Near-term Target (5–10 years)\nLong-term Net-Zero Target (by 2050 or earlier)\nBoth"
   },
   {
    "fieldname": "land_sector_removals",
    "label": "Land Sector & Removals (Optional)",
    "fieldtype": "MultiSelect",
-   "options": "Afforestation / reforestation\nSoil carbon improvement\nUrban greening\nBiochar application\nCarbon capture or enhanced weathering\nCertified removals (DAC, agroforestry)",
-   "hidden": 1,
-   "depends_on": "eval:doc.scopes_to_report && doc.scopes_to_report.includes('Reductions')"
+   "options": "Afforestation / reforestation\nSoil carbon improvement\nUrban greening\nBiochar application\nCarbon capture or enhanced weathering\nCertified removals (DAC, agroforestry)"
   },
   {
    "fieldname": "residual_emissions_strategy",
    "label": "Residual Emissions Strategy",
    "fieldtype": "MultiSelect",
-   "options": "High-quality removal credits\nBeyond Value Chain Mitigation (BVCM)\nTemporary voluntary solutions",
-   "hidden": 1,
-   "depends_on": "eval:doc.scopes_to_report && doc.scopes_to_report.includes('Reductions')"
+   "options": "High-quality removal credits\nBeyond Value Chain Mitigation (BVCM)\nTemporary voluntary solutions"
   },
   {
    "fieldname": "section_f_monitoring",
