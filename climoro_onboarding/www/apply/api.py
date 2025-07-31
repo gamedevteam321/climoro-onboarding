@@ -222,7 +222,7 @@ def submit_onboarding_form(form_data):
             # Target Metrics
             doc.target_metrics_absolute_emissions = form_data.get("target_metrics_absolute_emissions")
             doc.target_metrics_kgco2e_mwh = form_data.get("target_metrics_kgco2e_mwh")
-            doc.target_metrics_kgco2e_tonne_material = form_data.get("target_metrics_kgco2e_tonne_material")
+            doc.target_metrics_kgco2e_tonne = form_data.get("target_metrics_kgco2e_tonne")
             doc.target_metrics_kgco2e_unit_service = form_data.get("target_metrics_kgco2e_unit_service")
             doc.target_metrics_kgco2e_usd_revenue = form_data.get("target_metrics_kgco2e_usd_revenue")
             doc.target_metrics_kgco2e_stove_year = form_data.get("target_metrics_kgco2e_stove_year")
@@ -310,8 +310,9 @@ def submit_onboarding_form(form_data):
             doc.status = "Submitted"
             doc.current_step = 5
             
-            # Clear existing units and users
+            # Clear existing units and users before adding new ones
             doc.units = []
+            doc.assigned_users = []
             
             # Add new units
             if form_data.get("units"):
@@ -716,7 +717,7 @@ def save_step_data(step_data):
             # Target Metrics
             doc.target_metrics_absolute_emissions = step_data.get("target_metrics_absolute_emissions")
             doc.target_metrics_kgco2e_mwh = step_data.get("target_metrics_kgco2e_mwh")
-            doc.target_metrics_kgco2e_tonne_material = step_data.get("target_metrics_kgco2e_tonne_material")
+            doc.target_metrics_kgco2e_tonne = step_data.get("target_metrics_kgco2e_tonne")
             doc.target_metrics_kgco2e_unit_service = step_data.get("target_metrics_kgco2e_unit_service")
             doc.target_metrics_kgco2e_usd_revenue = step_data.get("target_metrics_kgco2e_usd_revenue")
             doc.target_metrics_kgco2e_stove_year = step_data.get("target_metrics_kgco2e_stove_year")
@@ -1302,7 +1303,7 @@ def get_saved_data():
                    "target_type", "scope_1_2_intensity_percentage", "scope_1_2_target_year", "scope_3_intensity_percentage",
                    "scope_3_target_year", "absolute_emissions_percentage", "near_term_target_year", "long_term_target_year",
                    # Target Metrics
-                   "target_metrics_absolute_emissions", "target_metrics_kgco2e_mwh", "target_metrics_kgco2e_tonne_material",
+                   "target_metrics_absolute_emissions", "target_metrics_kgco2e_mwh", "target_metrics_kgco2e_tonne",
                    "target_metrics_kgco2e_unit_service", "target_metrics_kgco2e_usd_revenue", "target_metrics_kgco2e_stove_year",
                    "target_metrics_kgco2e_tonne_biochar", "target_metrics_kgco2e_km_travelled",
                    # Target Boundary

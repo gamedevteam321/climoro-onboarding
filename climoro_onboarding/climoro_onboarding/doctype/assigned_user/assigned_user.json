@@ -1,7 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
- "creation": "2024-01-01 12:00:00.000000",
+ "creation": "2024-01-01 12:00:00",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
@@ -10,20 +10,20 @@
   "email",
   "first_name",
   "user_role",
-  "parent",
-  "parentfield",
-  "parenttype"
+  "idx"
  ],
  "fields": [
   {
    "fieldname": "assigned_unit",
    "fieldtype": "Data",
+   "in_list_view": 1,
    "label": "Assigned Unit",
    "reqd": 1
   },
   {
    "fieldname": "email",
    "fieldtype": "Data",
+   "in_list_view": 1,
    "label": "Email",
    "options": "Email",
    "reqd": 1
@@ -31,70 +31,37 @@
   {
    "fieldname": "first_name",
    "fieldtype": "Data",
+   "in_list_view": 1,
    "label": "First Name",
    "reqd": 1
   },
   {
    "fieldname": "user_role",
    "fieldtype": "Select",
+   "in_list_view": 1,
    "label": "User Role",
    "options": "Unit Manager\nData Analyst",
    "reqd": 1
   },
   {
-   "fieldname": "parent",
-   "fieldtype": "Data",
-   "label": "Parent",
-   "hidden": 1
-  },
-  {
-   "fieldname": "parentfield",
-   "fieldtype": "Data",
-   "label": "Parent Field",
-   "hidden": 1
-  },
-  {
-   "fieldname": "parenttype",
-   "fieldtype": "Data",
-   "label": "Parent Type",
-   "hidden": 1
-  },
-  {
    "fieldname": "idx",
    "fieldtype": "Int",
-   "label": "Index",
-   "hidden": 1
+   "hidden": 1,
+   "label": "Index"
   }
  ],
  "index_web_pages_for_search": 1,
+ "istable": 1,
  "links": [],
- "list_fields": [
-  "first_name",
-  "email",
-  "user_role",
-  "assigned_unit"
- ],
- "modified": "2024-01-01 12:00:00.000000",
+ "modified": "2025-07-31 17:14:04.595379",
  "modified_by": "Administrator",
- "module": "Climoro Onboarding",
+ "module": "climoro onboarding",
  "name": "Assigned User",
  "owner": "Administrator",
- "permissions": [
-  {
-   "create": 1,
-   "delete": 1,
-   "email": 1,
-   "export": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "System Manager",
-   "share": 1,
-   "write": 1
-  }
- ],
+ "permissions": [],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": [],
  "track_changes": 1
-} 
+}

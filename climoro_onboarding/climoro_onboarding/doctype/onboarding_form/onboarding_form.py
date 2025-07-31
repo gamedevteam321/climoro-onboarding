@@ -10,9 +10,8 @@ class OnboardingForm(Document):
         self.created_at = datetime.now()
     
     def before_save(self):
-        """Set modification timestamp and update summary fields"""
+        """Set modification timestamp"""
         self.modified_at = datetime.now()
-        self.update_summary_fields()
     
     def validate(self):
         """Validate the application data"""
@@ -544,7 +543,7 @@ def refresh_all_summaries():
         for form in forms:
             try:
                 doc = frappe.get_doc("Onboarding Form", form.name)
-                doc.update_summary_fields()
+                # Removed update_summary_fields() call
                 doc.save(ignore_permissions=True)
                 updated_count += 1
             except Exception as e:

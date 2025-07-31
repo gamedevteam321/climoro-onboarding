@@ -611,7 +611,7 @@
                                 <input type="checkbox" name="target_metrics_kgco2e_mwh" value="1"> kgCO₂e/MWh electricity (e.g., solar, wind generation)
                             </label>
                             <label class="checkbox-label">
-                                <input type="checkbox" name="target_metrics_kgco2e_tonne_material" value="1"> kgCO₂e per tonne of material or product
+                                <input type="checkbox" name="target_metrics_kgco2e_tonne" value="1"> kgCO₂e per tonne of material or product
                             </label>
                             <label class="checkbox-label">
                                 <input type="checkbox" name="target_metrics_kgco2e_unit_service" value="1"> kgCO₂e per unit of service
@@ -772,7 +772,7 @@
                         <label for="ghg_tracking_tools">GHG Tracking Tools Used</label>
                         <div class="checkbox-group">
                             <label class="checkbox-label">
-                                <input type="checkbox" name="ghg_tracking_tools" value="Excel / spreadsheet"> Excel / spreadsheet
+                                <input type="checkbox" name="ghg_tracking_tools_excel" value="1"> Excel / spreadsheet
                             </label>
                             <label class="checkbox-label">
                                 <input type="checkbox" name="ghg_tracking_tools_software" value="1" onchange="toggleSoftwareName()"> GHG software
@@ -987,6 +987,98 @@ body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 
+/* Global checkbox reset to prevent any default styling */
+* input[type="checkbox"] {
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    -ms-appearance: none !important;
+    appearance: none !important;
+    border-radius: 0 !important;
+    -webkit-border-radius: 0 !important;
+    -moz-border-radius: 0 !important;
+    background-image: none !important;
+    -webkit-background-image: none !important;
+    -moz-background-image: none !important;
+    -ms-background-image: none !important;
+    content: none !important;
+    outline: none !important;
+    -webkit-outline: none !important;
+    -moz-outline: none !important;
+    box-shadow: none !important;
+    -webkit-box-shadow: none !important;
+    -moz-box-shadow: none !important;
+    /* Force square shape */
+    width: 18px !important;
+    height: 18px !important;
+    min-width: 18px !important;
+    min-height: 18px !important;
+    max-width: 18px !important;
+    max-height: 18px !important;
+    /* Default unchecked state */
+    border: 2px solid var(--border-color) !important;
+    background-color: var(--card-background) !important;
+    position: relative !important;
+    display: inline-block !important;
+    vertical-align: middle !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+}
+
+/* Checked state - consistent purple color */
+* input[type="checkbox"]:checked {
+    background-color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+    background-image: none !important;
+    -webkit-background-image: none !important;
+    -moz-background-image: none !important;
+    -ms-background-image: none !important;
+    content: none !important;
+    border-radius: 0 !important;
+    -webkit-border-radius: 0 !important;
+    -moz-border-radius: 0 !important;
+    -webkit-box-shadow: none !important;
+    -moz-box-shadow: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+    -webkit-outline: none !important;
+    -moz-outline: none !important;
+}
+
+/* Custom checkmark - centered and consistent */
+* input[type="checkbox"]:checked::after {
+    content: '✓' !important;
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    color: white !important;
+    font-size: 12px !important;
+    font-weight: bold !important;
+    line-height: 1 !important;
+    display: block !important;
+    z-index: 10 !important;
+    pointer-events: none !important;
+    background: none !important;
+    border: none !important;
+    box-shadow: none !important;
+    text-align: center !important;
+    width: auto !important;
+    height: auto !important;
+}
+
+/* Hover state */
+* input[type="checkbox"]:hover {
+    border-color: var(--primary-color) !important;
+}
+
+/* Focus state */
+* input[type="checkbox"]:focus {
+    outline: none !important;
+    box-shadow: 0 0 0 3px rgba(94, 100, 255, 0.1) !important;
+}
+
 .onboarding-container {
     max-width: 900px;
     margin: 0 auto;
@@ -1157,7 +1249,47 @@ body {
 }
 
 .form-group {
-    margin-bottom: 20px;
+    margin-bottom: 25px;
+}
+
+/* Improved spacing for form sections */
+.form-step {
+    display: none;
+    padding: 20px 0;
+}
+
+.form-step.active {
+    display: block;
+}
+
+.form-step h2 {
+    margin-bottom: 30px;
+    color: var(--dark-color);
+    font-size: 1.5rem;
+    font-weight: 600;
+    border-bottom: 2px solid var(--primary-color);
+    padding-bottom: 15px;
+}
+
+/* Section breaks and headings */
+.form-step h3 {
+    margin: 30px 0 20px 0;
+    color: var(--dark-color);
+    font-size: 1.2rem;
+    font-weight: 600;
+    padding: 10px 15px;
+    background-color: var(--light-color);
+    border-radius: 6px;
+    border-left: 4px solid var(--primary-color);
+}
+
+.form-step h4 {
+    margin: 25px 0 15px 0;
+    color: var(--dark-color);
+    font-size: 1.1rem;
+    font-weight: 600;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border-color);
 }
 
 .form-group label {
@@ -1587,6 +1719,48 @@ body {
     .btn {
         width: 100%;
     }
+    
+    /* Mobile checkbox improvements */
+    .checkbox-group {
+        padding: 12px;
+        gap: 10px;
+    }
+    
+    .checkbox-label {
+        padding: 10px 8px;
+        font-size: 13px;
+    }
+    
+    .checkbox-label input[type="checkbox"] {
+        width: 16px;
+        height: 16px;
+    }
+    
+    /* Mobile form layout */
+    .form-row {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .form-col {
+        width: 100%;
+    }
+    
+    /* Mobile section headings */
+    .form-step h2 {
+        font-size: 1.3rem;
+        margin-bottom: 25px;
+    }
+    
+    .form-step h3 {
+        font-size: 1.1rem;
+        margin: 25px 0 15px 0;
+    }
+    
+    .form-step h4 {
+        font-size: 1rem;
+        margin: 20px 0 12px 0;
+    }
 }
 
 /* Loading States */
@@ -1649,6 +1823,224 @@ body {
     border-color: var(--success-color);
     box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.1);
 }
+
+/* Checkbox Styles - Fix spacing and double tick issue */
+.checkbox-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: var(--light-color);
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+}
+
+/* Override any Frappe default checkbox styles */
+.onboarding-form input[type="checkbox"],
+.form-container input[type="checkbox"],
+.checkbox-group input[type="checkbox"] {
+    appearance: none !important;
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    -ms-appearance: none !important;
+    width: 18px !important;
+    height: 18px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 2px solid var(--border-color) !important;
+    border-radius: 4px !important;
+    background-color: var(--card-background) !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+    position: relative !important;
+    box-shadow: none !important;
+    outline: none !important;
+    display: inline-block !important;
+    vertical-align: middle !important;
+    flex-shrink: 0 !important;
+    /* Completely hide default checkbox */
+    opacity: 1 !important;
+    background-image: none !important;
+    background-size: auto !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+    /* Remove any default styling */
+    -webkit-box-shadow: none !important;
+    -moz-box-shadow: none !important;
+    box-shadow: none !important;
+    /* Ensure no default content */
+    content: none !important;
+}
+
+.onboarding-form input[type="checkbox"]:checked,
+.form-container input[type="checkbox"]:checked,
+.checkbox-group input[type="checkbox"]:checked {
+    background-color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+    position: relative !important;
+    /* Completely override any default checked styling */
+    background-image: none !important;
+    -webkit-background-image: none !important;
+    -moz-background-image: none !important;
+    -ms-background-image: none !important;
+    /* Remove any default content */
+    content: none !important;
+    /* Ensure no default checkmark shows */
+    -webkit-box-shadow: none !important;
+    -moz-box-shadow: none !important;
+    box-shadow: none !important;
+}
+
+.onboarding-form input[type="checkbox"]:checked::after,
+.form-container input[type="checkbox"]:checked::after,
+.checkbox-group input[type="checkbox"]:checked::after {
+    content: '✓' !important;
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    color: white !important;
+    font-size: 12px !important;
+    font-weight: bold !important;
+    line-height: 1 !important;
+    display: block !important;
+    /* Ensure this is the only checkmark visible */
+    z-index: 10 !important;
+    pointer-events: none !important;
+    /* Remove any default pseudo-elements */
+    -webkit-box-shadow: none !important;
+    -moz-box-shadow: none !important;
+    box-shadow: none !important;
+    background: none !important;
+    border: none !important;
+}
+
+.checkbox-label {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    cursor: pointer !important;
+    padding: 8px 12px !important;
+    border-radius: 6px !important;
+    transition: background-color 0.2s ease !important;
+    font-size: 14px !important;
+    color: var(--text-color) !important;
+    margin: 0 !important;
+    line-height: 1.4 !important;
+    min-height: 20px !important;
+}
+
+.checkbox-label:hover {
+    background-color: rgba(94, 100, 255, 0.05);
+}
+
+.checkbox-label input[type="checkbox"] {
+    width: 18px !important;
+    height: 18px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 2px solid var(--border-color) !important;
+    border-radius: 4px !important;
+    background-color: var(--card-background) !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+    flex-shrink: 0 !important;
+    position: relative !important;
+    appearance: none !important;
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+    display: inline-block !important;
+    vertical-align: middle !important;
+}
+
+.checkbox-label input[type="checkbox"]:checked {
+    background-color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+    position: relative !important;
+}
+
+.checkbox-label input[type="checkbox"]:checked::after {
+    content: '✓' !important;
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    color: white !important;
+    font-size: 12px !important;
+    font-weight: bold !important;
+    line-height: 1 !important;
+    display: block !important;
+}
+
+.checkbox-label input[type="checkbox"]:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(94, 100, 255, 0.1);
+}
+
+.checkbox-label input[type="checkbox"]:hover {
+    border-color: var(--primary-color);
+}
+
+/* Section headings for checkbox groups */
+.checkbox-group h4,
+.checkbox-group h5 {
+    margin: 0 0 15px 0;
+    color: var(--dark-color);
+    font-weight: 600;
+    font-size: 16px;
+    border-bottom: 2px solid var(--primary-color);
+    padding-bottom: 8px;
+}
+
+.checkbox-group h5 {
+    font-size: 14px;
+    margin-bottom: 12px;
+}
+
+/* Form row layout for better spacing */
+.form-row {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.form-col {
+    flex: 1;
+}
+
+.form-col .form-group {
+    margin-bottom: 15px;
+}
+
+/* Additional spacing improvements */
+.form-step .form-group:last-child {
+    margin-bottom: 0;
+}
+
+.checkbox-group:last-child {
+    margin-bottom: 0;
+}
+
+/* Ensure proper alignment of checkbox text */
+.checkbox-label span,
+.checkbox-label {
+    vertical-align: middle !important;
+    display: inline-flex !important;
+    align-items: center !important;
+}
+
+/* Fix any potential alignment issues */
+.checkbox-label input[type="checkbox"] {
+    margin-right: 0 !important;
+    margin-left: 0 !important;
+}
+
+/* Additional checkbox styling removed - now handled by global rules above */
+
+/* Frappe-specific checkbox styling removed - now handled by global rules above */
 
 /* File Upload Styles */
 .file-upload-area {
@@ -3481,7 +3873,7 @@ class OnboardingForm {
             // Target Metrics
             stepData.target_metrics_absolute_emissions = this.getCheckboxValue('target_metrics_absolute_emissions');
             stepData.target_metrics_kgco2e_mwh = this.getCheckboxValue('target_metrics_kgco2e_mwh');
-            stepData.target_metrics_kgco2e_tonne_material = this.getCheckboxValue('target_metrics_kgco2e_tonne_material');
+                            stepData.target_metrics_kgco2e_tonne = this.getCheckboxValue('target_metrics_kgco2e_tonne');
             stepData.target_metrics_kgco2e_unit_service = this.getCheckboxValue('target_metrics_kgco2e_unit_service');
             stepData.target_metrics_kgco2e_usd_revenue = this.getCheckboxValue('target_metrics_kgco2e_usd_revenue');
             stepData.target_metrics_kgco2e_stove_year = this.getCheckboxValue('target_metrics_kgco2e_stove_year');
@@ -3758,7 +4150,7 @@ class OnboardingForm {
             // Target Metrics
             target_metrics_absolute_emissions: this.getCheckboxValue('target_metrics_absolute_emissions'),
             target_metrics_kgco2e_mwh: this.getCheckboxValue('target_metrics_kgco2e_mwh'),
-            target_metrics_kgco2e_tonne_material: this.getCheckboxValue('target_metrics_kgco2e_tonne_material'),
+                            target_metrics_kgco2e_tonne: this.getCheckboxValue('target_metrics_kgco2e_tonne'),
             target_metrics_kgco2e_unit_service: this.getCheckboxValue('target_metrics_kgco2e_unit_service'),
             target_metrics_kgco2e_usd_revenue: this.getCheckboxValue('target_metrics_kgco2e_usd_revenue'),
             target_metrics_kgco2e_stove_year: this.getCheckboxValue('target_metrics_kgco2e_stove_year'),
@@ -5495,7 +5887,86 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-    });
+    
+    // Debug function to check all checkbox field names
+    window.debugCheckboxFields = function() {
+        console.log('=== Checking all checkbox field names ===');
+        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        const fieldNames = [];
+        
+        checkboxes.forEach((checkbox, index) => {
+            const name = checkbox.getAttribute('name');
+            const value = checkbox.getAttribute('value');
+            const checked = checkbox.checked;
+            fieldNames.push({ name, value, checked, index });
+            console.log(`Checkbox ${index + 1}: name="${name}", value="${value}", checked=${checked}`);
+        });
+        
+        console.log('Total checkboxes found:', checkboxes.length);
+        console.log('Field names array:', fieldNames);
+        return fieldNames;
+    };
+    
+    // Debug function to check specific field mapping
+    window.debugFieldMapping = function(fieldName) {
+        console.log(`=== Debugging field: ${fieldName} ===`);
+        const checkbox = document.querySelector(`input[name="${fieldName}"]`);
+        if (checkbox) {
+            console.log(`Found checkbox:`, checkbox);
+            console.log(`Checked: ${checkbox.checked}`);
+            console.log(`Value: ${checkbox.value}`);
+            console.log(`Visible: ${checkbox.offsetWidth > 0 && checkbox.offsetHeight > 0}`);
+        } else {
+            console.log(`❌ Checkbox with name "${fieldName}" not found!`);
+        }
+    };
+    
+    // Debug function specifically for the problematic field
+    window.debugTonneField = function() {
+        console.log('=== Debugging kgCO₂e per tonne field ===');
+        const checkbox = document.querySelector('input[name="target_metrics_kgco2e_tonne"]');
+        if (checkbox) {
+            console.log('✅ Checkbox found:', checkbox);
+            console.log('Checked:', checkbox.checked);
+            console.log('Value:', checkbox.value);
+            console.log('Name:', checkbox.name);
+            
+            // Test the getCheckboxValue function
+            const form = document.getElementById('onboarding-form');
+            if (form && form.getCheckboxValue) {
+                const value = form.getCheckboxValue('target_metrics_kgco2e_tonne');
+                console.log('getCheckboxValue result:', value);
+            }
+        } else {
+            console.log('❌ Checkbox not found!');
+        }
+    };
+    
+    // Debug function to test checkbox styling
+    window.debugCheckboxStyling = function() {
+        console.log('=== Testing Checkbox Styling ===');
+        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        console.log(`Found ${checkboxes.length} checkboxes`);
+        
+        checkboxes.forEach((checkbox, index) => {
+            const computedStyle = window.getComputedStyle(checkbox);
+            console.log(`Checkbox ${index + 1}:`, {
+                name: checkbox.name,
+                checked: checkbox.checked,
+                backgroundColor: computedStyle.backgroundColor,
+                borderColor: computedStyle.borderColor,
+                borderRadius: computedStyle.borderRadius,
+                width: computedStyle.width,
+                height: computedStyle.height,
+                appearance: computedStyle.appearance,
+                webkitAppearance: computedStyle.webkitAppearance
+            });
+        });
+    };
+    
+    // Auto-run debug on page load (remove this in production)
+    // setTimeout(() => debugCheckboxFields(), 2000);
+});
 
 
 </script>
