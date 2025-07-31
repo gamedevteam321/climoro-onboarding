@@ -319,7 +319,56 @@
                     
                     <div class="form-group">
                         <label for="base_year">Base Year *</label>
-                        <input type="number" id="base_year" name="base_year" min="1990" max="2030" required>
+                        <select id="base_year" name="base_year" required>
+                            <option value="">Select Base Year</option>
+                            <option value="2024">2024</option>
+                            <option value="2025">2025</option>
+                            <option value="2026">2026</option>
+                            <option value="2027">2027</option>
+                            <option value="2028">2028</option>
+                            <option value="2029">2029</option>
+                            <option value="2030">2030</option>
+                            <option value="2031">2031</option>
+                            <option value="2032">2032</option>
+                            <option value="2033">2033</option>
+                            <option value="2034">2034</option>
+                            <option value="2035">2035</option>
+                            <option value="2036">2036</option>
+                            <option value="2037">2037</option>
+                            <option value="2038">2038</option>
+                            <option value="2039">2039</option>
+                            <option value="2040">2040</option>
+                            <option value="2041">2041</option>
+                            <option value="2042">2042</option>
+                            <option value="2043">2043</option>
+                            <option value="2044">2044</option>
+                            <option value="2045">2045</option>
+                            <option value="2046">2046</option>
+                            <option value="2047">2047</option>
+                            <option value="2048">2048</option>
+                            <option value="2049">2049</option>
+                            <option value="2050">2050</option>
+                            <option value="2051">2051</option>
+                            <option value="2052">2052</option>
+                            <option value="2053">2053</option>
+                            <option value="2054">2054</option>
+                            <option value="2055">2055</option>
+                            <option value="2056">2056</option>
+                            <option value="2057">2057</option>
+                            <option value="2058">2058</option>
+                            <option value="2059">2059</option>
+                            <option value="2060">2060</option>
+                            <option value="2061">2061</option>
+                            <option value="2062">2062</option>
+                            <option value="2063">2063</option>
+                            <option value="2064">2064</option>
+                            <option value="2065">2065</option>
+                            <option value="2066">2066</option>
+                            <option value="2067">2067</option>
+                            <option value="2068">2068</option>
+                            <option value="2069">2069</option>
+                            <option value="2070">2070</option>
+                        </select>
                     </div>
                     
                     <div class="form-group">
@@ -328,16 +377,64 @@
                     </div>
                     
                     <div class="form-group">
-                        <label for="ghg_boundary_approach">GHG Boundary Approach</label>
+                        <label>Scopes Covered</label>
                         <div class="checkbox-group">
                             <label class="checkbox-label">
-                                <input type="checkbox" name="ghg_boundary_approach" value="Operational Control"> Operational Control
+                                <input type="checkbox" name="scopes_covered_scope1" value="1"> Scope 1 – Direct emissions
                             </label>
                             <label class="checkbox-label">
-                                <input type="checkbox" name="ghg_boundary_approach" value="Financial Control"> Financial Control
+                                <input type="checkbox" name="scopes_covered_scope2" value="1"> Scope 2 – Indirect emissions
                             </label>
                             <label class="checkbox-label">
-                                <input type="checkbox" name="ghg_boundary_approach" value="Equity Share"> Equity Share
+                                <input type="checkbox" name="scopes_covered_scope3" value="1"> Scope 3 – Other indirect emissions
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>GHG Boundary Approach</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="ghg_boundary_approach_operational_control" value="1"> Operational Control
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="ghg_boundary_approach_financial_control" value="1"> Financial Control
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="ghg_boundary_approach_equity_share" value="1"> Equity Share
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Scope 3 Categories Included</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="scope_3_categories_purchased_goods" value="1"> Purchased goods and services
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="scope_3_categories_capital_goods" value="1"> Capital goods
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="scope_3_categories_fuel_energy" value="1"> Fuel- and energy-related activities
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="scope_3_categories_transportation" value="1"> Upstream/downstream transportation and distribution
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="scope_3_categories_waste" value="1"> Waste generated in operations
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="scope_3_categories_business_travel" value="1"> Business travel / employee commuting
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="scope_3_categories_use_sold_products" value="1"> Use of sold products
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="scope_3_categories_end_life_treatment" value="1"> End-of-life treatment of sold products
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="scope_3_categories_leased_assets" value="1"> Leased assets, franchises, or investments
                             </label>
                         </div>
                     </div>
@@ -348,65 +445,328 @@
                     </div>
                 </div>
 
-                <!-- Dynamic Sections based on Scope Selection -->
-                <div id="scope1-section" class="section-container" style="display: none;">
-                    <h3>Section B: Scope 1 Emissions Reduction Targets</h3>
-                    <!-- Scope 1 fields will be populated dynamically -->
-                </div>
-
-                <div id="scope2-section" class="section-container" style="display: none;">
-                    <h3>Section C: Scope 2 Emissions Reduction Targets</h3>
-                    <!-- Scope 2 fields will be populated dynamically -->
-                </div>
-
-                <div id="scope3-section" class="section-container" style="display: none;">
-                    <h3>Section D: Scope 3 Emissions Reduction Targets</h3>
-                    <!-- Scope 3 fields will be populated dynamically -->
-                </div>
-
-                <div id="reductions-section" class="section-container" style="display: none;">
-                    <h3>Section E: Reduction Strategies</h3>
-                    <!-- Reductions fields will be populated dynamically -->
-                </div>
-
-                <!-- Section F: Monitoring, Adjustments & Reporting -->
+                <!-- Section B: Emissions Reduction Targets -->
                 <div class="section-container">
-                    <h3>Section F: Monitoring, Adjustments & Reporting</h3>
+                    <h3>Section B: Emissions Reduction Targets</h3>
                     
                     <div class="form-group">
-                        <label for="monitoring_frequency">Monitoring Frequency</label>
+                        <label for="target_type">Target Type</label>
+                        <select id="target_type" name="target_type">
+                            <option value="">Select Target Type</option>
+                            <option value="Near-term Target (5–10 years)">Near-term Target (5–10 years)</option>
+                            <option value="Long-term Net-Zero Target (by 2050 or earlier)">Long-term Net-Zero Target (by 2050 or earlier)</option>
+                            <option value="Both">Both</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Target Scope Alignment (Intensity-Based Reduction Goals)</label>
+                        <div class="form-row">
+                            <div class="form-col">
+                                <label for="scope_1_2_intensity_percentage">Scope 1 & 2: Reduce emissions intensity by ___ %</label>
+                                <input type="number" id="scope_1_2_intensity_percentage" name="scope_1_2_intensity_percentage" step="0.1" min="0" max="100">
+                            </div>
+                            <div class="form-col">
+                                <label for="scope_1_2_target_year">Target Year</label>
+                                <select id="scope_1_2_target_year" name="scope_1_2_target_year">
+                                    <option value="">Select Year</option>
+                                    <option value="2024">2024</option>
+                                    <option value="2025">2025</option>
+                                    <option value="2026">2026</option>
+                                    <option value="2027">2027</option>
+                                    <option value="2028">2028</option>
+                                    <option value="2029">2029</option>
+                                    <option value="2030">2030</option>
+                                    <option value="2031">2031</option>
+                                    <option value="2032">2032</option>
+                                    <option value="2033">2033</option>
+                                    <option value="2034">2034</option>
+                                    <option value="2035">2035</option>
+                                    <option value="2036">2036</option>
+                                    <option value="2037">2037</option>
+                                    <option value="2038">2038</option>
+                                    <option value="2039">2039</option>
+                                    <option value="2040">2040</option>
+                                    <option value="2041">2041</option>
+                                    <option value="2042">2042</option>
+                                    <option value="2043">2043</option>
+                                    <option value="2044">2044</option>
+                                    <option value="2045">2045</option>
+                                    <option value="2046">2046</option>
+                                    <option value="2047">2047</option>
+                                    <option value="2048">2048</option>
+                                    <option value="2049">2049</option>
+                                    <option value="2050">2050</option>
+                                    <option value="2051">2051</option>
+                                    <option value="2052">2052</option>
+                                    <option value="2053">2053</option>
+                                    <option value="2054">2054</option>
+                                    <option value="2055">2055</option>
+                                    <option value="2056">2056</option>
+                                    <option value="2057">2057</option>
+                                    <option value="2058">2058</option>
+                                    <option value="2059">2059</option>
+                                    <option value="2060">2060</option>
+                                    <option value="2061">2061</option>
+                                    <option value="2062">2062</option>
+                                    <option value="2063">2063</option>
+                                    <option value="2064">2064</option>
+                                    <option value="2065">2065</option>
+                                    <option value="2066">2066</option>
+                                    <option value="2067">2067</option>
+                                    <option value="2068">2068</option>
+                                    <option value="2069">2069</option>
+                                    <option value="2070">2070</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-col">
+                                <label for="scope_3_intensity_percentage">Scope 3: Reduce emissions intensity by ___ %</label>
+                                <input type="number" id="scope_3_intensity_percentage" name="scope_3_intensity_percentage" step="0.1" min="0" max="100">
+                            </div>
+                            <div class="form-col">
+                                <label for="scope_3_target_year">Target year</label>
+                                <select id="scope_3_target_year" name="scope_3_target_year">
+                                    <option value="">Select Year</option>
+                                    <option value="2024">2024</option>
+                                    <option value="2025">2025</option>
+                                    <option value="2026">2026</option>
+                                    <option value="2027">2027</option>
+                                    <option value="2028">2028</option>
+                                    <option value="2029">2029</option>
+                                    <option value="2030">2030</option>
+                                    <option value="2031">2031</option>
+                                    <option value="2032">2032</option>
+                                    <option value="2033">2033</option>
+                                    <option value="2034">2034</option>
+                                    <option value="2035">2035</option>
+                                    <option value="2036">2036</option>
+                                    <option value="2037">2037</option>
+                                    <option value="2038">2038</option>
+                                    <option value="2039">2039</option>
+                                    <option value="2040">2040</option>
+                                    <option value="2041">2041</option>
+                                    <option value="2042">2042</option>
+                                    <option value="2043">2043</option>
+                                    <option value="2044">2044</option>
+                                    <option value="2045">2045</option>
+                                    <option value="2046">2046</option>
+                                    <option value="2047">2047</option>
+                                    <option value="2048">2048</option>
+                                    <option value="2049">2049</option>
+                                    <option value="2050">2050</option>
+                                    <option value="2051">2051</option>
+                                    <option value="2052">2052</option>
+                                    <option value="2053">2053</option>
+                                    <option value="2054">2054</option>
+                                    <option value="2055">2055</option>
+                                    <option value="2056">2056</option>
+                                    <option value="2057">2057</option>
+                                    <option value="2058">2058</option>
+                                    <option value="2059">2059</option>
+                                    <option value="2060">2060</option>
+                                    <option value="2061">2061</option>
+                                    <option value="2062">2062</option>
+                                    <option value="2063">2063</option>
+                                    <option value="2064">2064</option>
+                                    <option value="2065">2065</option>
+                                    <option value="2066">2066</option>
+                                    <option value="2067">2067</option>
+                                    <option value="2068">2068</option>
+                                    <option value="2069">2069</option>
+                                    <option value="2070">2070</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-col">
+                                <label for="absolute_emissions_percentage">Optional: Maintain absolute emission with ___ % base year levels</label>
+                                <input type="number" id="absolute_emissions_percentage" name="absolute_emissions_percentage" step="0.1" min="0" max="100">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Target Years</label>
+                        <div class="form-row">
+                            <div class="form-col">
+                                <label for="near_term_target_year">Near-Term Target Year</label>
+                                <input type="number" id="near_term_target_year" name="near_term_target_year" min="2024" max="2070">
+                            </div>
+                            <div class="form-col">
+                                <label for="long_term_target_year">Long-Term (Net-Zero) Target Year</label>
+                                <input type="number" id="long_term_target_year" name="long_term_target_year" min="2024" max="2070">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Target Metrics – Select All That Apply</label>
                         <div class="checkbox-group">
                             <label class="checkbox-label">
-                                <input type="checkbox" name="monitoring_frequency" value="Annual"> Annual
+                                <input type="checkbox" name="target_metrics_absolute_emissions" value="1"> Absolute emissions reduction
                             </label>
                             <label class="checkbox-label">
-                                <input type="checkbox" name="monitoring_frequency" value="Biennial"> Biennial
+                                <input type="checkbox" name="target_metrics_kgco2e_mwh" value="1"> kgCO₂e/MWh electricity (e.g., solar, wind generation)
                             </label>
                             <label class="checkbox-label">
-                                <input type="checkbox" name="monitoring_frequency" value="Other" onchange="toggleOtherFrequency()"> Other
+                                <input type="checkbox" name="target_metrics_kgco2e_tonne_material" value="1"> kgCO₂e per tonne of material or product
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="target_metrics_kgco2e_unit_service" value="1"> kgCO₂e per unit of service
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="target_metrics_kgco2e_usd_revenue" value="1"> kgCO₂e per USD revenue
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="target_metrics_kgco2e_stove_year" value="1"> kgCO₂e per stove-year (clean cooking)
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="target_metrics_kgco2e_tonne_biochar" value="1"> kgCO₂e per tonne biochar applied
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="target_metrics_kgco2e_km_travelled" value="1"> kgCO₂e per km travelled (transport decarbonization)
                             </label>
                         </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Target Boundary (Coverage of Emissions)</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="target_boundary_scope1_2_95_percent" value="1"> Scope 1 & 2: ≥95% included
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="target_boundary_scope3_90_percent_long_term" value="1"> Scope 3: ≥90% included (long-term)
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="target_boundary_scope3_67_percent_near_term" value="1"> Scope 3: ≥67% (near-term)
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="target_boundary_prioritize_relevance" value="1"> Scope 3: Prioritize by relevance
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section C: Mitigation Strategies -->
+                <div class="section-container">
+                    <h3>Section C: Mitigation Strategies</h3>
+                    
+                    <div class="form-group">
+                        <label>1. Operational Emissions (Scope 1 & 2)</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="operational_emissions_energy_efficiency" value="1"> Energy efficiency improvements
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="operational_emissions_onsite_renewable" value="1"> Onsite renewable energy (e.g., rooftop solar)
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="operational_emissions_offsite_renewable" value="1"> Offsite renewable procurement
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="operational_emissions_fuel_switching" value="1"> Fuel switching to clean alternatives
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="operational_emissions_process_optimization" value="1"> Process optimization
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>2. Value Chain Emissions (Scope 3)</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="value_chain_emissions_supplier_engagement" value="1"> Supplier engagement
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="value_chain_emissions_low_carbon_materials" value="1"> Low-carbon input materials
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="value_chain_emissions_redesign_use_phase" value="1"> Redesign for use-phase reduction
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="value_chain_emissions_optimize_logistics" value="1"> Optimize logistics
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="value_chain_emissions_circular_economy" value="1"> Circular economy practices
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>3. Land Sector & Removals (Optional)</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="land_sector_removals_afforestation" value="1"> Afforestation / reforestation
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="land_sector_removals_soil_carbon" value="1"> Soil carbon improvement
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="land_sector_removals_urban_greening" value="1"> Urban greening
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="land_sector_removals_biochar" value="1"> Biochar application
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="land_sector_removals_carbon_capture" value="1"> Carbon capture or enhanced weathering
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="land_sector_removals_certified_removals" value="1"> Certified removals (DAC, agroforestry)
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>4. Residual Emissions Strategy</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="residual_emissions_high_quality_credits" value="1"> High-quality removal credits
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="residual_emissions_bvcm" value="1"> Beyond Value Chain Mitigation (BVCM)
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="residual_emissions_temporary_solutions" value="1"> Temporary voluntary solutions
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section D: Monitoring, Adjustments & Reporting -->
+                <div class="section-container">
+                    <h3>Section D: Monitoring, Adjustments & Reporting</h3>
+                    
+                    <div class="form-group">
+                        <label for="monitoring_frequency">1. Monitoring Frequency</label>
+                        <select id="monitoring_frequency" name="monitoring_frequency" onchange="toggleOtherFrequency()">
+                            <option value="">Select Monitoring Frequency</option>
+                            <option value="Annual">Annual</option>
+                            <option value="Biennial">Biennial</option>
+                            <option value="Other">Other</option>
+                        </select>
                     </div>
                     
                     <div class="form-group" id="other-frequency-group" style="display: none;">
-                        <label for="monitoring_frequency_other">Other Monitoring Frequency</label>
-                        <input type="text" id="monitoring_frequency_other" name="monitoring_frequency_other" placeholder="Specify other monitoring frequency">
+                        <label for="monitoring_frequency_other_text">Other Monitoring Frequency</label>
+                        <input type="text" id="monitoring_frequency_other_text" name="monitoring_frequency_other_text" placeholder="Specify other monitoring frequency">
                     </div>
                     
                     <div class="form-group">
-                        <label for="assurance_validation">Assurance and Validation</label>
-                        <div class="checkbox-group">
-                            <label class="checkbox-label">
-                                <input type="checkbox" name="assurance_validation" value="Internal assurance"> Internal assurance
-                            </label>
-                            <label class="checkbox-label">
-                                <input type="checkbox" name="assurance_validation" value="Third-party verification"> Third-party verification
-                            </label>
-                            <label class="checkbox-label">
-                                <input type="checkbox" name="assurance_validation" value="Submitted to validation platform (e.g., SBTi)"> Submitted to validation platform (e.g., SBTi)
-                            </label>
-                        </div>
+                        <label for="assurance_validation">2. Assurance and Validation</label>
+                        <select id="assurance_validation" name="assurance_validation">
+                            <option value="">Select Assurance and Validation</option>
+                            <option value="Internal assurance">Internal assurance</option>
+                            <option value="Third-party verification">Third-party verification</option>
+                            <option value="Submitted to validation platform (e.g., SBTi)">Submitted to validation platform (e.g., SBTi)</option>
+                        </select>
                     </div>
+                    
+
+                </div>
                     
                     <div class="form-group">
                         <label for="ghg_tracking_tools">GHG Tracking Tools Used</label>
@@ -415,48 +775,48 @@
                                 <input type="checkbox" name="ghg_tracking_tools" value="Excel / spreadsheet"> Excel / spreadsheet
                             </label>
                             <label class="checkbox-label">
-                                <input type="checkbox" name="ghg_tracking_tools" value="GHG software" onchange="toggleGHGSoftware()"> GHG software
+                                <input type="checkbox" name="ghg_tracking_tools_software" value="1" onchange="toggleSoftwareName()"> GHG software
                             </label>
                             <label class="checkbox-label">
-                                <input type="checkbox" name="ghg_tracking_tools" value="Web platform (e.g., CDP, Net-Zero Cloud)"> Web platform (e.g., CDP, Net-Zero Cloud)
-                            </label>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group" id="ghg-software-group" style="display: none;">
-                        <label for="ghg_software_name">GHG Software Name</label>
-                        <input type="text" id="ghg_software_name" name="ghg_software_name" placeholder="Name of the GHG software used">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="recalculation_policy">Recalculation Policy</label>
-                        <div class="checkbox-group">
-                            <label class="checkbox-label">
-                                <input type="checkbox" name="recalculation_policy" value="Structural changes"> Structural changes
-                            </label>
-                            <label class="checkbox-label">
-                                <input type="checkbox" name="recalculation_policy" value="Methodology changes"> Methodology changes
-                            </label>
-                            <label class="checkbox-label">
-                                <input type="checkbox" name="recalculation_policy" value="Boundary/scope adjustments"> Boundary/scope adjustments
+                                <input type="checkbox" name="ghg_tracking_tools_web_platform" value="1"> Web platform (e.g., CDP, Net-Zero Cloud)
                             </label>
                         </div>
                     </div>
                     
+                    <div class="form-group" id="software-name-group" style="display: none;">
+                        <label for="ghg_tracking_tools_software_name">GHG Software Name</label>
+                        <input type="text" id="ghg_tracking_tools_software_name" name="ghg_tracking_tools_software_name" placeholder="Name of the GHG software used">
+                    </div>
+                    
                     <div class="form-group">
-                        <label for="progress_communication">Progress Communication</label>
+                        <label>4. Recalculation Policy</label>
                         <div class="checkbox-group">
                             <label class="checkbox-label">
-                                <input type="checkbox" name="progress_communication" value="ESG dashboard"> ESG dashboard
+                                <input type="checkbox" name="recalculation_policy_structural" value="1"> Structural changes
                             </label>
                             <label class="checkbox-label">
-                                <input type="checkbox" name="progress_communication" value="Annual sustainability report"> Annual sustainability report
+                                <input type="checkbox" name="recalculation_policy_methodology" value="1"> Methodology changes
                             </label>
                             <label class="checkbox-label">
-                                <input type="checkbox" name="progress_communication" value="CDP/public disclosure"> CDP/public disclosure
+                                <input type="checkbox" name="recalculation_policy_boundary" value="1"> Boundary/scope adjustments
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>5. Progress Communication</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="progress_communication_esg_dashboard" value="1"> ESG dashboard
                             </label>
                             <label class="checkbox-label">
-                                <input type="checkbox" name="progress_communication" value="SBTi registry updates"> SBTi registry updates
+                                <input type="checkbox" name="progress_communication_sustainability_report" value="1"> Annual sustainability report
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="progress_communication_cdp_disclosure" value="1"> CDP/public disclosure
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="progress_communication_sbti_registry" value="1"> SBTi registry updates
                             </label>
                         </div>
                     </div>
@@ -3081,47 +3441,108 @@ class OnboardingForm {
             stepData.reduction_options_transportation = this.getCheckboxValue('reduction_options_transportation');
             stepData.reduction_options_other = this.getCheckboxValue('reduction_options_other');
         } else if (targetStep === 5) {
-            // Step 5: Reduction Form
+            // Step 5: Reduction Form - Section A: Emissions Inventory Setup
             stepData.base_year = document.getElementById('base_year')?.value || '';
             stepData.base_year_reason = document.getElementById('base_year_reason')?.value || '';
-            stepData.ghg_boundary_approach = this.getCheckboxValues('ghg_boundary_approach');
+            
+            // Scopes Covered
+            stepData.scopes_covered_scope1 = this.getCheckboxValue('scopes_covered_scope1');
+            stepData.scopes_covered_scope2 = this.getCheckboxValue('scopes_covered_scope2');
+            stepData.scopes_covered_scope3 = this.getCheckboxValue('scopes_covered_scope3');
+            
+            // GHG Boundary Approach
+            stepData.ghg_boundary_approach_operational_control = this.getCheckboxValue('ghg_boundary_approach_operational_control');
+            stepData.ghg_boundary_approach_financial_control = this.getCheckboxValue('ghg_boundary_approach_financial_control');
+            stepData.ghg_boundary_approach_equity_share = this.getCheckboxValue('ghg_boundary_approach_equity_share');
+            
+            // Scope 3 Categories Included
+            stepData.scope_3_categories_purchased_goods = this.getCheckboxValue('scope_3_categories_purchased_goods');
+            stepData.scope_3_categories_capital_goods = this.getCheckboxValue('scope_3_categories_capital_goods');
+            stepData.scope_3_categories_fuel_energy = this.getCheckboxValue('scope_3_categories_fuel_energy');
+            stepData.scope_3_categories_transportation = this.getCheckboxValue('scope_3_categories_transportation');
+            stepData.scope_3_categories_waste = this.getCheckboxValue('scope_3_categories_waste');
+            stepData.scope_3_categories_business_travel = this.getCheckboxValue('scope_3_categories_business_travel');
+            stepData.scope_3_categories_use_sold_products = this.getCheckboxValue('scope_3_categories_use_sold_products');
+            stepData.scope_3_categories_end_life_treatment = this.getCheckboxValue('scope_3_categories_end_life_treatment');
+            stepData.scope_3_categories_leased_assets = this.getCheckboxValue('scope_3_categories_leased_assets');
+            
             stepData.emissions_exclusions = document.getElementById('emissions_exclusions')?.value || '';
             
-            // Scope 1 Fields
-            stepData.scope_1_target_type = this.getCheckboxValues('scope_1_target_type');
-            stepData.scope_1_intensity_reduction = this.getCheckboxValue('scope_1_intensity_reduction');
-            stepData.scope_1_reduction_percentage = document.getElementById('scope_1_reduction_percentage')?.value || '';
-            stepData.scope_1_target_year = document.getElementById('scope_1_target_year')?.value || '';
-            stepData.scope_1_mitigation_strategies = this.getCheckboxValues('scope_1_mitigation_strategies');
-            
-            // Scope 2 Fields
-            stepData.scope_2_target_type = this.getCheckboxValues('scope_2_target_type');
-            stepData.scope_2_intensity_reduction = this.getCheckboxValue('scope_2_intensity_reduction');
-            stepData.scope_2_reduction_percentage = document.getElementById('scope_2_reduction_percentage')?.value || '';
-            stepData.scope_2_target_year = document.getElementById('scope_2_target_year')?.value || '';
-            stepData.scope_2_mitigation_strategies = this.getCheckboxValues('scope_2_mitigation_strategies');
-            
-            // Scope 3 Fields
-            stepData.scope_3_categories_included = this.getCheckboxValues('scope_3_categories_included');
-            stepData.scope_3_target_type = this.getCheckboxValues('scope_3_target_type');
-            stepData.scope_3_intensity_reduction = this.getCheckboxValue('scope_3_intensity_reduction');
-            stepData.scope_3_reduction_percentage = document.getElementById('scope_3_reduction_percentage')?.value || '';
+            // Section B: Emissions Reduction Targets
+            stepData.target_type = document.getElementById('target_type')?.value || '';
+            stepData.scope_1_2_intensity_percentage = document.getElementById('scope_1_2_intensity_percentage')?.value || '';
+            stepData.scope_1_2_target_year = document.getElementById('scope_1_2_target_year')?.value || '';
+            stepData.scope_3_intensity_percentage = document.getElementById('scope_3_intensity_percentage')?.value || '';
             stepData.scope_3_target_year = document.getElementById('scope_3_target_year')?.value || '';
-            stepData.scope_3_mitigation_strategies = this.getCheckboxValues('scope_3_mitigation_strategies');
+            stepData.absolute_emissions_percentage = document.getElementById('absolute_emissions_percentage')?.value || '';
+            stepData.near_term_target_year = document.getElementById('near_term_target_year')?.value || '';
+            stepData.long_term_target_year = document.getElementById('long_term_target_year')?.value || '';
             
-            // Reductions Fields
-            stepData.reduction_target_type = this.getCheckboxValues('reduction_target_type');
-            stepData.land_sector_removals = this.getCheckboxValues('land_sector_removals');
-            stepData.residual_emissions_strategy = this.getCheckboxValues('residual_emissions_strategy');
+            // Target Metrics
+            stepData.target_metrics_absolute_emissions = this.getCheckboxValue('target_metrics_absolute_emissions');
+            stepData.target_metrics_kgco2e_mwh = this.getCheckboxValue('target_metrics_kgco2e_mwh');
+            stepData.target_metrics_kgco2e_tonne_material = this.getCheckboxValue('target_metrics_kgco2e_tonne_material');
+            stepData.target_metrics_kgco2e_unit_service = this.getCheckboxValue('target_metrics_kgco2e_unit_service');
+            stepData.target_metrics_kgco2e_usd_revenue = this.getCheckboxValue('target_metrics_kgco2e_usd_revenue');
+            stepData.target_metrics_kgco2e_stove_year = this.getCheckboxValue('target_metrics_kgco2e_stove_year');
+            stepData.target_metrics_kgco2e_tonne_biochar = this.getCheckboxValue('target_metrics_kgco2e_tonne_biochar');
+            stepData.target_metrics_kgco2e_km_travelled = this.getCheckboxValue('target_metrics_kgco2e_km_travelled');
             
-            // Monitoring Fields
-            stepData.monitoring_frequency = this.getCheckboxValues('monitoring_frequency');
-            stepData.monitoring_frequency_other = document.getElementById('monitoring_frequency_other')?.value || '';
-            stepData.assurance_validation = this.getCheckboxValues('assurance_validation');
-            stepData.ghg_tracking_tools = this.getCheckboxValues('ghg_tracking_tools');
-            stepData.ghg_software_name = document.getElementById('ghg_software_name')?.value || '';
-            stepData.recalculation_policy = this.getCheckboxValues('recalculation_policy');
-            stepData.progress_communication = this.getCheckboxValues('progress_communication');
+            // Target Boundary
+            stepData.target_boundary_scope1_2_95_percent = this.getCheckboxValue('target_boundary_scope1_2_95_percent');
+            stepData.target_boundary_scope3_90_percent_long_term = this.getCheckboxValue('target_boundary_scope3_90_percent_long_term');
+            stepData.target_boundary_scope3_67_percent_near_term = this.getCheckboxValue('target_boundary_scope3_67_percent_near_term');
+            stepData.target_boundary_prioritize_relevance = this.getCheckboxValue('target_boundary_prioritize_relevance');
+            
+            // Section C: Mitigation Strategies
+            // Operational Emissions
+            stepData.operational_emissions_energy_efficiency = this.getCheckboxValue('operational_emissions_energy_efficiency');
+            stepData.operational_emissions_onsite_renewable = this.getCheckboxValue('operational_emissions_onsite_renewable');
+            stepData.operational_emissions_offsite_renewable = this.getCheckboxValue('operational_emissions_offsite_renewable');
+            stepData.operational_emissions_fuel_switching = this.getCheckboxValue('operational_emissions_fuel_switching');
+            stepData.operational_emissions_process_optimization = this.getCheckboxValue('operational_emissions_process_optimization');
+            
+            // Value Chain Emissions
+            stepData.value_chain_emissions_supplier_engagement = this.getCheckboxValue('value_chain_emissions_supplier_engagement');
+            stepData.value_chain_emissions_low_carbon_materials = this.getCheckboxValue('value_chain_emissions_low_carbon_materials');
+            stepData.value_chain_emissions_redesign_use_phase = this.getCheckboxValue('value_chain_emissions_redesign_use_phase');
+            stepData.value_chain_emissions_optimize_logistics = this.getCheckboxValue('value_chain_emissions_optimize_logistics');
+            stepData.value_chain_emissions_circular_economy = this.getCheckboxValue('value_chain_emissions_circular_economy');
+            
+            // Land Sector & Removals
+            stepData.land_sector_removals_afforestation = this.getCheckboxValue('land_sector_removals_afforestation');
+            stepData.land_sector_removals_soil_carbon = this.getCheckboxValue('land_sector_removals_soil_carbon');
+            stepData.land_sector_removals_urban_greening = this.getCheckboxValue('land_sector_removals_urban_greening');
+            stepData.land_sector_removals_biochar = this.getCheckboxValue('land_sector_removals_biochar');
+            stepData.land_sector_removals_carbon_capture = this.getCheckboxValue('land_sector_removals_carbon_capture');
+            stepData.land_sector_removals_certified_removals = this.getCheckboxValue('land_sector_removals_certified_removals');
+            
+            // Residual Emissions Strategy
+            stepData.residual_emissions_high_quality_credits = this.getCheckboxValue('residual_emissions_high_quality_credits');
+            stepData.residual_emissions_bvcm = this.getCheckboxValue('residual_emissions_bvcm');
+            stepData.residual_emissions_temporary_solutions = this.getCheckboxValue('residual_emissions_temporary_solutions');
+            
+            // Section D: Monitoring, Adjustments & Reporting
+            stepData.monitoring_frequency = document.getElementById('monitoring_frequency')?.value || '';
+            stepData.monitoring_frequency_other_text = document.getElementById('monitoring_frequency_other_text')?.value || '';
+            stepData.assurance_validation = document.getElementById('assurance_validation')?.value || '';
+            
+            // GHG Tracking Tools
+            stepData.ghg_tracking_tools_excel = this.getCheckboxValue('ghg_tracking_tools_excel');
+            stepData.ghg_tracking_tools_software = this.getCheckboxValue('ghg_tracking_tools_software');
+            stepData.ghg_tracking_tools_software_name = document.getElementById('ghg_tracking_tools_software_name')?.value || '';
+            stepData.ghg_tracking_tools_web_platform = this.getCheckboxValue('ghg_tracking_tools_web_platform');
+            
+            // Recalculation Policy
+            stepData.recalculation_policy_structural = this.getCheckboxValue('recalculation_policy_structural');
+            stepData.recalculation_policy_methodology = this.getCheckboxValue('recalculation_policy_methodology');
+            stepData.recalculation_policy_boundary = this.getCheckboxValue('recalculation_policy_boundary');
+            
+            // Progress Communication
+            stepData.progress_communication_esg_dashboard = this.getCheckboxValue('progress_communication_esg_dashboard');
+            stepData.progress_communication_sustainability_report = this.getCheckboxValue('progress_communication_sustainability_report');
+            stepData.progress_communication_cdp_disclosure = this.getCheckboxValue('progress_communication_cdp_disclosure');
+            stepData.progress_communication_sbti_registry = this.getCheckboxValue('progress_communication_sbti_registry');
         }
         
         return stepData;
@@ -3297,47 +3718,108 @@ class OnboardingForm {
             reduction_options_transportation: this.getCheckboxValue('reduction_options_transportation'),
             reduction_options_other: this.getCheckboxValue('reduction_options_other'),
             
-            // Step 5: Reduction Form
+            // Step 5: Reduction Form - Section A: Emissions Inventory Setup
             base_year: document.getElementById('base_year')?.value || '',
             base_year_reason: document.getElementById('base_year_reason')?.value || '',
-            ghg_boundary_approach: this.getCheckboxValues('ghg_boundary_approach'),
+            
+            // Scopes Covered
+            scopes_covered_scope1: this.getCheckboxValue('scopes_covered_scope1'),
+            scopes_covered_scope2: this.getCheckboxValue('scopes_covered_scope2'),
+            scopes_covered_scope3: this.getCheckboxValue('scopes_covered_scope3'),
+            
+            // GHG Boundary Approach
+            ghg_boundary_approach_operational_control: this.getCheckboxValue('ghg_boundary_approach_operational_control'),
+            ghg_boundary_approach_financial_control: this.getCheckboxValue('ghg_boundary_approach_financial_control'),
+            ghg_boundary_approach_equity_share: this.getCheckboxValue('ghg_boundary_approach_equity_share'),
+            
+            // Scope 3 Categories Included
+            scope_3_categories_purchased_goods: this.getCheckboxValue('scope_3_categories_purchased_goods'),
+            scope_3_categories_capital_goods: this.getCheckboxValue('scope_3_categories_capital_goods'),
+            scope_3_categories_fuel_energy: this.getCheckboxValue('scope_3_categories_fuel_energy'),
+            scope_3_categories_transportation: this.getCheckboxValue('scope_3_categories_transportation'),
+            scope_3_categories_waste: this.getCheckboxValue('scope_3_categories_waste'),
+            scope_3_categories_business_travel: this.getCheckboxValue('scope_3_categories_business_travel'),
+            scope_3_categories_use_sold_products: this.getCheckboxValue('scope_3_categories_use_sold_products'),
+            scope_3_categories_end_life_treatment: this.getCheckboxValue('scope_3_categories_end_life_treatment'),
+            scope_3_categories_leased_assets: this.getCheckboxValue('scope_3_categories_leased_assets'),
+            
             emissions_exclusions: document.getElementById('emissions_exclusions')?.value || '',
             
-            // Scope 1 Fields
-            scope_1_target_type: this.getCheckboxValues('scope_1_target_type'),
-            scope_1_intensity_reduction: this.getCheckboxValue('scope_1_intensity_reduction'),
-            scope_1_reduction_percentage: document.getElementById('scope_1_reduction_percentage')?.value || '',
-            scope_1_target_year: document.getElementById('scope_1_target_year')?.value || '',
-            scope_1_mitigation_strategies: this.getCheckboxValues('scope_1_mitigation_strategies'),
-            
-            // Scope 2 Fields
-            scope_2_target_type: this.getCheckboxValues('scope_2_target_type'),
-            scope_2_intensity_reduction: this.getCheckboxValue('scope_2_intensity_reduction'),
-            scope_2_reduction_percentage: document.getElementById('scope_2_reduction_percentage')?.value || '',
-            scope_2_target_year: document.getElementById('scope_2_target_year')?.value || '',
-            scope_2_mitigation_strategies: this.getCheckboxValues('scope_2_mitigation_strategies'),
-            
-            // Scope 3 Fields
-            scope_3_categories_included: this.getCheckboxValues('scope_3_categories_included'),
-            scope_3_target_type: this.getCheckboxValues('scope_3_target_type'),
-            scope_3_intensity_reduction: this.getCheckboxValue('scope_3_intensity_reduction'),
-            scope_3_reduction_percentage: document.getElementById('scope_3_reduction_percentage')?.value || '',
+            // Section B: Emissions Reduction Targets
+            target_type: document.getElementById('target_type')?.value || '',
+            scope_1_2_intensity_percentage: document.getElementById('scope_1_2_intensity_percentage')?.value || '',
+            scope_1_2_target_year: document.getElementById('scope_1_2_target_year')?.value || '',
+            scope_3_intensity_percentage: document.getElementById('scope_3_intensity_percentage')?.value || '',
             scope_3_target_year: document.getElementById('scope_3_target_year')?.value || '',
-            scope_3_mitigation_strategies: this.getCheckboxValues('scope_3_mitigation_strategies'),
+            absolute_emissions_percentage: document.getElementById('absolute_emissions_percentage')?.value || '',
+            near_term_target_year: document.getElementById('near_term_target_year')?.value || '',
+            long_term_target_year: document.getElementById('long_term_target_year')?.value || '',
             
-            // Reductions Fields
-            reduction_target_type: this.getCheckboxValues('reduction_target_type'),
-            land_sector_removals: this.getCheckboxValues('land_sector_removals'),
-            residual_emissions_strategy: this.getCheckboxValues('residual_emissions_strategy'),
+            // Target Metrics
+            target_metrics_absolute_emissions: this.getCheckboxValue('target_metrics_absolute_emissions'),
+            target_metrics_kgco2e_mwh: this.getCheckboxValue('target_metrics_kgco2e_mwh'),
+            target_metrics_kgco2e_tonne_material: this.getCheckboxValue('target_metrics_kgco2e_tonne_material'),
+            target_metrics_kgco2e_unit_service: this.getCheckboxValue('target_metrics_kgco2e_unit_service'),
+            target_metrics_kgco2e_usd_revenue: this.getCheckboxValue('target_metrics_kgco2e_usd_revenue'),
+            target_metrics_kgco2e_stove_year: this.getCheckboxValue('target_metrics_kgco2e_stove_year'),
+            target_metrics_kgco2e_tonne_biochar: this.getCheckboxValue('target_metrics_kgco2e_tonne_biochar'),
+            target_metrics_kgco2e_km_travelled: this.getCheckboxValue('target_metrics_kgco2e_km_travelled'),
             
-            // Monitoring Fields
-            monitoring_frequency: this.getCheckboxValues('monitoring_frequency'),
-            monitoring_frequency_other: document.getElementById('monitoring_frequency_other')?.value || '',
-            assurance_validation: this.getCheckboxValues('assurance_validation'),
-            ghg_tracking_tools: this.getCheckboxValues('ghg_tracking_tools'),
-            ghg_software_name: document.getElementById('ghg_software_name')?.value || '',
-            recalculation_policy: this.getCheckboxValues('recalculation_policy'),
-            progress_communication: this.getCheckboxValues('progress_communication'),
+            // Target Boundary
+            target_boundary_scope1_2_95_percent: this.getCheckboxValue('target_boundary_scope1_2_95_percent'),
+            target_boundary_scope3_90_percent_long_term: this.getCheckboxValue('target_boundary_scope3_90_percent_long_term'),
+            target_boundary_scope3_67_percent_near_term: this.getCheckboxValue('target_boundary_scope3_67_percent_near_term'),
+            target_boundary_prioritize_relevance: this.getCheckboxValue('target_boundary_prioritize_relevance'),
+            
+            // Section C: Mitigation Strategies
+            // Operational Emissions
+            operational_emissions_energy_efficiency: this.getCheckboxValue('operational_emissions_energy_efficiency'),
+            operational_emissions_onsite_renewable: this.getCheckboxValue('operational_emissions_onsite_renewable'),
+            operational_emissions_offsite_renewable: this.getCheckboxValue('operational_emissions_offsite_renewable'),
+            operational_emissions_fuel_switching: this.getCheckboxValue('operational_emissions_fuel_switching'),
+            operational_emissions_process_optimization: this.getCheckboxValue('operational_emissions_process_optimization'),
+            
+            // Value Chain Emissions
+            value_chain_emissions_supplier_engagement: this.getCheckboxValue('value_chain_emissions_supplier_engagement'),
+            value_chain_emissions_low_carbon_materials: this.getCheckboxValue('value_chain_emissions_low_carbon_materials'),
+            value_chain_emissions_redesign_use_phase: this.getCheckboxValue('value_chain_emissions_redesign_use_phase'),
+            value_chain_emissions_optimize_logistics: this.getCheckboxValue('value_chain_emissions_optimize_logistics'),
+            value_chain_emissions_circular_economy: this.getCheckboxValue('value_chain_emissions_circular_economy'),
+            
+            // Land Sector & Removals
+            land_sector_removals_afforestation: this.getCheckboxValue('land_sector_removals_afforestation'),
+            land_sector_removals_soil_carbon: this.getCheckboxValue('land_sector_removals_soil_carbon'),
+            land_sector_removals_urban_greening: this.getCheckboxValue('land_sector_removals_urban_greening'),
+            land_sector_removals_biochar: this.getCheckboxValue('land_sector_removals_biochar'),
+            land_sector_removals_carbon_capture: this.getCheckboxValue('land_sector_removals_carbon_capture'),
+            land_sector_removals_certified_removals: this.getCheckboxValue('land_sector_removals_certified_removals'),
+            
+            // Residual Emissions Strategy
+            residual_emissions_high_quality_credits: this.getCheckboxValue('residual_emissions_high_quality_credits'),
+            residual_emissions_bvcm: this.getCheckboxValue('residual_emissions_bvcm'),
+            residual_emissions_temporary_solutions: this.getCheckboxValue('residual_emissions_temporary_solutions'),
+            
+            // Section D: Monitoring, Adjustments & Reporting
+            monitoring_frequency: document.getElementById('monitoring_frequency')?.value || '',
+            monitoring_frequency_other_text: document.getElementById('monitoring_frequency_other_text')?.value || '',
+            assurance_validation: document.getElementById('assurance_validation')?.value || '',
+            
+            // GHG Tracking Tools
+            ghg_tracking_tools_excel: this.getCheckboxValue('ghg_tracking_tools_excel'),
+            ghg_tracking_tools_software: this.getCheckboxValue('ghg_tracking_tools_software'),
+            ghg_tracking_tools_software_name: document.getElementById('ghg_tracking_tools_software_name')?.value || '',
+            ghg_tracking_tools_web_platform: this.getCheckboxValue('ghg_tracking_tools_web_platform'),
+            
+            // Recalculation Policy
+            recalculation_policy_structural: this.getCheckboxValue('recalculation_policy_structural'),
+            recalculation_policy_methodology: this.getCheckboxValue('recalculation_policy_methodology'),
+            recalculation_policy_boundary: this.getCheckboxValue('recalculation_policy_boundary'),
+            
+            // Progress Communication
+            progress_communication_esg_dashboard: this.getCheckboxValue('progress_communication_esg_dashboard'),
+            progress_communication_sustainability_report: this.getCheckboxValue('progress_communication_sustainability_report'),
+            progress_communication_cdp_disclosure: this.getCheckboxValue('progress_communication_cdp_disclosure'),
+            progress_communication_sbti_registry: this.getCheckboxValue('progress_communication_sbti_registry'),
             
             // Step 3: Units and Users
             units: [],
@@ -4636,66 +5118,6 @@ function toggleScopeOptions(scopeType) {
         optionsDiv.style.display = 'none';
         console.log('🌱 Hiding options for:', scopeType);
     }
-    
-    // Update Step 5 sections based on scope selection
-    updateStep5Sections();
-}
-
-// Function to update Step 5 sections based on scope selection
-function updateStep5Sections() {
-    const scopes = [];
-    
-    // Check individual scope checkboxes
-    if (document.querySelector('input[name="scopes_to_report_scope1"]:checked')) {
-        scopes.push('Scope 1');
-    }
-    if (document.querySelector('input[name="scopes_to_report_scope2"]:checked')) {
-        scopes.push('Scope 2');
-    }
-    if (document.querySelector('input[name="scopes_to_report_scope3"]:checked')) {
-        scopes.push('Scope 3');
-    }
-    if (document.querySelector('input[name="scopes_to_report_reductions"]:checked')) {
-        scopes.push('Reductions');
-    }
-    
-    // Scope 1 section
-    const scope1Section = document.getElementById('scope1-section');
-    if (scopes.includes('Scope 1')) {
-        scope1Section.style.display = 'block';
-        populateScope1Fields();
-    } else {
-        scope1Section.style.display = 'none';
-    }
-    
-    // Scope 2 section
-    const scope2Section = document.getElementById('scope2-section');
-    if (scopes.includes('Scope 2')) {
-        scope2Section.style.display = 'block';
-        populateScope2Fields();
-    } else {
-        scope2Section.style.display = 'none';
-    }
-    
-    // Scope 3 section
-    const scope3Section = document.getElementById('scope3-section');
-    if (scopes.includes('Scope 3')) {
-        scope3Section.style.display = 'block';
-        populateScope3Fields();
-    } else {
-        scope3Section.style.display = 'none';
-    }
-    
-    // Reductions section
-    const reductionsSection = document.getElementById('reductions-section');
-    if (scopes.includes('Reductions')) {
-        reductionsSection.style.display = 'block';
-        populateReductionsFields();
-    } else {
-        reductionsSection.style.display = 'none';
-    }
-    
-    console.log('🌱 Updated Step 5 sections for scopes:', scopes);
 }
 
 // Function to populate Scope 1 fields
@@ -5032,19 +5454,19 @@ function toggleScope3Fields() {
 }
 
 function toggleOtherFrequency() {
-    const checkbox = document.querySelector('input[name="monitoring_frequency"][value="Other"]');
+    const select = document.getElementById('monitoring_frequency');
     const otherGroup = document.getElementById('other-frequency-group');
     
-    if (checkbox && checkbox.checked) {
+    if (select && select.value === 'Other') {
         otherGroup.style.display = 'block';
     } else {
         otherGroup.style.display = 'none';
     }
 }
 
-function toggleGHGSoftware() {
-    const checkbox = document.querySelector('input[name="ghg_tracking_tools"][value="GHG software"]');
-    const softwareGroup = document.getElementById('ghg-software-group');
+function toggleSoftwareName() {
+    const checkbox = document.querySelector('input[name="ghg_tracking_tools_software"]');
+    const softwareGroup = document.getElementById('software-name-group');
     
     if (checkbox && checkbox.checked) {
         softwareGroup.style.display = 'block';

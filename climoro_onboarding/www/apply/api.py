@@ -178,60 +178,134 @@ def submit_onboarding_form(form_data):
             doc.reduction_options_transportation = form_data.get("reduction_options_transportation")
             doc.reduction_options_other = form_data.get("reduction_options_other")
             
-            # Reduction Form Fields (Step 5)
+            # Reduction Form Fields (Step 5) - Section A: Emissions Inventory Setup
             frappe.logger().info(f"🌱 Reduction Form Fields Debug:")
             frappe.logger().info(f"   Base year: '{form_data.get('base_year')}'")
             frappe.logger().info(f"   Base year reason: '{form_data.get('base_year_reason')}'")
-            frappe.logger().info(f"   GHG boundary approach: '{form_data.get('ghg_boundary_approach')}'")
-            frappe.logger().info(f"   Emissions exclusions: '{form_data.get('emissions_exclusions')}'")
             
             doc.base_year = form_data.get("base_year")
             doc.base_year_reason = form_data.get("base_year_reason")
-            doc.ghg_boundary_approach = form_data.get("ghg_boundary_approach")
+            
+            # Scopes Covered
+            doc.scopes_covered_scope1 = form_data.get("scopes_covered_scope1")
+            doc.scopes_covered_scope2 = form_data.get("scopes_covered_scope2")
+            doc.scopes_covered_scope3 = form_data.get("scopes_covered_scope3")
+            
+            # GHG Boundary Approach
+            doc.ghg_boundary_approach_operational_control = form_data.get("ghg_boundary_approach_operational_control")
+            doc.ghg_boundary_approach_financial_control = form_data.get("ghg_boundary_approach_financial_control")
+            doc.ghg_boundary_approach_equity_share = form_data.get("ghg_boundary_approach_equity_share")
+            
+            # Scope 3 Categories Included
+            doc.scope_3_categories_purchased_goods = form_data.get("scope_3_categories_purchased_goods")
+            doc.scope_3_categories_capital_goods = form_data.get("scope_3_categories_capital_goods")
+            doc.scope_3_categories_fuel_energy = form_data.get("scope_3_categories_fuel_energy")
+            doc.scope_3_categories_transportation = form_data.get("scope_3_categories_transportation")
+            doc.scope_3_categories_waste = form_data.get("scope_3_categories_waste")
+            doc.scope_3_categories_business_travel = form_data.get("scope_3_categories_business_travel")
+            doc.scope_3_categories_use_sold_products = form_data.get("scope_3_categories_use_sold_products")
+            doc.scope_3_categories_end_life_treatment = form_data.get("scope_3_categories_end_life_treatment")
+            doc.scope_3_categories_leased_assets = form_data.get("scope_3_categories_leased_assets")
+            
             doc.emissions_exclusions = form_data.get("emissions_exclusions")
             
-            # Scope 1 Fields
-            frappe.logger().info(f"🌱 Scope 1 Fields Debug:")
-            frappe.logger().info(f"   Target type: '{form_data.get('scope_1_target_type')}'")
-            frappe.logger().info(f"   Intensity reduction: '{form_data.get('scope_1_intensity_reduction')}'")
-            frappe.logger().info(f"   Reduction percentage: '{form_data.get('scope_1_reduction_percentage')}'")
-            frappe.logger().info(f"   Target year: '{form_data.get('scope_1_target_year')}'")
-            frappe.logger().info(f"   Mitigation strategies: '{form_data.get('scope_1_mitigation_strategies')}'")
-            
-            doc.scope_1_target_type = form_data.get("scope_1_target_type")
-            doc.scope_1_intensity_reduction = form_data.get("scope_1_intensity_reduction")
-            doc.scope_1_reduction_percentage = form_data.get("scope_1_reduction_percentage")
-            doc.scope_1_target_year = form_data.get("scope_1_target_year")
-            doc.scope_1_mitigation_strategies = form_data.get("scope_1_mitigation_strategies")
-            
-            # Scope 2 Fields
-            doc.scope_2_target_type = form_data.get("scope_2_target_type")
-            doc.scope_2_intensity_reduction = form_data.get("scope_2_intensity_reduction")
-            doc.scope_2_reduction_percentage = form_data.get("scope_2_reduction_percentage")
-            doc.scope_2_target_year = form_data.get("scope_2_target_year")
-            doc.scope_2_mitigation_strategies = form_data.get("scope_2_mitigation_strategies")
-            
-            # Scope 3 Fields
-            doc.scope_3_categories_included = form_data.get("scope_3_categories_included")
-            doc.scope_3_target_type = form_data.get("scope_3_target_type")
-            doc.scope_3_intensity_reduction = form_data.get("scope_3_intensity_reduction")
-            doc.scope_3_reduction_percentage = form_data.get("scope_3_reduction_percentage")
+            # Section B: Emissions Reduction Targets
+            doc.target_type = form_data.get("target_type")
+            doc.scope_1_2_intensity_percentage = form_data.get("scope_1_2_intensity_percentage")
+            doc.scope_1_2_target_year = form_data.get("scope_1_2_target_year")
+            doc.scope_3_intensity_percentage = form_data.get("scope_3_intensity_percentage")
             doc.scope_3_target_year = form_data.get("scope_3_target_year")
-            doc.scope_3_mitigation_strategies = form_data.get("scope_3_mitigation_strategies")
+            doc.absolute_emissions_percentage = form_data.get("absolute_emissions_percentage")
+            doc.near_term_target_year = form_data.get("near_term_target_year")
+            doc.long_term_target_year = form_data.get("long_term_target_year")
             
-            # Reductions Fields
-            doc.reduction_target_type = form_data.get("reduction_target_type")
-            doc.land_sector_removals = form_data.get("land_sector_removals")
-            doc.residual_emissions_strategy = form_data.get("residual_emissions_strategy")
+            # Target Metrics
+            doc.target_metrics_absolute_emissions = form_data.get("target_metrics_absolute_emissions")
+            doc.target_metrics_kgco2e_mwh = form_data.get("target_metrics_kgco2e_mwh")
+            doc.target_metrics_kgco2e_tonne_material = form_data.get("target_metrics_kgco2e_tonne_material")
+            doc.target_metrics_kgco2e_unit_service = form_data.get("target_metrics_kgco2e_unit_service")
+            doc.target_metrics_kgco2e_usd_revenue = form_data.get("target_metrics_kgco2e_usd_revenue")
+            doc.target_metrics_kgco2e_stove_year = form_data.get("target_metrics_kgco2e_stove_year")
+            doc.target_metrics_kgco2e_tonne_biochar = form_data.get("target_metrics_kgco2e_tonne_biochar")
+            doc.target_metrics_kgco2e_km_travelled = form_data.get("target_metrics_kgco2e_km_travelled")
             
-            # Monitoring Fields
+            # Target Boundary
+            doc.target_boundary_scope1_2_95_percent = form_data.get("target_boundary_scope1_2_95_percent")
+            doc.target_boundary_scope3_90_percent_long_term = form_data.get("target_boundary_scope3_90_percent_long_term")
+            doc.target_boundary_scope3_67_percent_near_term = form_data.get("target_boundary_scope3_67_percent_near_term")
+            doc.target_boundary_prioritize_relevance = form_data.get("target_boundary_prioritize_relevance")
+            
+            # Section C: Mitigation Strategies
+            # Operational Emissions
+            doc.operational_emissions_energy_efficiency = form_data.get("operational_emissions_energy_efficiency")
+            doc.operational_emissions_onsite_renewable = form_data.get("operational_emissions_onsite_renewable")
+            doc.operational_emissions_offsite_renewable = form_data.get("operational_emissions_offsite_renewable")
+            doc.operational_emissions_fuel_switching = form_data.get("operational_emissions_fuel_switching")
+            doc.operational_emissions_process_optimization = form_data.get("operational_emissions_process_optimization")
+            
+            # Value Chain Emissions
+            doc.value_chain_emissions_supplier_engagement = form_data.get("value_chain_emissions_supplier_engagement")
+            doc.value_chain_emissions_low_carbon_materials = form_data.get("value_chain_emissions_low_carbon_materials")
+            doc.value_chain_emissions_redesign_use_phase = form_data.get("value_chain_emissions_redesign_use_phase")
+            doc.value_chain_emissions_optimize_logistics = form_data.get("value_chain_emissions_optimize_logistics")
+            doc.value_chain_emissions_circular_economy = form_data.get("value_chain_emissions_circular_economy")
+            
+            # Land Sector & Removals
+            doc.land_sector_removals_afforestation = form_data.get("land_sector_removals_afforestation")
+            doc.land_sector_removals_soil_carbon = form_data.get("land_sector_removals_soil_carbon")
+            doc.land_sector_removals_urban_greening = form_data.get("land_sector_removals_urban_greening")
+            doc.land_sector_removals_biochar = form_data.get("land_sector_removals_biochar")
+            doc.land_sector_removals_carbon_capture = form_data.get("land_sector_removals_carbon_capture")
+            doc.land_sector_removals_certified_removals = form_data.get("land_sector_removals_certified_removals")
+            
+            # Residual Emissions Strategy
+            doc.residual_emissions_high_quality_credits = form_data.get("residual_emissions_high_quality_credits")
+            doc.residual_emissions_bvcm = form_data.get("residual_emissions_bvcm")
+            doc.residual_emissions_temporary_solutions = form_data.get("residual_emissions_temporary_solutions")
+            
+            # Section D: Monitoring, Adjustments & Reporting
             doc.monitoring_frequency = form_data.get("monitoring_frequency")
-            doc.monitoring_frequency_other = form_data.get("monitoring_frequency_other")
+            doc.monitoring_frequency_other_text = form_data.get("monitoring_frequency_other_text")
             doc.assurance_validation = form_data.get("assurance_validation")
-            doc.ghg_tracking_tools = form_data.get("ghg_tracking_tools")
-            doc.ghg_software_name = form_data.get("ghg_software_name")
-            doc.recalculation_policy = form_data.get("recalculation_policy")
-            doc.progress_communication = form_data.get("progress_communication")
+            
+            # GHG Tracking Tools
+            doc.ghg_tracking_tools_excel = form_data.get("ghg_tracking_tools_excel")
+            doc.ghg_tracking_tools_software = form_data.get("ghg_tracking_tools_software")
+            doc.ghg_tracking_tools_software_name = form_data.get("ghg_tracking_tools_software_name")
+            doc.ghg_tracking_tools_web_platform = form_data.get("ghg_tracking_tools_web_platform")
+            
+            # Recalculation Policy
+            doc.recalculation_policy_structural = form_data.get("recalculation_policy_structural")
+            doc.recalculation_policy_methodology = form_data.get("recalculation_policy_methodology")
+            doc.recalculation_policy_boundary = form_data.get("recalculation_policy_boundary")
+            
+            # Progress Communication
+            doc.progress_communication_esg_dashboard = form_data.get("progress_communication_esg_dashboard")
+            doc.progress_communication_sustainability_report = form_data.get("progress_communication_sustainability_report")
+            doc.progress_communication_cdp_disclosure = form_data.get("progress_communication_cdp_disclosure")
+            doc.progress_communication_sbti_registry = form_data.get("progress_communication_sbti_registry")
+            
+            frappe.logger().info(f"🌱 Step 5 Fields Debug:")
+            frappe.logger().info(f"   Base year: '{form_data.get('base_year')}'")
+            frappe.logger().info(f"   Target type: '{form_data.get('target_type')}'")
+            frappe.logger().info(f"   Monitoring frequency: '{form_data.get('monitoring_frequency')}'")
+            frappe.logger().info(f"   Assurance validation: '{form_data.get('assurance_validation')}'")
+            frappe.logger().info(f"   Scopes covered scope1: '{form_data.get('scopes_covered_scope1')}'")
+            frappe.logger().info(f"   Scopes covered scope2: '{form_data.get('scopes_covered_scope2')}'")
+            frappe.logger().info(f"   Scopes covered scope3: '{form_data.get('scopes_covered_scope3')}'")
+            frappe.logger().info(f"   GHG boundary operational: '{form_data.get('ghg_boundary_approach_operational_control')}'")
+            frappe.logger().info(f"   GHG boundary financial: '{form_data.get('ghg_boundary_approach_financial_control')}'")
+            frappe.logger().info(f"   GHG boundary equity: '{form_data.get('ghg_boundary_approach_equity_share')}'")
+            frappe.logger().info(f"   Target metrics absolute: '{form_data.get('target_metrics_absolute_emissions')}'")
+            frappe.logger().info(f"   Target metrics kgco2e_mwh: '{form_data.get('target_metrics_kgco2e_mwh')}'")
+            frappe.logger().info(f"   Operational emissions energy: '{form_data.get('operational_emissions_energy_efficiency')}'")
+            frappe.logger().info(f"   Value chain supplier: '{form_data.get('value_chain_emissions_supplier_engagement')}'")
+            frappe.logger().info(f"   Land sector afforestation: '{form_data.get('land_sector_removals_afforestation')}'")
+            frappe.logger().info(f"   Residual emissions bvcm: '{form_data.get('residual_emissions_bvcm')}'")
+            frappe.logger().info(f"   GHG tracking excel: '{form_data.get('ghg_tracking_tools_excel')}'")
+            frappe.logger().info(f"   GHG tracking software: '{form_data.get('ghg_tracking_tools_software')}'")
+            frappe.logger().info(f"   Recalculation structural: '{form_data.get('recalculation_policy_structural')}'")
+            frappe.logger().info(f"   Progress communication esg: '{form_data.get('progress_communication_esg_dashboard')}'")
             
             doc.status = "Submitted"
             doc.current_step = 5
@@ -602,47 +676,109 @@ def save_step_data(step_data):
             doc.current_step = 4
             
         elif step_number == 5:
-            # Step 5: Reduction Form
+            # Step 5: Reduction Form - Section A: Emissions Inventory Setup
             doc.base_year = step_data.get("base_year")
             doc.base_year_reason = step_data.get("base_year_reason")
-            doc.ghg_boundary_approach = step_data.get("ghg_boundary_approach")
+            
+            # Scopes Covered
+            doc.scopes_covered_scope1 = step_data.get("scopes_covered_scope1")
+            doc.scopes_covered_scope2 = step_data.get("scopes_covered_scope2")
+            doc.scopes_covered_scope3 = step_data.get("scopes_covered_scope3")
+            
+            # GHG Boundary Approach
+            doc.ghg_boundary_approach_operational_control = step_data.get("ghg_boundary_approach_operational_control")
+            doc.ghg_boundary_approach_financial_control = step_data.get("ghg_boundary_approach_financial_control")
+            doc.ghg_boundary_approach_equity_share = step_data.get("ghg_boundary_approach_equity_share")
+            
+            # Scope 3 Categories Included
+            doc.scope_3_categories_purchased_goods = step_data.get("scope_3_categories_purchased_goods")
+            doc.scope_3_categories_capital_goods = step_data.get("scope_3_categories_capital_goods")
+            doc.scope_3_categories_fuel_energy = step_data.get("scope_3_categories_fuel_energy")
+            doc.scope_3_categories_transportation = step_data.get("scope_3_categories_transportation")
+            doc.scope_3_categories_waste = step_data.get("scope_3_categories_waste")
+            doc.scope_3_categories_business_travel = step_data.get("scope_3_categories_business_travel")
+            doc.scope_3_categories_use_sold_products = step_data.get("scope_3_categories_use_sold_products")
+            doc.scope_3_categories_end_life_treatment = step_data.get("scope_3_categories_end_life_treatment")
+            doc.scope_3_categories_leased_assets = step_data.get("scope_3_categories_leased_assets")
+            
             doc.emissions_exclusions = step_data.get("emissions_exclusions")
             
-            # Scope 1 Fields
-            doc.scope_1_target_type = step_data.get("scope_1_target_type")
-            doc.scope_1_intensity_reduction = step_data.get("scope_1_intensity_reduction")
-            doc.scope_1_reduction_percentage = step_data.get("scope_1_reduction_percentage")
-            doc.scope_1_target_year = step_data.get("scope_1_target_year")
-            doc.scope_1_mitigation_strategies = step_data.get("scope_1_mitigation_strategies")
-            
-            # Scope 2 Fields
-            doc.scope_2_target_type = step_data.get("scope_2_target_type")
-            doc.scope_2_intensity_reduction = step_data.get("scope_2_intensity_reduction")
-            doc.scope_2_reduction_percentage = step_data.get("scope_2_reduction_percentage")
-            doc.scope_2_target_year = step_data.get("scope_2_target_year")
-            doc.scope_2_mitigation_strategies = step_data.get("scope_2_mitigation_strategies")
-            
-            # Scope 3 Fields
-            doc.scope_3_categories_included = step_data.get("scope_3_categories_included")
-            doc.scope_3_target_type = step_data.get("scope_3_target_type")
-            doc.scope_3_intensity_reduction = step_data.get("scope_3_intensity_reduction")
-            doc.scope_3_reduction_percentage = step_data.get("scope_3_reduction_percentage")
+            # Section B: Emissions Reduction Targets
+            doc.target_type = step_data.get("target_type")
+            doc.scope_1_2_intensity_percentage = step_data.get("scope_1_2_intensity_percentage")
+            doc.scope_1_2_target_year = step_data.get("scope_1_2_target_year")
+            doc.scope_3_intensity_percentage = step_data.get("scope_3_intensity_percentage")
             doc.scope_3_target_year = step_data.get("scope_3_target_year")
-            doc.scope_3_mitigation_strategies = step_data.get("scope_3_mitigation_strategies")
+            doc.absolute_emissions_percentage = step_data.get("absolute_emissions_percentage")
+            doc.near_term_target_year = step_data.get("near_term_target_year")
+            doc.long_term_target_year = step_data.get("long_term_target_year")
             
-            # Reductions Fields
-            doc.reduction_target_type = step_data.get("reduction_target_type")
-            doc.land_sector_removals = step_data.get("land_sector_removals")
-            doc.residual_emissions_strategy = step_data.get("residual_emissions_strategy")
+            # Target Metrics
+            doc.target_metrics_absolute_emissions = step_data.get("target_metrics_absolute_emissions")
+            doc.target_metrics_kgco2e_mwh = step_data.get("target_metrics_kgco2e_mwh")
+            doc.target_metrics_kgco2e_tonne_material = step_data.get("target_metrics_kgco2e_tonne_material")
+            doc.target_metrics_kgco2e_unit_service = step_data.get("target_metrics_kgco2e_unit_service")
+            doc.target_metrics_kgco2e_usd_revenue = step_data.get("target_metrics_kgco2e_usd_revenue")
+            doc.target_metrics_kgco2e_stove_year = step_data.get("target_metrics_kgco2e_stove_year")
+            doc.target_metrics_kgco2e_tonne_biochar = step_data.get("target_metrics_kgco2e_tonne_biochar")
+            doc.target_metrics_kgco2e_km_travelled = step_data.get("target_metrics_kgco2e_km_travelled")
             
-            # Monitoring Fields
+            # Target Boundary
+            doc.target_boundary_scope1_2_95_percent = step_data.get("target_boundary_scope1_2_95_percent")
+            doc.target_boundary_scope3_90_percent_long_term = step_data.get("target_boundary_scope3_90_percent_long_term")
+            doc.target_boundary_scope3_67_percent_near_term = step_data.get("target_boundary_scope3_67_percent_near_term")
+            doc.target_boundary_prioritize_relevance = step_data.get("target_boundary_prioritize_relevance")
+            
+            # Section C: Mitigation Strategies
+            # Operational Emissions
+            doc.operational_emissions_energy_efficiency = step_data.get("operational_emissions_energy_efficiency")
+            doc.operational_emissions_onsite_renewable = step_data.get("operational_emissions_onsite_renewable")
+            doc.operational_emissions_offsite_renewable = step_data.get("operational_emissions_offsite_renewable")
+            doc.operational_emissions_fuel_switching = step_data.get("operational_emissions_fuel_switching")
+            doc.operational_emissions_process_optimization = step_data.get("operational_emissions_process_optimization")
+            
+            # Value Chain Emissions
+            doc.value_chain_emissions_supplier_engagement = step_data.get("value_chain_emissions_supplier_engagement")
+            doc.value_chain_emissions_low_carbon_materials = step_data.get("value_chain_emissions_low_carbon_materials")
+            doc.value_chain_emissions_redesign_use_phase = step_data.get("value_chain_emissions_redesign_use_phase")
+            doc.value_chain_emissions_optimize_logistics = step_data.get("value_chain_emissions_optimize_logistics")
+            doc.value_chain_emissions_circular_economy = step_data.get("value_chain_emissions_circular_economy")
+            
+            # Land Sector & Removals
+            doc.land_sector_removals_afforestation = step_data.get("land_sector_removals_afforestation")
+            doc.land_sector_removals_soil_carbon = step_data.get("land_sector_removals_soil_carbon")
+            doc.land_sector_removals_urban_greening = step_data.get("land_sector_removals_urban_greening")
+            doc.land_sector_removals_biochar = step_data.get("land_sector_removals_biochar")
+            doc.land_sector_removals_carbon_capture = step_data.get("land_sector_removals_carbon_capture")
+            doc.land_sector_removals_certified_removals = step_data.get("land_sector_removals_certified_removals")
+            
+            # Residual Emissions Strategy
+            doc.residual_emissions_high_quality_credits = step_data.get("residual_emissions_high_quality_credits")
+            doc.residual_emissions_bvcm = step_data.get("residual_emissions_bvcm")
+            doc.residual_emissions_temporary_solutions = step_data.get("residual_emissions_temporary_solutions")
+            
+            # Section D: Monitoring, Adjustments & Reporting
             doc.monitoring_frequency = step_data.get("monitoring_frequency")
-            doc.monitoring_frequency_other = step_data.get("monitoring_frequency_other")
+            doc.monitoring_frequency_other_text = step_data.get("monitoring_frequency_other_text")
             doc.assurance_validation = step_data.get("assurance_validation")
-            doc.ghg_tracking_tools = step_data.get("ghg_tracking_tools")
-            doc.ghg_software_name = step_data.get("ghg_software_name")
-            doc.recalculation_policy = step_data.get("recalculation_policy")
-            doc.progress_communication = step_data.get("progress_communication")
+            
+            # GHG Tracking Tools
+            doc.ghg_tracking_tools_excel = step_data.get("ghg_tracking_tools_excel")
+            doc.ghg_tracking_tools_software = step_data.get("ghg_tracking_tools_software")
+            doc.ghg_tracking_tools_software_name = step_data.get("ghg_tracking_tools_software_name")
+            doc.ghg_tracking_tools_web_platform = step_data.get("ghg_tracking_tools_web_platform")
+            
+            # Recalculation Policy
+            doc.recalculation_policy_structural = step_data.get("recalculation_policy_structural")
+            doc.recalculation_policy_methodology = step_data.get("recalculation_policy_methodology")
+            doc.recalculation_policy_boundary = step_data.get("recalculation_policy_boundary")
+            
+            # Progress Communication
+            doc.progress_communication_esg_dashboard = step_data.get("progress_communication_esg_dashboard")
+            doc.progress_communication_sustainability_report = step_data.get("progress_communication_sustainability_report")
+            doc.progress_communication_cdp_disclosure = step_data.get("progress_communication_cdp_disclosure")
+            doc.progress_communication_sbti_registry = step_data.get("progress_communication_sbti_registry")
+            
             doc.current_step = 5
         
         doc.save()
@@ -1152,22 +1288,46 @@ def get_saved_data():
                    # Individual reduction options
                    "reduction_options_energy_efficiency", "reduction_options_renewable_energy", "reduction_options_process_optimization",
                    "reduction_options_waste_management", "reduction_options_transportation", "reduction_options_other",
-                   # Step 5: Reduction Form fields
-                   "base_year", "base_year_reason", "ghg_boundary_approach", "emissions_exclusions",
-                   # Scope 1 fields
-                   "scope_1_target_type", "scope_1_intensity_reduction", "scope_1_reduction_percentage",
-                   "scope_1_target_year", "scope_1_mitigation_strategies",
-                   # Scope 2 fields
-                   "scope_2_target_type", "scope_2_intensity_reduction", "scope_2_reduction_percentage",
-                   "scope_2_target_year", "scope_2_mitigation_strategies",
-                   # Scope 3 fields
-                   "scope_3_categories_included", "scope_3_target_type", "scope_3_intensity_reduction",
-                   "scope_3_reduction_percentage", "scope_3_target_year", "scope_3_mitigation_strategies",
-                   # Reductions fields
-                   "reduction_target_type", "land_sector_removals", "residual_emissions_strategy",
-                   # Monitoring fields
-                   "monitoring_frequency", "monitoring_frequency_other", "assurance_validation",
-                   "ghg_tracking_tools", "ghg_software_name", "recalculation_policy", "progress_communication"],
+                   # Step 5: Reduction Form fields - Section A: Emissions Inventory Setup
+                   "base_year", "base_year_reason", "emissions_exclusions",
+                   # Scopes Covered
+                   "scopes_covered_scope1", "scopes_covered_scope2", "scopes_covered_scope3",
+                   # GHG Boundary Approach
+                   "ghg_boundary_approach_operational_control", "ghg_boundary_approach_financial_control", "ghg_boundary_approach_equity_share",
+                   # Scope 3 Categories Included
+                   "scope_3_categories_purchased_goods", "scope_3_categories_capital_goods", "scope_3_categories_fuel_energy",
+                   "scope_3_categories_transportation", "scope_3_categories_waste", "scope_3_categories_business_travel",
+                   "scope_3_categories_use_sold_products", "scope_3_categories_end_life_treatment", "scope_3_categories_leased_assets",
+                   # Section B: Emissions Reduction Targets
+                   "target_type", "scope_1_2_intensity_percentage", "scope_1_2_target_year", "scope_3_intensity_percentage",
+                   "scope_3_target_year", "absolute_emissions_percentage", "near_term_target_year", "long_term_target_year",
+                   # Target Metrics
+                   "target_metrics_absolute_emissions", "target_metrics_kgco2e_mwh", "target_metrics_kgco2e_tonne_material",
+                   "target_metrics_kgco2e_unit_service", "target_metrics_kgco2e_usd_revenue", "target_metrics_kgco2e_stove_year",
+                   "target_metrics_kgco2e_tonne_biochar", "target_metrics_kgco2e_km_travelled",
+                   # Target Boundary
+                   "target_boundary_scope1_2_95_percent", "target_boundary_scope3_90_percent_long_term",
+                   "target_boundary_scope3_67_percent_near_term", "target_boundary_prioritize_relevance",
+                   # Section C: Mitigation Strategies - Operational Emissions
+                   "operational_emissions_energy_efficiency", "operational_emissions_onsite_renewable", "operational_emissions_offsite_renewable",
+                   "operational_emissions_fuel_switching", "operational_emissions_process_optimization",
+                   # Value Chain Emissions
+                   "value_chain_emissions_supplier_engagement", "value_chain_emissions_low_carbon_materials",
+                   "value_chain_emissions_redesign_use_phase", "value_chain_emissions_optimize_logistics", "value_chain_emissions_circular_economy",
+                   # Land Sector & Removals
+                   "land_sector_removals_afforestation", "land_sector_removals_soil_carbon", "land_sector_removals_urban_greening",
+                   "land_sector_removals_biochar", "land_sector_removals_carbon_capture", "land_sector_removals_certified_removals",
+                   # Residual Emissions Strategy
+                   "residual_emissions_high_quality_credits", "residual_emissions_bvcm", "residual_emissions_temporary_solutions",
+                   # Section D: Monitoring, Adjustments & Reporting
+                   "monitoring_frequency", "monitoring_frequency_other_text", "assurance_validation",
+                   # GHG Tracking Tools
+                   "ghg_tracking_tools_excel", "ghg_tracking_tools_software", "ghg_tracking_tools_software_name", "ghg_tracking_tools_web_platform",
+                   # Recalculation Policy
+                   "recalculation_policy_structural", "recalculation_policy_methodology", "recalculation_policy_boundary",
+                   # Progress Communication
+                   "progress_communication_esg_dashboard", "progress_communication_sustainability_report",
+                   "progress_communication_cdp_disclosure", "progress_communication_sbti_registry"],
             order_by="creation desc",
             limit=1
         )
