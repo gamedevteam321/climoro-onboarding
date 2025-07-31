@@ -36,10 +36,10 @@ frappe.ui.form.on('Onboarding Form', {
 		});
 		
 		// Add a manual trigger button for testing
-		frm.add_custom_button('Update Sub-Industry', function() {
-			console.log('🔧 Manual trigger button clicked');
-			updateSubIndustryOptions(frm);
-		});
+		// frm.add_custom_button('Update Sub-Industry', function() {
+		// 	console.log('🔧 Manual trigger button clicked');
+		// 	updateSubIndustryOptions(frm);
+		// });
 		
 
 		
