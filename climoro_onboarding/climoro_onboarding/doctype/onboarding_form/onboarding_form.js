@@ -41,8 +41,11 @@ frappe.ui.form.on('Onboarding Form', {
 			updateSubIndustryOptions(frm);
 		});
 		
+
+		
 		// Initialize GHG Accounting dynamic behavior
-		updateStep5Visibility(frm);
+		// Temporarily disabled to fix approve/reject buttons
+		// updateStep5Visibility(frm);
 		
 		// Temporarily disable map functionality to avoid errors
 		// const gpsField = frm.get_field('gps_coordinates');
@@ -70,6 +73,9 @@ frappe.ui.form.on('Onboarding Form', {
 		const adminRoles = ['System Manager', 'Administrator', 'Super Admin'];
 		const hasAdminRole = frappe.user_roles && frappe.user_roles.some(role => adminRoles.includes(role));
 		console.log('Has any admin role:', hasAdminRole);
+		console.log('Status check:', frm.doc.status === 'Submitted');
+		console.log('Admin role check:', hasAdminRole);
+		console.log('Both conditions met:', frm.doc.status === 'Submitted' && hasAdminRole);
 		
 		if (
 			frm.doc.status === 'Submitted' &&
@@ -241,17 +247,54 @@ frappe.ui.form.on('Onboarding Form', {
 	},
 	
 	// GHG Accounting Dynamic Behavior
-	scopes_to_report: function(frm) {
-		console.log('🌱 Scopes to report changed:', frm.get_value('scopes_to_report'));
-		// Update Step 5 visibility based on scope selections
+	scopes_to_report_scope1: function(frm) {
+		console.log('🌱 Scope 1 changed:', frm.doc.scopes_to_report_scope1);
 		updateStep5Visibility(frm);
 	},
 	
-	gases_to_report: function(frm) {
-		console.log('🌱 Gases to report changed:', frm.get_value('gases_to_report'));
+	scopes_to_report_scope2: function(frm) {
+		console.log('🌱 Scope 2 changed:', frm.doc.scopes_to_report_scope2);
+		updateStep5Visibility(frm);
+	},
+	
+	scopes_to_report_scope3: function(frm) {
+		console.log('🌱 Scope 3 changed:', frm.doc.scopes_to_report_scope3);
+		updateStep5Visibility(frm);
+	},
+	
+	scopes_to_report_reductions: function(frm) {
+		console.log('🌱 Reductions changed:', frm.doc.scopes_to_report_reductions);
+		updateStep5Visibility(frm);
+	},
+	
+	gases_to_report_co2: function(frm) {
+		console.log('🌱 CO2 gas changed:', frm.doc.gases_to_report_co2);
+	},
+	
+	gases_to_report_ch4: function(frm) {
+		console.log('🌱 CH4 gas changed:', frm.doc.gases_to_report_ch4);
+	},
+	
+	gases_to_report_n2o: function(frm) {
+		console.log('🌱 N2O gas changed:', frm.doc.gases_to_report_n2o);
+	},
+	
+	gases_to_report_hfcs: function(frm) {
+		console.log('🌱 HFCs gas changed:', frm.doc.gases_to_report_hfcs);
+	},
+	
+	gases_to_report_pfcs: function(frm) {
+		console.log('🌱 PFCs gas changed:', frm.doc.gases_to_report_pfcs);
+	},
+	
+	gases_to_report_sf6: function(frm) {
+		console.log('🌱 SF6 gas changed:', frm.doc.gases_to_report_sf6);
+	},
+	
+	gases_to_report_nf3: function(frm) {
+		console.log('🌱 NF3 gas changed:', frm.doc.gases_to_report_nf3);
 		// Handle NF3 visibility for semiconductor industry
-		let selected_gases = frm.get_value('gases_to_report') || [];
-		let industry_type = frm.get_value('industry_type');
+		let industry_type = frm.doc.industry_type;
 		
 		// Check if industry is semiconductor-related
 		if (industry_type && industry_type.toLowerCase().includes('semiconductor')) {
@@ -269,62 +312,6 @@ frappe.ui.form.on('Onboarding Form', {
 	
 	// Step 5 Dynamic Field Handlers
 	scope_1_intensity_reduction: function(frm) {
-		if (!frm.get_value('scope_1_intensity_reduction')) {
-			frm.set_value('scope_1_reduction_percentage', '');
-			frm.set_value('scope_1_target_year', '');
-		}
-	},
-	
-	scope_2_intensity_reduction: function(frm) {
-		if (!frm.get_value('scope_2_intensity_reduction')) {
-			frm.set_value('scope_2_reduction_percentage', '');
-			frm.set_value('scope_2_target_year', '');
-		}
-	},
-	
-	scope_3_intensity_reduction: function(frm) {
-		if (!frm.get_value('scope_3_intensity_reduction')) {
-			frm.set_value('scope_3_reduction_percentage', '');
-			frm.set_value('scope_3_target_year', '');
-		}
-	},
-	
-	ghg_tracking_tools: function(frm) {
-		let tools = frm.get_value('ghg_tracking_tools') || [];
-		if (!tools.includes('GHG software')) {
-			frm.set_value('ghg_software_name', '');
-		}
-	},
-	
-	monitoring_frequency: function(frm) {
-		let frequency = frm.get_value('monitoring_frequency') || [];
-		if (!frequency.includes('Other')) {
-			frm.set_value('monitoring_frequency_other', '');
-		}
-	},
-	
-	// GHG Accounting field event handlers
-	scopes_to_report: function(frm) {
-		console.log('🌱 scopes_to_report changed');
-		updateStep5Visibility(frm);
-	},
-	
-	gases_to_report: function(frm) {
-		console.log('🌱 gases_to_report changed');
-		// Check if NF3 should be hidden based on industry type
-		if (frm.doc.industry_type && frm.doc.industry_type !== 'Semiconductor') {
-			const currentGases = frm.get_value('gases_to_report') || [];
-			if (currentGases.includes('NF3')) {
-				// Remove NF3 from selection
-				const updatedGases = currentGases.filter(gas => gas !== 'NF3');
-				frm.set_value('gases_to_report', updatedGases);
-			}
-		}
-	},
-	
-	// Step 5 field event handlers
-	scope_1_intensity_reduction: function(frm) {
-		console.log('🌱 scope_1_intensity_reduction changed');
 		if (!frm.doc.scope_1_intensity_reduction) {
 			frm.set_value('scope_1_reduction_percentage', '');
 			frm.set_value('scope_1_target_year', '');
@@ -332,7 +319,6 @@ frappe.ui.form.on('Onboarding Form', {
 	},
 	
 	scope_2_intensity_reduction: function(frm) {
-		console.log('🌱 scope_2_intensity_reduction changed');
 		if (!frm.doc.scope_2_intensity_reduction) {
 			frm.set_value('scope_2_reduction_percentage', '');
 			frm.set_value('scope_2_target_year', '');
@@ -340,28 +326,35 @@ frappe.ui.form.on('Onboarding Form', {
 	},
 	
 	scope_3_intensity_reduction: function(frm) {
-		console.log('🌱 scope_3_intensity_reduction changed');
 		if (!frm.doc.scope_3_intensity_reduction) {
 			frm.set_value('scope_3_reduction_percentage', '');
 			frm.set_value('scope_3_target_year', '');
 		}
 	},
 	
-	ghg_tracking_tools: function(frm) {
-		console.log('🌱 ghg_tracking_tools changed');
-		const currentTools = frm.get_value('ghg_tracking_tools') || [];
-		if (!currentTools.includes('GHG software')) {
-			frm.set_value('ghg_software_name', '');
+	ghg_tracking_tools_excel: function(frm) {
+		console.log('🌱 Excel tracking tool changed:', frm.doc.ghg_tracking_tools_excel);
+	},
+	
+	ghg_tracking_tools_software: function(frm) {
+		console.log('🌱 Software tracking tool changed:', frm.doc.ghg_tracking_tools_software);
+		if (!frm.doc.ghg_tracking_tools_software) {
+			frm.set_value('ghg_tracking_tools_software_name', '');
 		}
 	},
 	
+	ghg_tracking_tools_web_platform: function(frm) {
+		console.log('🌱 Web platform tracking tool changed:', frm.doc.ghg_tracking_tools_web_platform);
+	},
+	
 	monitoring_frequency: function(frm) {
-		console.log('🌱 monitoring_frequency changed');
-		const currentFrequency = frm.get_value('monitoring_frequency') || [];
-		if (!currentFrequency.includes('Other')) {
-			frm.set_value('monitoring_frequency_other', '');
+		console.log('🌱 Monitoring frequency changed:', frm.doc.monitoring_frequency);
+		if (frm.doc.monitoring_frequency !== 'Other') {
+			frm.set_value('monitoring_frequency_other_text', '');
 		}
-	}
+	},
+	
+
 });
 
 function updateSubIndustryOptions(frm) {
@@ -1101,7 +1094,14 @@ function showProcessingPopup(title, subtitle, spinnerColor = '#007bff') {
 // Function to update Step 5 visibility based on Step 4 selections
 function updateStep5Visibility(frm) {
 	console.log('🌱 updateStep5Visibility called');
-	let selected_scopes = frm.get_value('scopes_to_report') || [];
+	
+	// Get selected scopes from individual scope fields
+	let selected_scopes = [];
+	if (frm.doc.scopes_to_report_scope1) selected_scopes.push('Scope 1');
+	if (frm.doc.scopes_to_report_scope2) selected_scopes.push('Scope 2');
+	if (frm.doc.scopes_to_report_scope3) selected_scopes.push('Scope 3');
+	if (frm.doc.scopes_to_report_reductions) selected_scopes.push('Reductions');
+	
 	console.log('🌱 Selected scopes:', selected_scopes);
 	
 	// Scope 1 fields
