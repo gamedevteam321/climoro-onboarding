@@ -1,0 +1,38 @@
+{
+ "allow_rename": 1,
+ "creation": "2024-01-01 12:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "istable": 1,
+ "modified": "2024-01-01 12:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Climoro Onboarding",
+ "name": "Scopes to Report Item",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1,
+ "fields": [
+  {
+   "fieldname": "scope_1",
+   "fieldtype": "Check",
+   "label": "Scope 1"
+  },
+  {
+   "fieldname": "scope_2",
+   "fieldtype": "Check",
+   "label": "Scope 2"
+  },
+  {
+   "fieldname": "scope_3",
+   "fieldtype": "Check",
+   "label": "Scope 3"
+  },
+  {
+   "fieldname": "reductions",
+   "fieldtype": "Check",
+   "label": "Reductions"
+  }
+ ]
+} 

@@ -105,20 +105,78 @@ def submit_onboarding_form(form_data):
             # GHG Accounting Fields (Step 4)
             frappe.logger().info(f"🌱 GHG Accounting Fields Debug:")
             frappe.logger().info(f"   Purpose of reporting: '{form_data.get('purpose_of_reporting')}'")
-            frappe.logger().info(f"   Gases to report: '{form_data.get('gases_to_report')}'")
-            frappe.logger().info(f"   Scopes to report: '{form_data.get('scopes_to_report')}'")
-            frappe.logger().info(f"   Scope 1 options: '{form_data.get('scope_1_options')}'")
-            frappe.logger().info(f"   Scope 2 options: '{form_data.get('scope_2_options')}'")
-            frappe.logger().info(f"   Scope 3 options: '{form_data.get('scope_3_options')}'")
-            frappe.logger().info(f"   Reduction options: '{form_data.get('reduction_options')}'")
+            
+            # Individual gas checkboxes
+            frappe.logger().info(f"   Gases to report CO2: '{form_data.get('gases_to_report_co2')}'")
+            frappe.logger().info(f"   Gases to report CH4: '{form_data.get('gases_to_report_ch4')}'")
+            frappe.logger().info(f"   Gases to report N2O: '{form_data.get('gases_to_report_n2o')}'")
+            frappe.logger().info(f"   Gases to report HFCs: '{form_data.get('gases_to_report_hfcs')}'")
+            frappe.logger().info(f"   Gases to report PFCs: '{form_data.get('gases_to_report_pfcs')}'")
+            frappe.logger().info(f"   Gases to report SF6: '{form_data.get('gases_to_report_sf6')}'")
+            frappe.logger().info(f"   Gases to report NF3: '{form_data.get('gases_to_report_nf3')}'")
+            
+            # Individual scope checkboxes
+            frappe.logger().info(f"   Scopes to report Scope1: '{form_data.get('scopes_to_report_scope1')}'")
+            frappe.logger().info(f"   Scopes to report Scope2: '{form_data.get('scopes_to_report_scope2')}'")
+            frappe.logger().info(f"   Scopes to report Scope3: '{form_data.get('scopes_to_report_scope3')}'")
+            frappe.logger().info(f"   Scopes to report Reductions: '{form_data.get('scopes_to_report_reductions')}'")
+            
+            # Individual scope options
+            frappe.logger().info(f"   Scope 1 options Process: '{form_data.get('scope_1_options_process')}'")
+            frappe.logger().info(f"   Scope 1 options Stationary: '{form_data.get('scope_1_options_stationary')}'")
+            frappe.logger().info(f"   Scope 1 options Mobile: '{form_data.get('scope_1_options_mobile')}'")
+            frappe.logger().info(f"   Scope 1 options Fugitive: '{form_data.get('scope_1_options_fugitive')}'")
+            frappe.logger().info(f"   Scope 2 options Electricity: '{form_data.get('scope_2_options_electricity')}'")
+            frappe.logger().info(f"   Scope 2 options Heating: '{form_data.get('scope_2_options_heating')}'")
+            frappe.logger().info(f"   Scope 2 options Cooling: '{form_data.get('scope_2_options_cooling')}'")
+            frappe.logger().info(f"   Scope 3 options Upstream: '{form_data.get('scope_3_options_upstream')}'")
+            frappe.logger().info(f"   Scope 3 options Downstream: '{form_data.get('scope_3_options_downstream')}'")
+            frappe.logger().info(f"   Reduction options Energy Efficiency: '{form_data.get('reduction_options_energy_efficiency')}'")
+            frappe.logger().info(f"   Reduction options Renewable Energy: '{form_data.get('reduction_options_renewable_energy')}'")
+            frappe.logger().info(f"   Reduction options Process Optimization: '{form_data.get('reduction_options_process_optimization')}'")
+            frappe.logger().info(f"   Reduction options Waste Management: '{form_data.get('reduction_options_waste_management')}'")
+            frappe.logger().info(f"   Reduction options Transportation: '{form_data.get('reduction_options_transportation')}'")
+            frappe.logger().info(f"   Reduction options Other: '{form_data.get('reduction_options_other')}'")
             
             doc.purpose_of_reporting = form_data.get("purpose_of_reporting")
-            doc.gases_to_report = form_data.get("gases_to_report")
-            doc.scopes_to_report = form_data.get("scopes_to_report")
-            doc.scope_1_options = form_data.get("scope_1_options")
-            doc.scope_2_options = form_data.get("scope_2_options")
-            doc.scope_3_options = form_data.get("scope_3_options")
-            doc.reduction_options = form_data.get("reduction_options")
+            
+            # Individual gas checkboxes
+            doc.gases_to_report_co2 = form_data.get("gases_to_report_co2")
+            doc.gases_to_report_ch4 = form_data.get("gases_to_report_ch4")
+            doc.gases_to_report_n2o = form_data.get("gases_to_report_n2o")
+            doc.gases_to_report_hfcs = form_data.get("gases_to_report_hfcs")
+            doc.gases_to_report_pfcs = form_data.get("gases_to_report_pfcs")
+            doc.gases_to_report_sf6 = form_data.get("gases_to_report_sf6")
+            doc.gases_to_report_nf3 = form_data.get("gases_to_report_nf3")
+            
+            # Individual scope checkboxes
+            doc.scopes_to_report_scope1 = form_data.get("scopes_to_report_scope1")
+            doc.scopes_to_report_scope2 = form_data.get("scopes_to_report_scope2")
+            doc.scopes_to_report_scope3 = form_data.get("scopes_to_report_scope3")
+            doc.scopes_to_report_reductions = form_data.get("scopes_to_report_reductions")
+            
+            # Individual scope 1 options
+            doc.scope_1_options_process = form_data.get("scope_1_options_process")
+            doc.scope_1_options_stationary = form_data.get("scope_1_options_stationary")
+            doc.scope_1_options_mobile = form_data.get("scope_1_options_mobile")
+            doc.scope_1_options_fugitive = form_data.get("scope_1_options_fugitive")
+            
+            # Individual scope 2 options
+            doc.scope_2_options_electricity = form_data.get("scope_2_options_electricity")
+            doc.scope_2_options_heating = form_data.get("scope_2_options_heating")
+            doc.scope_2_options_cooling = form_data.get("scope_2_options_cooling")
+            
+            # Individual scope 3 options
+            doc.scope_3_options_upstream = form_data.get("scope_3_options_upstream")
+            doc.scope_3_options_downstream = form_data.get("scope_3_options_downstream")
+            
+            # Individual reduction options
+            doc.reduction_options_energy_efficiency = form_data.get("reduction_options_energy_efficiency")
+            doc.reduction_options_renewable_energy = form_data.get("reduction_options_renewable_energy")
+            doc.reduction_options_process_optimization = form_data.get("reduction_options_process_optimization")
+            doc.reduction_options_waste_management = form_data.get("reduction_options_waste_management")
+            doc.reduction_options_transportation = form_data.get("reduction_options_transportation")
+            doc.reduction_options_other = form_data.get("reduction_options_other")
             
             # Reduction Form Fields (Step 5)
             frappe.logger().info(f"🌱 Reduction Form Fields Debug:")
@@ -498,6 +556,94 @@ def save_step_data(step_data):
                     })
             
             doc.current_step = 3
+            
+        elif step_number == 4:
+            # Step 4: GHG Accounting
+            doc.purpose_of_reporting = step_data.get("purpose_of_reporting")
+            
+            # Individual gas checkboxes
+            doc.gases_to_report_co2 = step_data.get("gases_to_report_co2")
+            doc.gases_to_report_ch4 = step_data.get("gases_to_report_ch4")
+            doc.gases_to_report_n2o = step_data.get("gases_to_report_n2o")
+            doc.gases_to_report_hfcs = step_data.get("gases_to_report_hfcs")
+            doc.gases_to_report_pfcs = step_data.get("gases_to_report_pfcs")
+            doc.gases_to_report_sf6 = step_data.get("gases_to_report_sf6")
+            doc.gases_to_report_nf3 = step_data.get("gases_to_report_nf3")
+            
+            # Individual scope checkboxes
+            doc.scopes_to_report_scope1 = step_data.get("scopes_to_report_scope1")
+            doc.scopes_to_report_scope2 = step_data.get("scopes_to_report_scope2")
+            doc.scopes_to_report_scope3 = step_data.get("scopes_to_report_scope3")
+            doc.scopes_to_report_reductions = step_data.get("scopes_to_report_reductions")
+            
+            # Individual scope 1 options
+            doc.scope_1_options_process = step_data.get("scope_1_options_process")
+            doc.scope_1_options_stationary = step_data.get("scope_1_options_stationary")
+            doc.scope_1_options_mobile = step_data.get("scope_1_options_mobile")
+            doc.scope_1_options_fugitive = step_data.get("scope_1_options_fugitive")
+            
+            # Individual scope 2 options
+            doc.scope_2_options_electricity = step_data.get("scope_2_options_electricity")
+            doc.scope_2_options_heating = step_data.get("scope_2_options_heating")
+            doc.scope_2_options_cooling = step_data.get("scope_2_options_cooling")
+            
+            # Individual scope 3 options
+            doc.scope_3_options_upstream = step_data.get("scope_3_options_upstream")
+            doc.scope_3_options_downstream = step_data.get("scope_3_options_downstream")
+            
+            # Individual reduction options
+            doc.reduction_options_energy_efficiency = step_data.get("reduction_options_energy_efficiency")
+            doc.reduction_options_renewable_energy = step_data.get("reduction_options_renewable_energy")
+            doc.reduction_options_process_optimization = step_data.get("reduction_options_process_optimization")
+            doc.reduction_options_waste_management = step_data.get("reduction_options_waste_management")
+            doc.reduction_options_transportation = step_data.get("reduction_options_transportation")
+            doc.reduction_options_other = step_data.get("reduction_options_other")
+            
+            doc.current_step = 4
+            
+        elif step_number == 5:
+            # Step 5: Reduction Form
+            doc.base_year = step_data.get("base_year")
+            doc.base_year_reason = step_data.get("base_year_reason")
+            doc.ghg_boundary_approach = step_data.get("ghg_boundary_approach")
+            doc.emissions_exclusions = step_data.get("emissions_exclusions")
+            
+            # Scope 1 Fields
+            doc.scope_1_target_type = step_data.get("scope_1_target_type")
+            doc.scope_1_intensity_reduction = step_data.get("scope_1_intensity_reduction")
+            doc.scope_1_reduction_percentage = step_data.get("scope_1_reduction_percentage")
+            doc.scope_1_target_year = step_data.get("scope_1_target_year")
+            doc.scope_1_mitigation_strategies = step_data.get("scope_1_mitigation_strategies")
+            
+            # Scope 2 Fields
+            doc.scope_2_target_type = step_data.get("scope_2_target_type")
+            doc.scope_2_intensity_reduction = step_data.get("scope_2_intensity_reduction")
+            doc.scope_2_reduction_percentage = step_data.get("scope_2_reduction_percentage")
+            doc.scope_2_target_year = step_data.get("scope_2_target_year")
+            doc.scope_2_mitigation_strategies = step_data.get("scope_2_mitigation_strategies")
+            
+            # Scope 3 Fields
+            doc.scope_3_categories_included = step_data.get("scope_3_categories_included")
+            doc.scope_3_target_type = step_data.get("scope_3_target_type")
+            doc.scope_3_intensity_reduction = step_data.get("scope_3_intensity_reduction")
+            doc.scope_3_reduction_percentage = step_data.get("scope_3_reduction_percentage")
+            doc.scope_3_target_year = step_data.get("scope_3_target_year")
+            doc.scope_3_mitigation_strategies = step_data.get("scope_3_mitigation_strategies")
+            
+            # Reductions Fields
+            doc.reduction_target_type = step_data.get("reduction_target_type")
+            doc.land_sector_removals = step_data.get("land_sector_removals")
+            doc.residual_emissions_strategy = step_data.get("residual_emissions_strategy")
+            
+            # Monitoring Fields
+            doc.monitoring_frequency = step_data.get("monitoring_frequency")
+            doc.monitoring_frequency_other = step_data.get("monitoring_frequency_other")
+            doc.assurance_validation = step_data.get("assurance_validation")
+            doc.ghg_tracking_tools = step_data.get("ghg_tracking_tools")
+            doc.ghg_software_name = step_data.get("ghg_software_name")
+            doc.recalculation_policy = step_data.get("recalculation_policy")
+            doc.progress_communication = step_data.get("progress_communication")
+            doc.current_step = 5
         
         doc.save()
         frappe.db.commit()
@@ -989,7 +1135,39 @@ def get_saved_data():
             filters={"email": email},
             fields=["name", "first_name", "middle_name", "last_name", "phone_number", "position", 
                    "company_name", "address", "gps_coordinates", "location_name", "cin", "gst_number", 
-                   "industry_type", "website", "letter_of_authorisation"],
+                   "industry_type", "sub_industry_type", "website", "letter_of_authorisation",
+                   # Step 4: GHG Accounting fields
+                   "purpose_of_reporting",
+                   # Individual gas checkboxes
+                   "gases_to_report_co2", "gases_to_report_ch4", "gases_to_report_n2o", 
+                   "gases_to_report_hfcs", "gases_to_report_pfcs", "gases_to_report_sf6", "gases_to_report_nf3",
+                   # Individual scope checkboxes
+                   "scopes_to_report_scope1", "scopes_to_report_scope2", "scopes_to_report_scope3", "scopes_to_report_reductions",
+                   # Individual scope 1 options
+                   "scope_1_options_process", "scope_1_options_stationary", "scope_1_options_mobile", "scope_1_options_fugitive",
+                   # Individual scope 2 options
+                   "scope_2_options_electricity", "scope_2_options_heating", "scope_2_options_cooling",
+                   # Individual scope 3 options
+                   "scope_3_options_upstream", "scope_3_options_downstream",
+                   # Individual reduction options
+                   "reduction_options_energy_efficiency", "reduction_options_renewable_energy", "reduction_options_process_optimization",
+                   "reduction_options_waste_management", "reduction_options_transportation", "reduction_options_other",
+                   # Step 5: Reduction Form fields
+                   "base_year", "base_year_reason", "ghg_boundary_approach", "emissions_exclusions",
+                   # Scope 1 fields
+                   "scope_1_target_type", "scope_1_intensity_reduction", "scope_1_reduction_percentage",
+                   "scope_1_target_year", "scope_1_mitigation_strategies",
+                   # Scope 2 fields
+                   "scope_2_target_type", "scope_2_intensity_reduction", "scope_2_reduction_percentage",
+                   "scope_2_target_year", "scope_2_mitigation_strategies",
+                   # Scope 3 fields
+                   "scope_3_categories_included", "scope_3_target_type", "scope_3_intensity_reduction",
+                   "scope_3_reduction_percentage", "scope_3_target_year", "scope_3_mitigation_strategies",
+                   # Reductions fields
+                   "reduction_target_type", "land_sector_removals", "residual_emissions_strategy",
+                   # Monitoring fields
+                   "monitoring_frequency", "monitoring_frequency_other", "assurance_validation",
+                   "ghg_tracking_tools", "ghg_software_name", "recalculation_policy", "progress_communication"],
             order_by="creation desc",
             limit=1
         )

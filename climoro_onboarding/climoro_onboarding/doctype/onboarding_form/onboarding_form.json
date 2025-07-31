@@ -38,12 +38,38 @@
   "section_break_ghg_accounting",
   "ghg_accounting_tab",
   "purpose_of_reporting",
-  "gases_to_report",
-  "scopes_to_report",
-  "scope_1_options",
-  "scope_2_options",
-  "scope_3_options",
-  "reduction_options",
+  "section_break_gases",
+  "gases_to_report_co2",
+  "gases_to_report_ch4",
+  "gases_to_report_n2o",
+  "gases_to_report_hfcs",
+  "gases_to_report_pfcs",
+  "gases_to_report_sf6",
+  "gases_to_report_nf3",
+  "section_break_scopes",
+  "scopes_to_report_scope1",
+  "scopes_to_report_scope2",
+  "scopes_to_report_scope3",
+  "scopes_to_report_reductions",
+  "section_break_scope1_options",
+  "scope_1_options_process",
+  "scope_1_options_stationary",
+  "scope_1_options_mobile",
+  "scope_1_options_fugitive",
+  "section_break_scope2_options",
+  "scope_2_options_electricity",
+  "scope_2_options_heating",
+  "scope_2_options_cooling",
+  "section_break_scope3_options",
+  "scope_3_options_upstream",
+  "scope_3_options_downstream",
+  "section_break_reduction_options",
+  "reduction_options_energy_efficiency",
+  "reduction_options_renewable_energy",
+  "reduction_options_process_optimization",
+  "reduction_options_waste_management",
+  "reduction_options_transportation",
+  "reduction_options_other",
   "section_break_reduction_form",
   "reduction_form_tab",
   "section_a_emissions_inventory",
@@ -294,43 +320,167 @@
    "fieldname": "purpose_of_reporting",
    "label": "Purpose of Reporting",
    "fieldtype": "Select",
-   "options": "Regulatory Compliance\nVoluntary Reporting\nInternal Assessment\nCarbon Trading\nOther"
+   "options": "Regulatory / Compliance Reporting\nVoluntary / Market-Based Reporting\nStrategic & Internal Reporting\nProject-Level Reporting"
   },
   {
-   "fieldname": "gases_to_report",
-   "label": "Gases to be Reported",
-   "fieldtype": "MultiSelect",
-   "options": "CO2\nCH4\nN2O\nHFCs\nPFCs\nSF6\nNF3"
+   "fieldname": "section_break_gases",
+   "fieldtype": "Section Break",
+   "label": "Gases to be Reported"
   },
   {
-   "fieldname": "scopes_to_report",
-   "label": "Scopes to Report",
-   "fieldtype": "MultiSelect",
-   "options": "Scope 1\nScope 2\nScope 3\nReductions"
+   "fieldname": "gases_to_report_co2",
+   "label": "CO2",
+   "fieldtype": "Check"
   },
   {
-   "fieldname": "scope_1_options",
-   "label": "Scope 1 Options",
-   "fieldtype": "MultiSelect",
-   "options": "Process\nStationary\nMobile\nFugitive"
+   "fieldname": "gases_to_report_ch4",
+   "label": "CH4",
+   "fieldtype": "Check"
   },
   {
-   "fieldname": "scope_2_options",
-   "label": "Scope 2 Options",
-   "fieldtype": "MultiSelect",
-   "options": "Electricity\nHeating\nCooling"
+   "fieldname": "gases_to_report_n2o",
+   "label": "N2O",
+   "fieldtype": "Check"
   },
   {
-   "fieldname": "scope_3_options",
-   "label": "Scope 3 Options",
-   "fieldtype": "MultiSelect",
-   "options": "Upstream\nDownstream"
+   "fieldname": "gases_to_report_hfcs",
+   "label": "HFCs",
+   "fieldtype": "Check"
   },
   {
-   "fieldname": "reduction_options",
-   "label": "Reduction Options",
-   "fieldtype": "MultiSelect",
-   "options": "Energy Efficiency\nRenewable Energy\nProcess Optimization\nWaste Management\nTransportation\nOther"
+   "fieldname": "gases_to_report_pfcs",
+   "label": "PFCs",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "gases_to_report_sf6",
+   "label": "SF6",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "gases_to_report_nf3",
+   "label": "NF3",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "section_break_scopes",
+   "fieldtype": "Section Break",
+   "label": "Scopes to Report"
+  },
+  {
+   "fieldname": "scopes_to_report_scope1",
+   "label": "Scope 1",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "scopes_to_report_scope2",
+   "label": "Scope 2",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "scopes_to_report_scope3",
+   "label": "Scope 3",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "scopes_to_report_reductions",
+   "label": "Reductions",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "section_break_scope1_options",
+   "fieldtype": "Section Break",
+   "label": "Scope 1 Options"
+  },
+  {
+   "fieldname": "scope_1_options_process",
+   "label": "Process",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "scope_1_options_stationary",
+   "label": "Stationary",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "scope_1_options_mobile",
+   "label": "Mobile",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "scope_1_options_fugitive",
+   "label": "Fugitive",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "section_break_scope2_options",
+   "fieldtype": "Section Break",
+   "label": "Scope 2 Options"
+  },
+  {
+   "fieldname": "scope_2_options_electricity",
+   "label": "Electricity",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "scope_2_options_heating",
+   "label": "Heating",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "scope_2_options_cooling",
+   "label": "Cooling",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "section_break_scope3_options",
+   "fieldtype": "Section Break",
+   "label": "Scope 3 Options"
+  },
+  {
+   "fieldname": "scope_3_options_upstream",
+   "label": "Upstream",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "scope_3_options_downstream",
+   "label": "Downstream",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "section_break_reduction_options",
+   "fieldtype": "Section Break",
+   "label": "Reduction Options"
+  },
+  {
+   "fieldname": "reduction_options_energy_efficiency",
+   "label": "Energy Efficiency",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "reduction_options_renewable_energy",
+   "label": "Renewable Energy",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "reduction_options_process_optimization",
+   "label": "Process Optimization",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "reduction_options_waste_management",
+   "label": "Waste Management",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "reduction_options_transportation",
+   "label": "Transportation",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "reduction_options_other",
+   "label": "Other",
+   "fieldtype": "Check"
   },
   {
    "fieldname": "section_break_reduction_form",
@@ -362,8 +512,14 @@
   {
    "fieldname": "ghg_boundary_approach",
    "label": "GHG Boundary Approach",
-   "fieldtype": "MultiSelect",
+   "fieldtype": "Check",
    "options": "Operational Control\nFinancial Control\nEquity Share"
+  },
+  {
+   "fieldname": "scopes_covered",
+   "label": "Scopes Covered",
+   "fieldtype": "Check",
+   "options": "Scope 1 – Direct emissions\nScope 2 – Indirect emissions\nScope 3 – Other indirect emissions"
   },
   {
    "fieldname": "emissions_exclusions",
@@ -379,8 +535,38 @@
   {
    "fieldname": "scope_1_target_type",
    "label": "Scope 1 Target Type",
-   "fieldtype": "MultiSelect",
+   "fieldtype": "Check",
    "options": "Near-term Target (5–10 years)\nLong-term Net-Zero Target (by 2050 or earlier)\nBoth"
+  },
+  {
+   "fieldname": "target_scope_alignment",
+   "label": "Target Scope Alignment (Intensity-Based Reduction Goals)",
+   "fieldtype": "Small Text",
+   "description": "Scope 1 & 2: Reduce emissions intensity by ___% by [target year], Scope 3: Reduce emissions intensity by ___% by [target year], Optional: Maintain absolute emissions within ___% of base year levels"
+  },
+  {
+   "fieldname": "near_term_target_year",
+   "label": "Near-Term Target Year",
+   "fieldtype": "Data",
+   "description": "Target year for near-term goals (5-10 years)"
+  },
+  {
+   "fieldname": "long_term_target_year",
+   "label": "Long-Term (Net-Zero) Target Year",
+   "fieldtype": "Data",
+   "description": "Target year for long-term net-zero goals (by 2050 or earlier)"
+  },
+  {
+   "fieldname": "target_metrics",
+   "label": "Target Metrics – Select All That Apply",
+   "fieldtype": "Check",
+   "options": "Absolute emissions reduction\nkgCO₂e/MWh electricity (e.g., solar, wind generation)\nkgCO₂e per tonne of material or product\nkgCO₂e per unit of service\nkgCO₂e per USD revenue\nkgCO₂e per stove-year (clean cooking)\nkgCO₂e per tonne biochar applied\nkgCO₂e per km travelled (transport decarbonization)"
+  },
+  {
+   "fieldname": "target_boundary",
+   "label": "Target Boundary (Coverage of Emissions)",
+   "fieldtype": "Check",
+   "options": "Scope 1 & 2: ≥95% included\nScope 3: ≥90% included (long-term)\nScope 3: ≥67% (near-term)\nPrioritize by relevance"
   },
   {
    "fieldname": "scope_1_intensity_reduction",
@@ -399,9 +585,15 @@
    "fieldtype": "Int"
   },
   {
+   "fieldname": "operational_emissions_strategies",
+   "label": "Operational Emissions (Scope 1 & 2)",
+   "fieldtype": "Check",
+   "options": "Energy efficiency improvements\nOnsite renewable energy (e.g., rooftop solar)\nOffsite renewable procurement\nFuel switching to clean alternatives\nProcess optimization"
+  },
+  {
    "fieldname": "scope_1_mitigation_strategies",
    "label": "Scope 1 Mitigation Strategies",
-   "fieldtype": "MultiSelect",
+   "fieldtype": "Check",
    "options": "Energy efficiency improvements\nOnsite renewable energy (e.g., rooftop solar)\nFuel switching to clean alternatives\nProcess optimization\nEquipment upgrades\nFugitive emissions control"
   },
   {
@@ -412,7 +604,7 @@
   {
    "fieldname": "scope_2_target_type",
    "label": "Scope 2 Target Type",
-   "fieldtype": "MultiSelect",
+   "fieldtype": "Check",
    "options": "Near-term Target (5–10 years)\nLong-term Net-Zero Target (by 2050 or earlier)\nBoth"
   },
   {
@@ -434,7 +626,7 @@
   {
    "fieldname": "scope_2_mitigation_strategies",
    "label": "Scope 2 Mitigation Strategies",
-   "fieldtype": "MultiSelect",
+   "fieldtype": "Check",
    "options": "Offsite renewable procurement\nGreen power purchase agreements\nEnergy efficiency improvements\nDemand response programs\nGrid decarbonization support"
   },
   {
@@ -445,13 +637,13 @@
   {
    "fieldname": "scope_3_categories_included",
    "label": "Scope 3 Categories Included",
-   "fieldtype": "MultiSelect",
+   "fieldtype": "Check",
    "options": "Purchased goods and services\nCapital goods\nFuel- and energy-related activities\nUpstream/downstream transportation and distribution\nWaste generated in operations\nBusiness travel / employee commuting\nUse of sold products\nEnd-of-life treatment of sold products\nLeased assets, franchises, or investments"
   },
   {
    "fieldname": "scope_3_target_type",
    "label": "Scope 3 Target Type",
-   "fieldtype": "MultiSelect",
+   "fieldtype": "Check",
    "options": "Near-term Target (5–10 years)\nLong-term Net-Zero Target (by 2050 or earlier)\nBoth"
   },
   {
@@ -471,9 +663,15 @@
    "fieldtype": "Int"
   },
   {
+   "fieldname": "value_chain_emissions_strategies",
+   "label": "Value Chain Emissions (Scope 3)",
+   "fieldtype": "Check",
+   "options": "Supplier engagement\nLow-carbon input materials\nRedesign for use-phase reduction\nOptimize logistics\nCircular economy practices"
+  },
+  {
    "fieldname": "scope_3_mitigation_strategies",
    "label": "Scope 3 Mitigation Strategies",
-   "fieldtype": "MultiSelect",
+   "fieldtype": "Check",
    "options": "Supplier engagement\nLow-carbon input materials\nRedesign for use-phase reduction\nOptimize logistics\nCircular economy practices\nProduct lifecycle optimization"
   },
   {
@@ -484,19 +682,19 @@
   {
    "fieldname": "reduction_target_type",
    "label": "Reduction Target Type",
-   "fieldtype": "MultiSelect",
+   "fieldtype": "Check",
    "options": "Near-term Target (5–10 years)\nLong-term Net-Zero Target (by 2050 or earlier)\nBoth"
   },
   {
    "fieldname": "land_sector_removals",
    "label": "Land Sector & Removals (Optional)",
-   "fieldtype": "MultiSelect",
+   "fieldtype": "Check",
    "options": "Afforestation / reforestation\nSoil carbon improvement\nUrban greening\nBiochar application\nCarbon capture or enhanced weathering\nCertified removals (DAC, agroforestry)"
   },
   {
    "fieldname": "residual_emissions_strategy",
    "label": "Residual Emissions Strategy",
-   "fieldtype": "MultiSelect",
+   "fieldtype": "Check",
    "options": "High-quality removal credits\nBeyond Value Chain Mitigation (BVCM)\nTemporary voluntary solutions"
   },
   {
@@ -507,8 +705,8 @@
   {
    "fieldname": "monitoring_frequency",
    "label": "Monitoring Frequency",
-   "fieldtype": "MultiSelect",
-   "options": "Annual\nBiennial"
+   "fieldtype": "Check",
+   "options": "Annual\nBiennial\nOther"
   },
   {
    "fieldname": "monitoring_frequency_other",
@@ -520,13 +718,13 @@
   {
    "fieldname": "assurance_validation",
    "label": "Assurance and Validation",
-   "fieldtype": "MultiSelect",
+   "fieldtype": "Check",
    "options": "Internal assurance\nThird-party verification\nSubmitted to validation platform (e.g., SBTi)"
   },
   {
    "fieldname": "ghg_tracking_tools",
    "label": "GHG Tracking Tools Used",
-   "fieldtype": "MultiSelect",
+   "fieldtype": "Check",
    "options": "Excel / spreadsheet\nGHG software\nWeb platform (e.g., CDP, Net-Zero Cloud)"
   },
   {
@@ -539,13 +737,13 @@
   {
    "fieldname": "recalculation_policy",
    "label": "Recalculation Policy",
-   "fieldtype": "MultiSelect",
+   "fieldtype": "Check",
    "options": "Structural changes\nMethodology changes\nBoundary/scope adjustments"
   },
   {
    "fieldname": "progress_communication",
    "label": "Progress Communication",
-   "fieldtype": "MultiSelect",
+   "fieldtype": "Check",
    "options": "ESG dashboard\nAnnual sustainability report\nCDP/public disclosure\nSBTi registry updates"
   },
   {

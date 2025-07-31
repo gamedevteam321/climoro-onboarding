@@ -186,55 +186,54 @@
                     <label for="purpose_of_reporting">Purpose of Reporting *</label>
                     <select id="purpose_of_reporting" name="purpose_of_reporting" required>
                         <option value="">Select Purpose</option>
-                        <option value="Regulatory Compliance">Regulatory Compliance</option>
-                        <option value="Voluntary Reporting">Voluntary Reporting</option>
-                        <option value="Internal Assessment">Internal Assessment</option>
-                        <option value="Carbon Trading">Carbon Trading</option>
-                        <option value="Other">Other</option>
+                        <option value="Regulatory / Compliance Reporting">Regulatory / Compliance Reporting</option>
+                        <option value="Voluntary / Market-Based Reporting">Voluntary / Market-Based Reporting</option>
+                        <option value="Strategic & Internal Reporting">Strategic & Internal Reporting</option>
+                        <option value="Project-Level Reporting">Project-Level Reporting</option>
                     </select>
                 </div>
 
                 <div class="form-group">
-                    <label for="gases_to_report">Gases to be Reported *</label>
+                    <label>Gases to be Reported *</label>
                     <div class="checkbox-group">
                         <label class="checkbox-label">
-                            <input type="checkbox" name="gases_to_report" value="CO2"> CO2
+                            <input type="checkbox" name="gases_to_report_co2" value="1"> CO2
                         </label>
                         <label class="checkbox-label">
-                            <input type="checkbox" name="gases_to_report" value="CH4"> CH4
+                            <input type="checkbox" name="gases_to_report_ch4" value="1"> CH4
                         </label>
                         <label class="checkbox-label">
-                            <input type="checkbox" name="gases_to_report" value="N2O"> N2O
+                            <input type="checkbox" name="gases_to_report_n2o" value="1"> N2O
                         </label>
                         <label class="checkbox-label">
-                            <input type="checkbox" name="gases_to_report" value="HFCs"> HFCs
+                            <input type="checkbox" name="gases_to_report_hfcs" value="1"> HFCs
                         </label>
                         <label class="checkbox-label">
-                            <input type="checkbox" name="gases_to_report" value="PFCs"> PFCs
+                            <input type="checkbox" name="gases_to_report_pfcs" value="1"> PFCs
                         </label>
                         <label class="checkbox-label">
-                            <input type="checkbox" name="gases_to_report" value="SF6"> SF6
+                            <input type="checkbox" name="gases_to_report_sf6" value="1"> SF6
                         </label>
                         <label class="checkbox-label" id="nf3-checkbox" style="display: none;">
-                            <input type="checkbox" name="gases_to_report" value="NF3"> NF3 (Semiconductor Industry)
+                            <input type="checkbox" name="gases_to_report_nf3" value="1"> NF3 (Semiconductor Industry)
                         </label>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="scopes_to_report">Scopes to Report *</label>
+                    <label>Scopes to Report *</label>
                     <div class="checkbox-group">
                         <label class="checkbox-label">
-                            <input type="checkbox" name="scopes_to_report" value="Scope 1" onchange="toggleScopeOptions('scope1')"> Scope 1
+                            <input type="checkbox" name="scopes_to_report_scope1" value="1" onchange="toggleScopeOptions('scope1')"> Scope 1
                         </label>
                         <label class="checkbox-label">
-                            <input type="checkbox" name="scopes_to_report" value="Scope 2" onchange="toggleScopeOptions('scope2')"> Scope 2
+                            <input type="checkbox" name="scopes_to_report_scope2" value="1" onchange="toggleScopeOptions('scope2')"> Scope 2
                         </label>
                         <label class="checkbox-label">
-                            <input type="checkbox" name="scopes_to_report" value="Scope 3" onchange="toggleScopeOptions('scope3')"> Scope 3
+                            <input type="checkbox" name="scopes_to_report_scope3" value="1" onchange="toggleScopeOptions('scope3')"> Scope 3
                         </label>
                         <label class="checkbox-label">
-                            <input type="checkbox" name="scopes_to_report" value="Reductions" onchange="toggleScopeOptions('reductions')"> Reductions
+                            <input type="checkbox" name="scopes_to_report_reductions" value="1" onchange="toggleScopeOptions('reductions')"> Reductions
                         </label>
                     </div>
                 </div>
@@ -244,16 +243,16 @@
                     <h4>Scope 1 Options</h4>
                     <div class="checkbox-group">
                         <label class="checkbox-label">
-                            <input type="checkbox" name="scope_1_options" value="Process"> Process
+                            <input type="checkbox" name="scope_1_options_process" value="1"> Process
                         </label>
                         <label class="checkbox-label">
-                            <input type="checkbox" name="scope_1_options" value="Stationary"> Stationary
+                            <input type="checkbox" name="scope_1_options_stationary" value="1"> Stationary
                         </label>
                         <label class="checkbox-label">
-                            <input type="checkbox" name="scope_1_options" value="Mobile"> Mobile
+                            <input type="checkbox" name="scope_1_options_mobile" value="1"> Mobile
                         </label>
                         <label class="checkbox-label">
-                            <input type="checkbox" name="scope_1_options" value="Fugitive"> Fugitive
+                            <input type="checkbox" name="scope_1_options_fugitive" value="1"> Fugitive
                         </label>
                     </div>
                 </div>
@@ -262,13 +261,13 @@
                     <h4>Scope 2 Options</h4>
                     <div class="checkbox-group">
                         <label class="checkbox-label">
-                            <input type="checkbox" name="scope_2_options" value="Electricity"> Electricity
+                            <input type="checkbox" name="scope_2_options_electricity" value="1"> Electricity
                         </label>
                         <label class="checkbox-label">
-                            <input type="checkbox" name="scope_2_options" value="Heating"> Heating
+                            <input type="checkbox" name="scope_2_options_heating" value="1"> Heating
                         </label>
                         <label class="checkbox-label">
-                            <input type="checkbox" name="scope_2_options" value="Cooling"> Cooling
+                            <input type="checkbox" name="scope_2_options_cooling" value="1"> Cooling
                         </label>
                     </div>
                 </div>
@@ -277,10 +276,10 @@
                     <h4>Scope 3 Options</h4>
                     <div class="checkbox-group">
                         <label class="checkbox-label">
-                            <input type="checkbox" name="scope_3_options" value="Upstream"> Upstream
+                            <input type="checkbox" name="scope_3_options_upstream" value="1"> Upstream
                         </label>
                         <label class="checkbox-label">
-                            <input type="checkbox" name="scope_3_options" value="Downstream"> Downstream
+                            <input type="checkbox" name="scope_3_options_downstream" value="1"> Downstream
                         </label>
                     </div>
                 </div>
@@ -289,22 +288,22 @@
                     <h4>Reduction Options</h4>
                     <div class="checkbox-group">
                         <label class="checkbox-label">
-                            <input type="checkbox" name="reduction_options" value="Energy Efficiency"> Energy Efficiency
+                            <input type="checkbox" name="reduction_options_energy_efficiency" value="1"> Energy Efficiency
                         </label>
                         <label class="checkbox-label">
-                            <input type="checkbox" name="reduction_options" value="Renewable Energy"> Renewable Energy
+                            <input type="checkbox" name="reduction_options_renewable_energy" value="1"> Renewable Energy
                         </label>
                         <label class="checkbox-label">
-                            <input type="checkbox" name="reduction_options" value="Process Optimization"> Process Optimization
+                            <input type="checkbox" name="reduction_options_process_optimization" value="1"> Process Optimization
                         </label>
                         <label class="checkbox-label">
-                            <input type="checkbox" name="reduction_options" value="Waste Management"> Waste Management
+                            <input type="checkbox" name="reduction_options_waste_management" value="1"> Waste Management
                         </label>
                         <label class="checkbox-label">
-                            <input type="checkbox" name="reduction_options" value="Transportation"> Transportation
+                            <input type="checkbox" name="reduction_options_transportation" value="1"> Transportation
                         </label>
                         <label class="checkbox-label">
-                            <input type="checkbox" name="reduction_options" value="Other"> Other
+                            <input type="checkbox" name="reduction_options_other" value="1"> Other
                         </label>
                     </div>
                 </div>
@@ -1837,6 +1836,140 @@ class OnboardingForm {
                     if (fileField) fileField.setAttribute('data-file-url', savedData.letter_of_authorisation);
                 }
                 
+                // Load GHG Accounting fields (Step 4)
+                if (savedData.purpose_of_reporting) {
+                    const purposeField = document.getElementById('purpose_of_reporting');
+                    if (purposeField) purposeField.value = savedData.purpose_of_reporting;
+                }
+                
+                // Load individual gas checkboxes
+                if (savedData.gases_to_report_co2) {
+                    const co2Field = document.querySelector('input[name="gases_to_report_co2"]');
+                    if (co2Field) co2Field.checked = true;
+                }
+                if (savedData.gases_to_report_ch4) {
+                    const ch4Field = document.querySelector('input[name="gases_to_report_ch4"]');
+                    if (ch4Field) ch4Field.checked = true;
+                }
+                if (savedData.gases_to_report_n2o) {
+                    const n2oField = document.querySelector('input[name="gases_to_report_n2o"]');
+                    if (n2oField) n2oField.checked = true;
+                }
+                if (savedData.gases_to_report_hfcs) {
+                    const hfcsField = document.querySelector('input[name="gases_to_report_hfcs"]');
+                    if (hfcsField) hfcsField.checked = true;
+                }
+                if (savedData.gases_to_report_pfcs) {
+                    const pfcsField = document.querySelector('input[name="gases_to_report_pfcs"]');
+                    if (pfcsField) pfcsField.checked = true;
+                }
+                if (savedData.gases_to_report_sf6) {
+                    const sf6Field = document.querySelector('input[name="gases_to_report_sf6"]');
+                    if (sf6Field) sf6Field.checked = true;
+                }
+                if (savedData.gases_to_report_nf3) {
+                    const nf3Field = document.querySelector('input[name="gases_to_report_nf3"]');
+                    if (nf3Field) nf3Field.checked = true;
+                }
+                
+                // Load individual scope checkboxes and initialize scope options
+                if (savedData.scopes_to_report_scope1) {
+                    const scope1Field = document.querySelector('input[name="scopes_to_report_scope1"]');
+                    if (scope1Field) {
+                        scope1Field.checked = true;
+                        toggleScopeOptions('scope1');
+                    }
+                }
+                if (savedData.scopes_to_report_scope2) {
+                    const scope2Field = document.querySelector('input[name="scopes_to_report_scope2"]');
+                    if (scope2Field) {
+                        scope2Field.checked = true;
+                        toggleScopeOptions('scope2');
+                    }
+                }
+                if (savedData.scopes_to_report_scope3) {
+                    const scope3Field = document.querySelector('input[name="scopes_to_report_scope3"]');
+                    if (scope3Field) {
+                        scope3Field.checked = true;
+                        toggleScopeOptions('scope3');
+                    }
+                }
+                if (savedData.scopes_to_report_reductions) {
+                    const reductionsField = document.querySelector('input[name="scopes_to_report_reductions"]');
+                    if (reductionsField) {
+                        reductionsField.checked = true;
+                        toggleScopeOptions('reductions');
+                    }
+                }
+                
+                // Load individual scope 1 options
+                if (savedData.scope_1_options_process) {
+                    const processField = document.querySelector('input[name="scope_1_options_process"]');
+                    if (processField) processField.checked = true;
+                }
+                if (savedData.scope_1_options_stationary) {
+                    const stationaryField = document.querySelector('input[name="scope_1_options_stationary"]');
+                    if (stationaryField) stationaryField.checked = true;
+                }
+                if (savedData.scope_1_options_mobile) {
+                    const mobileField = document.querySelector('input[name="scope_1_options_mobile"]');
+                    if (mobileField) mobileField.checked = true;
+                }
+                if (savedData.scope_1_options_fugitive) {
+                    const fugitiveField = document.querySelector('input[name="scope_1_options_fugitive"]');
+                    if (fugitiveField) fugitiveField.checked = true;
+                }
+                
+                // Load individual scope 2 options
+                if (savedData.scope_2_options_electricity) {
+                    const electricityField = document.querySelector('input[name="scope_2_options_electricity"]');
+                    if (electricityField) electricityField.checked = true;
+                }
+                if (savedData.scope_2_options_heating) {
+                    const heatingField = document.querySelector('input[name="scope_2_options_heating"]');
+                    if (heatingField) heatingField.checked = true;
+                }
+                if (savedData.scope_2_options_cooling) {
+                    const coolingField = document.querySelector('input[name="scope_2_options_cooling"]');
+                    if (coolingField) coolingField.checked = true;
+                }
+                
+                // Load individual scope 3 options
+                if (savedData.scope_3_options_upstream) {
+                    const upstreamField = document.querySelector('input[name="scope_3_options_upstream"]');
+                    if (upstreamField) upstreamField.checked = true;
+                }
+                if (savedData.scope_3_options_downstream) {
+                    const downstreamField = document.querySelector('input[name="scope_3_options_downstream"]');
+                    if (downstreamField) downstreamField.checked = true;
+                }
+                
+                // Load individual reduction options
+                if (savedData.reduction_options_energy_efficiency) {
+                    const energyEfficiencyField = document.querySelector('input[name="reduction_options_energy_efficiency"]');
+                    if (energyEfficiencyField) energyEfficiencyField.checked = true;
+                }
+                if (savedData.reduction_options_renewable_energy) {
+                    const renewableEnergyField = document.querySelector('input[name="reduction_options_renewable_energy"]');
+                    if (renewableEnergyField) renewableEnergyField.checked = true;
+                }
+                if (savedData.reduction_options_process_optimization) {
+                    const processOptimizationField = document.querySelector('input[name="reduction_options_process_optimization"]');
+                    if (processOptimizationField) processOptimizationField.checked = true;
+                }
+                if (savedData.reduction_options_waste_management) {
+                    const wasteManagementField = document.querySelector('input[name="reduction_options_waste_management"]');
+                    if (wasteManagementField) wasteManagementField.checked = true;
+                }
+                if (savedData.reduction_options_transportation) {
+                    const transportationField = document.querySelector('input[name="reduction_options_transportation"]');
+                    if (transportationField) transportationField.checked = true;
+                }
+                if (savedData.reduction_options_other) {
+                    const otherField = document.querySelector('input[name="reduction_options_other"]');
+                    if (otherField) otherField.checked = true;
+                }
+                
                 console.log('✅ Saved data restored successfully');
             } else {
                 console.log('📭 No saved data found or error loading data');
@@ -1866,7 +1999,7 @@ class OnboardingForm {
             }
             
             // Save current step data before moving to next step
-            if (this.currentStep === 2) {
+            if (this.currentStep >= 2 && this.currentStep <= 5) {
                 const saveSuccess = await this.saveStepData();
                 if (!saveSuccess) {
                     console.log('❌ Failed to save step data, not proceeding to next step');
@@ -2906,6 +3039,89 @@ class OnboardingForm {
                     stepData.assigned_users.push(userData);
                 });
             });
+        } else if (targetStep === 4) {
+            // Step 4: GHG Accounting
+            stepData.purpose_of_reporting = this.getMultiSelectValue('purpose_of_reporting');
+            
+            // Individual gas checkboxes
+            stepData.gases_to_report_co2 = this.getCheckboxValue('gases_to_report_co2');
+            stepData.gases_to_report_ch4 = this.getCheckboxValue('gases_to_report_ch4');
+            stepData.gases_to_report_n2o = this.getCheckboxValue('gases_to_report_n2o');
+            stepData.gases_to_report_hfcs = this.getCheckboxValue('gases_to_report_hfcs');
+            stepData.gases_to_report_pfcs = this.getCheckboxValue('gases_to_report_pfcs');
+            stepData.gases_to_report_sf6 = this.getCheckboxValue('gases_to_report_sf6');
+            stepData.gases_to_report_nf3 = this.getCheckboxValue('gases_to_report_nf3');
+            
+            // Individual scope checkboxes
+            stepData.scopes_to_report_scope1 = this.getCheckboxValue('scopes_to_report_scope1');
+            stepData.scopes_to_report_scope2 = this.getCheckboxValue('scopes_to_report_scope2');
+            stepData.scopes_to_report_scope3 = this.getCheckboxValue('scopes_to_report_scope3');
+            stepData.scopes_to_report_reductions = this.getCheckboxValue('scopes_to_report_reductions');
+            
+            // Individual scope 1 options
+            stepData.scope_1_options_process = this.getCheckboxValue('scope_1_options_process');
+            stepData.scope_1_options_stationary = this.getCheckboxValue('scope_1_options_stationary');
+            stepData.scope_1_options_mobile = this.getCheckboxValue('scope_1_options_mobile');
+            stepData.scope_1_options_fugitive = this.getCheckboxValue('scope_1_options_fugitive');
+            
+            // Individual scope 2 options
+            stepData.scope_2_options_electricity = this.getCheckboxValue('scope_2_options_electricity');
+            stepData.scope_2_options_heating = this.getCheckboxValue('scope_2_options_heating');
+            stepData.scope_2_options_cooling = this.getCheckboxValue('scope_2_options_cooling');
+            
+            // Individual scope 3 options
+            stepData.scope_3_options_upstream = this.getCheckboxValue('scope_3_options_upstream');
+            stepData.scope_3_options_downstream = this.getCheckboxValue('scope_3_options_downstream');
+            
+            // Individual reduction options
+            stepData.reduction_options_energy_efficiency = this.getCheckboxValue('reduction_options_energy_efficiency');
+            stepData.reduction_options_renewable_energy = this.getCheckboxValue('reduction_options_renewable_energy');
+            stepData.reduction_options_process_optimization = this.getCheckboxValue('reduction_options_process_optimization');
+            stepData.reduction_options_waste_management = this.getCheckboxValue('reduction_options_waste_management');
+            stepData.reduction_options_transportation = this.getCheckboxValue('reduction_options_transportation');
+            stepData.reduction_options_other = this.getCheckboxValue('reduction_options_other');
+        } else if (targetStep === 5) {
+            // Step 5: Reduction Form
+            stepData.base_year = document.getElementById('base_year')?.value || '';
+            stepData.base_year_reason = document.getElementById('base_year_reason')?.value || '';
+            stepData.ghg_boundary_approach = this.getCheckboxValues('ghg_boundary_approach');
+            stepData.emissions_exclusions = document.getElementById('emissions_exclusions')?.value || '';
+            
+            // Scope 1 Fields
+            stepData.scope_1_target_type = this.getCheckboxValues('scope_1_target_type');
+            stepData.scope_1_intensity_reduction = this.getCheckboxValue('scope_1_intensity_reduction');
+            stepData.scope_1_reduction_percentage = document.getElementById('scope_1_reduction_percentage')?.value || '';
+            stepData.scope_1_target_year = document.getElementById('scope_1_target_year')?.value || '';
+            stepData.scope_1_mitigation_strategies = this.getCheckboxValues('scope_1_mitigation_strategies');
+            
+            // Scope 2 Fields
+            stepData.scope_2_target_type = this.getCheckboxValues('scope_2_target_type');
+            stepData.scope_2_intensity_reduction = this.getCheckboxValue('scope_2_intensity_reduction');
+            stepData.scope_2_reduction_percentage = document.getElementById('scope_2_reduction_percentage')?.value || '';
+            stepData.scope_2_target_year = document.getElementById('scope_2_target_year')?.value || '';
+            stepData.scope_2_mitigation_strategies = this.getCheckboxValues('scope_2_mitigation_strategies');
+            
+            // Scope 3 Fields
+            stepData.scope_3_categories_included = this.getCheckboxValues('scope_3_categories_included');
+            stepData.scope_3_target_type = this.getCheckboxValues('scope_3_target_type');
+            stepData.scope_3_intensity_reduction = this.getCheckboxValue('scope_3_intensity_reduction');
+            stepData.scope_3_reduction_percentage = document.getElementById('scope_3_reduction_percentage')?.value || '';
+            stepData.scope_3_target_year = document.getElementById('scope_3_target_year')?.value || '';
+            stepData.scope_3_mitigation_strategies = this.getCheckboxValues('scope_3_mitigation_strategies');
+            
+            // Reductions Fields
+            stepData.reduction_target_type = this.getCheckboxValues('reduction_target_type');
+            stepData.land_sector_removals = this.getCheckboxValues('land_sector_removals');
+            stepData.residual_emissions_strategy = this.getCheckboxValues('residual_emissions_strategy');
+            
+            // Monitoring Fields
+            stepData.monitoring_frequency = this.getCheckboxValues('monitoring_frequency');
+            stepData.monitoring_frequency_other = document.getElementById('monitoring_frequency_other')?.value || '';
+            stepData.assurance_validation = this.getCheckboxValues('assurance_validation');
+            stepData.ghg_tracking_tools = this.getCheckboxValues('ghg_tracking_tools');
+            stepData.ghg_software_name = document.getElementById('ghg_software_name')?.value || '';
+            stepData.recalculation_policy = this.getCheckboxValues('recalculation_policy');
+            stepData.progress_communication = this.getCheckboxValues('progress_communication');
         }
         
         return stepData;
@@ -3042,12 +3258,44 @@ class OnboardingForm {
             
             // Step 4: GHG Accounting
             purpose_of_reporting: this.getMultiSelectValue('purpose_of_reporting'),
-            gases_to_report: this.getCheckboxValues('gases_to_report'),
-            scopes_to_report: this.getCheckboxValues('scopes_to_report'),
-            scope_1_options: this.getCheckboxValues('scope_1_options'),
-            scope_2_options: this.getCheckboxValues('scope_2_options'),
-            scope_3_options: this.getCheckboxValues('scope_3_options'),
-            reduction_options: this.getCheckboxValues('reduction_options'),
+            
+            // Individual gas checkboxes
+            gases_to_report_co2: this.getCheckboxValue('gases_to_report_co2'),
+            gases_to_report_ch4: this.getCheckboxValue('gases_to_report_ch4'),
+            gases_to_report_n2o: this.getCheckboxValue('gases_to_report_n2o'),
+            gases_to_report_hfcs: this.getCheckboxValue('gases_to_report_hfcs'),
+            gases_to_report_pfcs: this.getCheckboxValue('gases_to_report_pfcs'),
+            gases_to_report_sf6: this.getCheckboxValue('gases_to_report_sf6'),
+            gases_to_report_nf3: this.getCheckboxValue('gases_to_report_nf3'),
+            
+            // Individual scope checkboxes
+            scopes_to_report_scope1: this.getCheckboxValue('scopes_to_report_scope1'),
+            scopes_to_report_scope2: this.getCheckboxValue('scopes_to_report_scope2'),
+            scopes_to_report_scope3: this.getCheckboxValue('scopes_to_report_scope3'),
+            scopes_to_report_reductions: this.getCheckboxValue('scopes_to_report_reductions'),
+            
+            // Individual scope 1 options
+            scope_1_options_process: this.getCheckboxValue('scope_1_options_process'),
+            scope_1_options_stationary: this.getCheckboxValue('scope_1_options_stationary'),
+            scope_1_options_mobile: this.getCheckboxValue('scope_1_options_mobile'),
+            scope_1_options_fugitive: this.getCheckboxValue('scope_1_options_fugitive'),
+            
+            // Individual scope 2 options
+            scope_2_options_electricity: this.getCheckboxValue('scope_2_options_electricity'),
+            scope_2_options_heating: this.getCheckboxValue('scope_2_options_heating'),
+            scope_2_options_cooling: this.getCheckboxValue('scope_2_options_cooling'),
+            
+            // Individual scope 3 options
+            scope_3_options_upstream: this.getCheckboxValue('scope_3_options_upstream'),
+            scope_3_options_downstream: this.getCheckboxValue('scope_3_options_downstream'),
+            
+            // Individual reduction options
+            reduction_options_energy_efficiency: this.getCheckboxValue('reduction_options_energy_efficiency'),
+            reduction_options_renewable_energy: this.getCheckboxValue('reduction_options_renewable_energy'),
+            reduction_options_process_optimization: this.getCheckboxValue('reduction_options_process_optimization'),
+            reduction_options_waste_management: this.getCheckboxValue('reduction_options_waste_management'),
+            reduction_options_transportation: this.getCheckboxValue('reduction_options_transportation'),
+            reduction_options_other: this.getCheckboxValue('reduction_options_other'),
             
             // Step 5: Reduction Form
             base_year: document.getElementById('base_year')?.value || '',
@@ -4359,7 +4607,27 @@ document.addEventListener('DOMContentLoaded', function() {
 // Function to toggle scope options visibility
 function toggleScopeOptions(scopeType) {
     const optionsDiv = document.getElementById(scopeType + '-options');
-    const checkbox = document.querySelector(`input[name="scopes_to_report"][value="${scopeType === 'scope1' ? 'Scope 1' : scopeType === 'scope2' ? 'Scope 2' : scopeType === 'scope3' ? 'Scope 3' : 'Reductions'}"]`);
+    let checkboxName;
+    
+    // Map scopeType to the new individual checkbox field names
+    switch(scopeType) {
+        case 'scope1':
+            checkboxName = 'scopes_to_report_scope1';
+            break;
+        case 'scope2':
+            checkboxName = 'scopes_to_report_scope2';
+            break;
+        case 'scope3':
+            checkboxName = 'scopes_to_report_scope3';
+            break;
+        case 'reductions':
+            checkboxName = 'scopes_to_report_reductions';
+            break;
+        default:
+            checkboxName = '';
+    }
+    
+    const checkbox = document.querySelector(`input[name="${checkboxName}"]`);
     
     if (checkbox && checkbox.checked) {
         optionsDiv.style.display = 'block';
@@ -4376,9 +4644,20 @@ function toggleScopeOptions(scopeType) {
 // Function to update Step 5 sections based on scope selection
 function updateStep5Sections() {
     const scopes = [];
-    document.querySelectorAll('input[name="scopes_to_report"]:checked').forEach(checkbox => {
-        scopes.push(checkbox.value);
-    });
+    
+    // Check individual scope checkboxes
+    if (document.querySelector('input[name="scopes_to_report_scope1"]:checked')) {
+        scopes.push('Scope 1');
+    }
+    if (document.querySelector('input[name="scopes_to_report_scope2"]:checked')) {
+        scopes.push('Scope 2');
+    }
+    if (document.querySelector('input[name="scopes_to_report_scope3"]:checked')) {
+        scopes.push('Scope 3');
+    }
+    if (document.querySelector('input[name="scopes_to_report_reductions"]:checked')) {
+        scopes.push('Reductions');
+    }
     
     // Scope 1 section
     const scope1Section = document.getElementById('scope1-section');
