@@ -75,39 +75,94 @@
   "section_a_emissions_inventory",
   "base_year",
   "base_year_reason",
-  "ghg_boundary_approach",
+  "scopes_covered_heading",
+  "scopes_covered_scope1",
+  "scopes_covered_scope2",
+  "scopes_covered_scope3",
+  "ghg_boundary_heading",
+  "ghg_boundary_approach_operational_control",
+  "ghg_boundary_approach_financial_control",
+  "ghg_boundary_approach_equity_share",
+  "scope3_categories_heading",
+  "scope_3_categories_purchased_goods",
+  "scope_3_categories_capital_goods",
+  "scope_3_categories_fuel_energy",
+  "scope_3_categories_transportation",
+  "scope_3_categories_waste",
+  "scope_3_categories_business_travel",
+  "scope_3_categories_use_sold_products",
+  "scope_3_categories_end_life_treatment",
+  "scope_3_categories_leased_assets",
   "emissions_exclusions",
-  "section_b_scope_1_targets",
-  "scope_1_target_type",
-  "scope_1_intensity_reduction",
-  "scope_1_reduction_percentage",
-  "scope_1_target_year",
-  "scope_1_mitigation_strategies",
-  "section_c_scope_2_targets",
-  "scope_2_target_type",
-  "scope_2_intensity_reduction",
-  "scope_2_reduction_percentage",
-  "scope_2_target_year",
-  "scope_2_mitigation_strategies",
-  "section_d_scope_3_targets",
-  "scope_3_categories_included",
-  "scope_3_target_type",
-  "scope_3_intensity_reduction",
-  "scope_3_reduction_percentage",
+  "section_b_emissions_reduction_targets",
+  "target_type",
+  "target_scope_alignment_heading",
+  "scope_1_2_intensity_percentage",
+  "scope_1_2_target_year",
+  "scope_3_intensity_percentage",
   "scope_3_target_year",
-  "scope_3_mitigation_strategies",
-  "section_e_reductions",
-  "reduction_target_type",
-  "land_sector_removals",
-  "residual_emissions_strategy",
-  "section_f_monitoring",
+  "absolute_emissions_percentage",
+  "target_years_heading",
+  "near_term_target_year",
+  "long_term_target_year",
+  "target_metrics_heading",
+  "target_metrics_absolute_emissions",
+  "target_metrics_kgco2e_mwh",
+  "target_metrics_kgco2e_tonne",
+  "target_metrics_kgco2e_unit_service",
+  "target_metrics_kgco2e_usd_revenue",
+  "target_metrics_kgco2e_stove_year",
+  "target_metrics_kgco2e_tonne_biochar",
+  "target_metrics_kgco2e_km_travelled",
+  "target_boundary_heading",
+  "target_boundary_scope1_2_95_percent",
+  "target_boundary_scope3_90_percent_long_term",
+  "target_boundary_scope3_67_percent_near_term",
+  "target_boundary_prioritize_relevance",
+  "section_c_mitigation_strategies",
+  "operational_emissions_heading",
+  "operational_emissions_energy_efficiency",
+  "operational_emissions_onsite_renewable",
+  "operational_emissions_offsite_renewable",
+  "operational_emissions_fuel_switching",
+  "operational_emissions_process_optimization",
+  "value_chain_emissions_heading",
+  "value_chain_emissions_supplier_engagement",
+  "value_chain_emissions_low_carbon_materials",
+  "value_chain_emissions_redesign_use_phase",
+  "value_chain_emissions_optimize_logistics",
+  "value_chain_emissions_circular_economy",
+  "land_sector_removals_heading",
+  "land_sector_removals_afforestation",
+  "land_sector_removals_soil_carbon",
+  "land_sector_removals_urban_greening",
+  "land_sector_removals_biochar",
+  "land_sector_removals_carbon_capture",
+  "land_sector_removals_certified_removals",
+  "residual_emissions_heading",
+  "residual_emissions_high_quality_credits",
+  "residual_emissions_bvcm",
+  "residual_emissions_temporary_solutions",
+  "section_d_monitoring_reporting",
+  "monitoring_frequency_heading",
   "monitoring_frequency",
-  "monitoring_frequency_other",
+  "monitoring_frequency_other_text",
+  "assurance_validation_heading",
   "assurance_validation",
-  "ghg_tracking_tools",
-  "ghg_software_name",
-  "recalculation_policy",
-  "progress_communication",
+  "ghg_tracking_tools_heading",
+  "ghg_tracking_tools_excel",
+  "ghg_tracking_tools_software",
+  "ghg_tracking_tools_software_name",
+  "ghg_tracking_tools_web_platform",
+  "recalculation_policy_heading",
+  "recalculation_policy_structural",
+  "recalculation_policy_methodology",
+  "recalculation_policy_boundary",
+  "progress_communication_heading",
+  "progress_communication_esg_dashboard",
+  "progress_communication_sustainability_report",
+  "progress_communication_cdp_disclosure",
+  "progress_communication_sbti_registry",
   "created_at",
   "modified_at"
  ],
@@ -494,13 +549,13 @@
   {
    "fieldname": "section_a_emissions_inventory",
    "fieldtype": "Section Break",
-   "label": "Section A: Emissions Inventory Setup",
-   "description": "General setup information"
+   "label": "Section A: Emissions Inventory Setup"
   },
   {
    "fieldname": "base_year",
    "label": "Base Year",
-   "fieldtype": "Int",
+   "fieldtype": "Select",
+   "options": "2024\n2025\n2026\n2027\n2028\n2029\n2030\n2031\n2032\n2033\n2034\n2035\n2036\n2037\n2038\n2039\n2040\n2041\n2042\n2043\n2044\n2045\n2046\n2047\n2048\n2049\n2050\n2051\n2052\n2053\n2054\n2055\n2056\n2057\n2058\n2059\n2060\n2061\n2062\n2063\n2064\n2065\n2066\n2067\n2068\n2069\n2070",
    "description": "Select the base year for emissions calculations"
   },
   {
@@ -510,16 +565,97 @@
    "description": "Explain why this year was chosen as the base year"
   },
   {
-   "fieldname": "ghg_boundary_approach",
+   "fieldname": "ghg_boundary_heading",
+   "fieldtype": "HTML",
    "label": "GHG Boundary Approach",
-   "fieldtype": "Check",
-   "options": "Operational Control\nFinancial Control\nEquity Share"
+   "options": "<h3 style='color: #34495e; font-size: 16px; font-weight: bold; margin: 15px 0 10px 0; padding: 8px; background-color: #ecf0f1; border-left: 4px solid #e74c3c;'>GHG Boundary Approach</h3>"
   },
   {
-   "fieldname": "scopes_covered",
+   "fieldname": "ghg_boundary_approach_operational_control",
+   "label": "Operational Control",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "ghg_boundary_approach_financial_control",
+   "label": "Financial Control",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "ghg_boundary_approach_equity_share",
+   "label": "Equity Share",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "scopes_covered_heading",
+   "fieldtype": "HTML",
    "label": "Scopes Covered",
-   "fieldtype": "Check",
-   "options": "Scope 1 – Direct emissions\nScope 2 – Indirect emissions\nScope 3 – Other indirect emissions"
+   "options": "<h3 style='color: #34495e; font-size: 16px; font-weight: bold; margin: 15px 0 10px 0; padding: 8px; background-color: #ecf0f1; border-left: 4px solid #3498db;'>Scopes Covered</h3>"
+  },
+  {
+   "fieldname": "scopes_covered_scope1",
+   "label": "Scope 1 – Direct emissions",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "scopes_covered_scope2",
+   "label": "Scope 2 – Indirect emissions",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "scopes_covered_scope3",
+   "label": "Scope 3 – Other indirect emissions",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "scope3_categories_heading",
+   "fieldtype": "HTML",
+   "label": "Scope 3 Categories Included",
+   "options": "<h3 style='color: #34495e; font-size: 16px; font-weight: bold; margin: 15px 0 10px 0; padding: 8px; background-color: #ecf0f1; border-left: 4px solid #27ae60;'>Scope 3 Categories Included</h3>"
+  },
+  {
+   "fieldname": "scope_3_categories_purchased_goods",
+   "label": "Purchased goods and services",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "scope_3_categories_capital_goods",
+   "label": "Capital goods",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "scope_3_categories_fuel_energy",
+   "label": "Fuel- and energy-related activities",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "scope_3_categories_transportation",
+   "label": "Upstream/downstream transportation and distribution",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "scope_3_categories_waste",
+   "label": "Waste generated in operations",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "scope_3_categories_business_travel",
+   "label": "Business travel / employee commuting",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "scope_3_categories_use_sold_products",
+   "label": "Use of sold products",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "scope_3_categories_end_life_treatment",
+   "label": "End-of-life treatment of sold products",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "scope_3_categories_leased_assets",
+   "label": "Leased assets, franchises, or investments",
+   "fieldtype": "Check"
   },
   {
    "fieldname": "emissions_exclusions",
@@ -528,224 +664,381 @@
    "description": "List any emissions that are excluded from calculations and reasons"
   },
   {
-   "fieldname": "section_b_scope_1_targets",
+   "fieldname": "section_b_emissions_reduction_targets",
    "fieldtype": "Section Break",
-   "label": "Section B: Scope 1 Emissions Reduction Targets"
+   "label": "Section B: Emissions Reduction Targets"
   },
   {
-   "fieldname": "scope_1_target_type",
-   "label": "Scope 1 Target Type",
-   "fieldtype": "Check",
+   "fieldname": "target_type",
+   "label": "Target Type",
+   "fieldtype": "Select",
    "options": "Near-term Target (5–10 years)\nLong-term Net-Zero Target (by 2050 or earlier)\nBoth"
   },
   {
-   "fieldname": "target_scope_alignment",
+   "fieldname": "target_scope_alignment_heading",
+   "fieldtype": "HTML",
    "label": "Target Scope Alignment (Intensity-Based Reduction Goals)",
-   "fieldtype": "Small Text",
-   "description": "Scope 1 & 2: Reduce emissions intensity by ___% by [target year], Scope 3: Reduce emissions intensity by ___% by [target year], Optional: Maintain absolute emissions within ___% of base year levels"
+   "options": "<h3 style='color: #34495e; font-size: 16px; font-weight: bold; margin: 15px 0 10px 0; padding: 8px; background-color: #ecf0f1; border-left: 4px solid #3498db;'>Target Scope Alignment (Intensity-Based Reduction Goals)</h3>"
+  },
+  {
+   "fieldname": "scope_1_2_intensity_percentage",
+   "label": "Scope 1 & 2: Reduce emissions intensity by ___ %",
+   "fieldtype": "Float",
+   "description": "Enter the percentage for Scope 1 & 2 intensity reduction"
+  },
+  {
+   "fieldname": "scope_1_2_target_year",
+   "label": "Target Year",
+   "fieldtype": "Select",
+   "options": "2024\n2025\n2026\n2027\n2028\n2029\n2030\n2031\n2032\n2033\n2034\n2035\n2036\n2037\n2038\n2039\n2040\n2041\n2042\n2043\n2044\n2045\n2046\n2047\n2048\n2049\n2050\n2051\n2052\n2053\n2054\n2055\n2056\n2057\n2058\n2059\n2060\n2061\n2062\n2063\n2064\n2065\n2066\n2067\n2068\n2069\n2070",
+   "description": "Select the target year for Scope 1 & 2 reduction"
+  },
+  {
+   "fieldname": "scope_3_intensity_percentage",
+   "label": "Scope 3: Reduce emissions intensity by ___ %",
+   "fieldtype": "Float",
+   "description": "Enter the percentage for Scope 3 intensity reduction"
+  },
+  {
+   "fieldname": "scope_3_target_year",
+   "label": "Target year",
+   "fieldtype": "Select",
+   "options": "2024\n2025\n2026\n2027\n2028\n2029\n2030\n2031\n2032\n2033\n2034\n2035\n2036\n2037\n2038\n2039\n2040\n2041\n2042\n2043\n2044\n2045\n2046\n2047\n2048\n2049\n2050\n2051\n2052\n2053\n2054\n2055\n2056\n2057\n2058\n2059\n2060\n2061\n2062\n2063\n2064\n2065\n2066\n2067\n2068\n2069\n2070",
+   "description": "Select the target year for Scope 3 reduction"
+  },
+  {
+   "fieldname": "absolute_emissions_percentage",
+   "label": "Optional: Maintain absolute emission with ___ % base year levels",
+   "fieldtype": "Float",
+   "description": "Enter the percentage to maintain absolute emissions within base year levels"
+  },
+  {
+   "fieldname": "target_years_heading",
+   "fieldtype": "HTML",
+   "label": "Target Years",
+   "options": "<h3 style='color: #34495e; font-size: 16px; font-weight: bold; margin: 15px 0 10px 0; padding: 8px; background-color: #ecf0f1; border-left: 4px solid #e74c3c;'>Target Years</h3>"
   },
   {
    "fieldname": "near_term_target_year",
-   "label": "Near-Term Target Year",
-   "fieldtype": "Data",
+   "label": "Near-Term Target year",
+   "fieldtype": "Int",
    "description": "Target year for near-term goals (5-10 years)"
   },
   {
    "fieldname": "long_term_target_year",
-   "label": "Long-Term (Net-Zero) Target Year",
-   "fieldtype": "Data",
+   "label": "Long-Term (Net-Zero) Target Years",
+   "fieldtype": "Int",
    "description": "Target year for long-term net-zero goals (by 2050 or earlier)"
   },
   {
-   "fieldname": "target_metrics",
+   "fieldname": "target_metrics_heading",
+   "fieldtype": "HTML",
    "label": "Target Metrics – Select All That Apply",
-   "fieldtype": "Check",
-   "options": "Absolute emissions reduction\nkgCO₂e/MWh electricity (e.g., solar, wind generation)\nkgCO₂e per tonne of material or product\nkgCO₂e per unit of service\nkgCO₂e per USD revenue\nkgCO₂e per stove-year (clean cooking)\nkgCO₂e per tonne biochar applied\nkgCO₂e per km travelled (transport decarbonization)"
+   "options": "<h3 style='color: #34495e; font-size: 16px; font-weight: bold; margin: 15px 0 10px 0; padding: 8px; background-color: #ecf0f1; border-left: 4px solid #27ae60;'>Target Metrics – Select All That Apply</h3>"
   },
   {
-   "fieldname": "target_boundary",
+   "fieldname": "target_metrics_absolute_emissions",
+   "label": "Absolute emissions reduction",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "target_metrics_kgco2e_mwh",
+   "label": "kgCO₂e/MWh electricity (e.g., solar, wind generation)",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "target_metrics_kgco2e_tonne",
+   "label": "kgCO₂e per tonne of material or product",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "target_metrics_kgco2e_unit_service",
+   "label": "kgCO₂e per unit of service",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "target_metrics_kgco2e_usd_revenue",
+   "label": "kgCO₂e per USD revenue",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "target_metrics_kgco2e_stove_year",
+   "label": "kgCO₂e per stove-year (clean cooking)",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "target_metrics_kgco2e_tonne_biochar",
+   "label": "kgCO₂e per tonne biochar applied",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "target_metrics_kgco2e_km_travelled",
+   "label": "kgCO₂e per km travelled (transport decarbonization)",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "target_boundary_heading",
+   "fieldtype": "HTML",
    "label": "Target Boundary (Coverage of Emissions)",
-   "fieldtype": "Check",
-   "options": "Scope 1 & 2: ≥95% included\nScope 3: ≥90% included (long-term)\nScope 3: ≥67% (near-term)\nPrioritize by relevance"
+   "options": "<h3 style='color: #34495e; font-size: 16px; font-weight: bold; margin: 15px 0 10px 0; padding: 8px; background-color: #ecf0f1; border-left: 4px solid #f39c12;'>Target Boundary (Coverage of Emissions)</h3>"
   },
   {
-   "fieldname": "scope_1_intensity_reduction",
-   "label": "Scope 1 Intensity Reduction",
-   "fieldtype": "Check",
-   "description": "Reduce Scope 1 emissions intensity by percentage"
+   "fieldname": "target_boundary_scope1_2_95_percent",
+   "label": "Scope 1 & 2: ≥95% included",
+   "fieldtype": "Check"
   },
   {
-   "fieldname": "scope_1_reduction_percentage",
-   "label": "Scope 1 Reduction Percentage",
-   "fieldtype": "Float"
+   "fieldname": "target_boundary_scope3_90_percent_long_term",
+   "label": "Scope 3: ≥90% included (long-term)",
+   "fieldtype": "Check"
   },
   {
-   "fieldname": "scope_1_target_year",
-   "label": "Scope 1 Target Year",
-   "fieldtype": "Int"
+   "fieldname": "target_boundary_scope3_67_percent_near_term",
+   "label": "Scope 3: ≥67% (near-term)",
+   "fieldtype": "Check"
   },
   {
-   "fieldname": "operational_emissions_strategies",
-   "label": "Operational Emissions (Scope 1 & 2)",
-   "fieldtype": "Check",
-   "options": "Energy efficiency improvements\nOnsite renewable energy (e.g., rooftop solar)\nOffsite renewable procurement\nFuel switching to clean alternatives\nProcess optimization"
+   "fieldname": "target_boundary_prioritize_relevance",
+   "label": "Scope 3: Prioritize by relevance",
+   "fieldtype": "Check"
   },
+
   {
-   "fieldname": "scope_1_mitigation_strategies",
-   "label": "Scope 1 Mitigation Strategies",
-   "fieldtype": "Check",
-   "options": "Energy efficiency improvements\nOnsite renewable energy (e.g., rooftop solar)\nFuel switching to clean alternatives\nProcess optimization\nEquipment upgrades\nFugitive emissions control"
-  },
-  {
-   "fieldname": "section_c_scope_2_targets",
+   "fieldname": "section_c_mitigation_strategies",
    "fieldtype": "Section Break",
-   "label": "Section C: Scope 2 Emissions Reduction Targets"
+   "label": "Section C: Mitigation Strategies"
   },
   {
-   "fieldname": "scope_2_target_type",
-   "label": "Scope 2 Target Type",
-   "fieldtype": "Check",
-   "options": "Near-term Target (5–10 years)\nLong-term Net-Zero Target (by 2050 or earlier)\nBoth"
+   "fieldname": "operational_emissions_heading",
+   "fieldtype": "HTML",
+   "label": "1. Operational Emissions (Scope 1 & 2)",
+   "options": "<h3 style='color: #34495e; font-size: 16px; font-weight: bold; margin: 15px 0 10px 0; padding: 8px; background-color: #ecf0f1; border-left: 4px solid #3498db;'>1. Operational Emissions (Scope 1 & 2)</h3>"
   },
   {
-   "fieldname": "scope_2_intensity_reduction",
-   "label": "Scope 2 Intensity Reduction",
-   "fieldtype": "Check",
-   "description": "Reduce Scope 2 emissions intensity by percentage"
+   "fieldname": "operational_emissions_energy_efficiency",
+   "label": "Energy efficiency improvements",
+   "fieldtype": "Check"
   },
   {
-   "fieldname": "scope_2_reduction_percentage",
-   "label": "Scope 2 Reduction Percentage",
-   "fieldtype": "Float"
+   "fieldname": "operational_emissions_onsite_renewable",
+   "label": "Onsite renewable energy (e.g., rooftop solar)",
+   "fieldtype": "Check"
   },
   {
-   "fieldname": "scope_2_target_year",
-   "label": "Scope 2 Target Year",
-   "fieldtype": "Int"
+   "fieldname": "operational_emissions_offsite_renewable",
+   "label": "Offsite renewable procurement",
+   "fieldtype": "Check"
   },
   {
-   "fieldname": "scope_2_mitigation_strategies",
-   "label": "Scope 2 Mitigation Strategies",
-   "fieldtype": "Check",
-   "options": "Offsite renewable procurement\nGreen power purchase agreements\nEnergy efficiency improvements\nDemand response programs\nGrid decarbonization support"
+   "fieldname": "operational_emissions_fuel_switching",
+   "label": "Fuel switching to clean alternatives",
+   "fieldtype": "Check"
   },
   {
-   "fieldname": "section_d_scope_3_targets",
+   "fieldname": "operational_emissions_process_optimization",
+   "label": "Process optimization",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "value_chain_emissions_heading",
+   "fieldtype": "HTML",
+   "label": "2. Value Chain Emissions (Scope 3)",
+   "options": "<h3 style='color: #34495e; font-size: 16px; font-weight: bold; margin: 15px 0 10px 0; padding: 8px; background-color: #ecf0f1; border-left: 4px solid #e74c3c;'>2. Value Chain Emissions (Scope 3)</h3>"
+  },
+  {
+   "fieldname": "value_chain_emissions_supplier_engagement",
+   "label": "Supplier engagement",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "value_chain_emissions_low_carbon_materials",
+   "label": "Low-carbon input materials",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "value_chain_emissions_redesign_use_phase",
+   "label": "Redesign for use-phase reduction",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "value_chain_emissions_optimize_logistics",
+   "label": "Optimize logistics",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "value_chain_emissions_circular_economy",
+   "label": "Circular economy practices",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "land_sector_removals_heading",
+   "fieldtype": "HTML",
+   "label": "3. Land Sector & Removals (Optional)",
+   "options": "<h3 style='color: #34495e; font-size: 16px; font-weight: bold; margin: 15px 0 10px 0; padding: 8px; background-color: #ecf0f1; border-left: 4px solid #27ae60;'>3. Land Sector & Removals (Optional)</h3>"
+  },
+  {
+   "fieldname": "land_sector_removals_afforestation",
+   "label": "Afforestation / reforestation",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "land_sector_removals_soil_carbon",
+   "label": "Soil carbon improvement",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "land_sector_removals_urban_greening",
+   "label": "Urban greening",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "land_sector_removals_biochar",
+   "label": "Biochar application",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "land_sector_removals_carbon_capture",
+   "label": "Carbon capture or enhanced weathering",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "land_sector_removals_certified_removals",
+   "label": "Certified removals (DAC, agroforestry)",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "residual_emissions_heading",
+   "fieldtype": "HTML",
+   "label": "4. Residual Emissions Strategy",
+   "options": "<h3 style='color: #34495e; font-size: 16px; font-weight: bold; margin: 15px 0 10px 0; padding: 8px; background-color: #ecf0f1; border-left: 4px solid #f39c12;'>4. Residual Emissions Strategy</h3>"
+  },
+  {
+   "fieldname": "residual_emissions_high_quality_credits",
+   "label": "High-quality removal credits",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "residual_emissions_bvcm",
+   "label": "Beyond Value Chain Mitigation (BVCM)",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "residual_emissions_temporary_solutions",
+   "label": "Temporary voluntary solutions",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "section_d_monitoring_reporting",
    "fieldtype": "Section Break",
-   "label": "Section D: Scope 3 Emissions Reduction Targets"
+   "label": "Section D: Monitoring, Adjustments & Reporting"
   },
   {
-   "fieldname": "scope_3_categories_included",
-   "label": "Scope 3 Categories Included",
-   "fieldtype": "Check",
-   "options": "Purchased goods and services\nCapital goods\nFuel- and energy-related activities\nUpstream/downstream transportation and distribution\nWaste generated in operations\nBusiness travel / employee commuting\nUse of sold products\nEnd-of-life treatment of sold products\nLeased assets, franchises, or investments"
-  },
-  {
-   "fieldname": "scope_3_target_type",
-   "label": "Scope 3 Target Type",
-   "fieldtype": "Check",
-   "options": "Near-term Target (5–10 years)\nLong-term Net-Zero Target (by 2050 or earlier)\nBoth"
-  },
-  {
-   "fieldname": "scope_3_intensity_reduction",
-   "label": "Scope 3 Intensity Reduction",
-   "fieldtype": "Check",
-   "description": "Reduce Scope 3 emissions intensity by percentage"
-  },
-  {
-   "fieldname": "scope_3_reduction_percentage",
-   "label": "Scope 3 Reduction Percentage",
-   "fieldtype": "Float"
-  },
-  {
-   "fieldname": "scope_3_target_year",
-   "label": "Scope 3 Target Year",
-   "fieldtype": "Int"
-  },
-  {
-   "fieldname": "value_chain_emissions_strategies",
-   "label": "Value Chain Emissions (Scope 3)",
-   "fieldtype": "Check",
-   "options": "Supplier engagement\nLow-carbon input materials\nRedesign for use-phase reduction\nOptimize logistics\nCircular economy practices"
-  },
-  {
-   "fieldname": "scope_3_mitigation_strategies",
-   "label": "Scope 3 Mitigation Strategies",
-   "fieldtype": "Check",
-   "options": "Supplier engagement\nLow-carbon input materials\nRedesign for use-phase reduction\nOptimize logistics\nCircular economy practices\nProduct lifecycle optimization"
-  },
-  {
-   "fieldname": "section_e_reductions",
-   "fieldtype": "Section Break",
-   "label": "Section E: Reduction Strategies"
-  },
-  {
-   "fieldname": "reduction_target_type",
-   "label": "Reduction Target Type",
-   "fieldtype": "Check",
-   "options": "Near-term Target (5–10 years)\nLong-term Net-Zero Target (by 2050 or earlier)\nBoth"
-  },
-  {
-   "fieldname": "land_sector_removals",
-   "label": "Land Sector & Removals (Optional)",
-   "fieldtype": "Check",
-   "options": "Afforestation / reforestation\nSoil carbon improvement\nUrban greening\nBiochar application\nCarbon capture or enhanced weathering\nCertified removals (DAC, agroforestry)"
-  },
-  {
-   "fieldname": "residual_emissions_strategy",
-   "label": "Residual Emissions Strategy",
-   "fieldtype": "Check",
-   "options": "High-quality removal credits\nBeyond Value Chain Mitigation (BVCM)\nTemporary voluntary solutions"
-  },
-  {
-   "fieldname": "section_f_monitoring",
-   "fieldtype": "Section Break",
-   "label": "Section F: Monitoring, Adjustments & Reporting"
+   "fieldname": "monitoring_frequency_heading",
+   "fieldtype": "HTML",
+   "label": "1. Monitoring Frequency",
+   "options": "<h3 style='color: #34495e; font-size: 16px; font-weight: bold; margin: 15px 0 10px 0; padding: 8px; background-color: #ecf0f1; border-left: 4px solid #3498db;'>1. Monitoring Frequency</h3>"
   },
   {
    "fieldname": "monitoring_frequency",
    "label": "Monitoring Frequency",
-   "fieldtype": "Check",
+   "fieldtype": "Select",
    "options": "Annual\nBiennial\nOther"
   },
   {
-   "fieldname": "monitoring_frequency_other",
+   "fieldname": "monitoring_frequency_other_text",
    "label": "Other Monitoring Frequency",
    "fieldtype": "Data",
-   "depends_on": "eval:doc.monitoring_frequency && doc.monitoring_frequency.includes('Other')",
+   "depends_on": "eval:doc.monitoring_frequency == 'Other'",
    "description": "Specify other monitoring frequency"
+  },
+  {
+   "fieldname": "assurance_validation_heading",
+   "fieldtype": "HTML",
+   "label": "2. Assurance and Validation",
+   "options": "<h3 style='color: #34495e; font-size: 16px; font-weight: bold; margin: 15px 0 10px 0; padding: 8px; background-color: #ecf0f1; border-left: 4px solid #e74c3c;'>2. Assurance and Validation</h3>"
   },
   {
    "fieldname": "assurance_validation",
    "label": "Assurance and Validation",
-   "fieldtype": "Check",
+   "fieldtype": "Select",
    "options": "Internal assurance\nThird-party verification\nSubmitted to validation platform (e.g., SBTi)"
   },
   {
-   "fieldname": "ghg_tracking_tools",
-   "label": "GHG Tracking Tools Used",
-   "fieldtype": "Check",
-   "options": "Excel / spreadsheet\nGHG software\nWeb platform (e.g., CDP, Net-Zero Cloud)"
+   "fieldname": "ghg_tracking_tools_heading",
+   "fieldtype": "HTML",
+   "label": "3. GHG Tracking Tools Used",
+   "options": "<h3 style='color: #34495e; font-size: 16px; font-weight: bold; margin: 15px 0 10px 0; padding: 8px; background-color: #ecf0f1; border-left: 4px solid #27ae60;'>3. GHG Tracking Tools Used</h3>"
   },
   {
-   "fieldname": "ghg_software_name",
+   "fieldname": "ghg_tracking_tools_excel",
+   "label": "Excel / spreadsheet",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "ghg_tracking_tools_software",
+   "label": "GHG software",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "ghg_tracking_tools_software_name",
    "label": "GHG Software Name",
    "fieldtype": "Data",
-   "depends_on": "eval:doc.ghg_tracking_tools && doc.ghg_tracking_tools.includes('GHG software')",
+   "depends_on": "eval:doc.ghg_tracking_tools_software",
    "description": "Name of the GHG software used"
   },
   {
-   "fieldname": "recalculation_policy",
-   "label": "Recalculation Policy",
-   "fieldtype": "Check",
-   "options": "Structural changes\nMethodology changes\nBoundary/scope adjustments"
+   "fieldname": "ghg_tracking_tools_web_platform",
+   "label": "Web platform (e.g., CDP, Net-Zero Cloud)",
+   "fieldtype": "Check"
   },
   {
-   "fieldname": "progress_communication",
-   "label": "Progress Communication",
-   "fieldtype": "Check",
-   "options": "ESG dashboard\nAnnual sustainability report\nCDP/public disclosure\nSBTi registry updates"
+   "fieldname": "recalculation_policy_heading",
+   "fieldtype": "HTML",
+   "label": "4. Recalculation Policy",
+   "options": "<h3 style='color: #34495e; font-size: 16px; font-weight: bold; margin: 15px 0 10px 0; padding: 8px; background-color: #ecf0f1; border-left: 4px solid #f39c12;'>4. Recalculation Policy</h3>"
   },
+  {
+   "fieldname": "recalculation_policy_structural",
+   "label": "Structural changes",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "recalculation_policy_methodology",
+   "label": "Methodology changes",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "recalculation_policy_boundary",
+   "label": "Boundary/scope adjustments",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "progress_communication_heading",
+   "fieldtype": "HTML",
+   "label": "5. Progress Communication",
+   "options": "<h3 style='color: #34495e; font-size: 16px; font-weight: bold; margin: 15px 0 10px 0; padding: 8px; background-color: #ecf0f1; border-left: 4px solid #9b59b6;'>5. Progress Communication</h3>"
+  },
+  {
+   "fieldname": "progress_communication_esg_dashboard",
+   "label": "ESG dashboard",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "progress_communication_sustainability_report",
+   "label": "Annual sustainability report",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "progress_communication_cdp_disclosure",
+   "label": "CDP/public disclosure",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "progress_communication_sbti_registry",
+   "label": "SBTi registry updates",
+   "fieldtype": "Check"
+  },
+
   {
    "fieldname": "created_at",
    "fieldtype": "Datetime",
