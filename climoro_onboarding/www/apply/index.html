@@ -8,7 +8,7 @@
             <img src="/assets/climoro_onboarding/images/climoro.png" alt="Climoro Logo" class="climoro-logo">
         </div>
         <h1>Climoro Onboarding Form</h1>
-        <p>Complete your company onboarding in 5 simple steps</p>
+        <p>Complete your company onboarding in 6 simple steps</p>
     </div>
 
     <!-- Progress Indicator -->
@@ -37,6 +37,11 @@
             <div class="onboarding-progress-step" data-step="5">
                 <div class="onboarding-step-number">5</div>
                 <div class="onboarding-step-label">Reduction Form</div>
+            </div>
+            <div class="onboarding-progress-line"></div>
+            <div class="onboarding-progress-step" data-step="6">
+                <div class="onboarding-step-number">6</div>
+                <div class="onboarding-step-label">Method of Calculation</div>
             </div>
         </div>
     </div>
@@ -819,6 +824,32 @@
                                 <input type="checkbox" name="progress_communication_sbti_registry" value="1"> SBTi registry updates
                             </label>
                         </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 6: Method of Calculation -->
+            <div class="form-step" id="step-6">
+                <h2>Method of Calculation</h2>
+                
+                <div class="form-group">
+                    <label>Select Method of Calculation *</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="method_of_calculation_option_a" value="1"> A
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="method_of_calculation_option_b" value="1"> B
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="method_of_calculation_option_c" value="1"> C
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="method_of_calculation_option_d" value="1"> D
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="method_of_calculation_option_e" value="1"> E
+                        </label>
                     </div>
                 </div>
             </div>
@@ -2450,7 +2481,7 @@ body {
 class OnboardingForm {
     constructor() {
         this.currentStep = 1;
-        this.totalSteps = 5;
+        this.totalSteps = 6;
         this.unitCounter = 0;
         this.userCounters = {};
         
@@ -2741,6 +2772,28 @@ class OnboardingForm {
                     if (otherField) otherField.checked = true;
                 }
                 
+                // Load Step 6: Method of Calculation data
+                if (savedData.method_of_calculation_option_a) {
+                    const optionAField = document.querySelector('input[name="method_of_calculation_option_a"]');
+                    if (optionAField) optionAField.checked = true;
+                }
+                if (savedData.method_of_calculation_option_b) {
+                    const optionBField = document.querySelector('input[name="method_of_calculation_option_b"]');
+                    if (optionBField) optionBField.checked = true;
+                }
+                if (savedData.method_of_calculation_option_c) {
+                    const optionCField = document.querySelector('input[name="method_of_calculation_option_c"]');
+                    if (optionCField) optionCField.checked = true;
+                }
+                if (savedData.method_of_calculation_option_d) {
+                    const optionDField = document.querySelector('input[name="method_of_calculation_option_d"]');
+                    if (optionDField) optionDField.checked = true;
+                }
+                if (savedData.method_of_calculation_option_e) {
+                    const optionEField = document.querySelector('input[name="method_of_calculation_option_e"]');
+                    if (optionEField) optionEField.checked = true;
+                }
+                
                 console.log('✅ Saved data restored successfully');
             } else {
                 console.log('📭 No saved data found or error loading data');
@@ -2770,7 +2823,7 @@ class OnboardingForm {
             }
             
             // Save current step data before moving to next step
-            if (this.currentStep >= 2 && this.currentStep <= 5) {
+            if (this.currentStep >= 2 && this.currentStep <= 6) {
                 const saveSuccess = await this.saveStepData();
                 if (!saveSuccess) {
                     console.log('❌ Failed to save step data, not proceeding to next step');
@@ -3859,6 +3912,8 @@ class OnboardingForm {
             stepData.reduction_options_other = this.getCheckboxValue('reduction_options_other');
         } else if (targetStep === 5) {
             // Step 5: Reduction Form - Section A: Emissions Inventory Setup
+        } else if (targetStep === 6) {
+            // Step 6: Method of Calculation
             stepData.base_year = document.getElementById('base_year')?.value || '';
             stepData.base_year_reason = document.getElementById('base_year_reason')?.value || '';
             
@@ -3960,6 +4015,13 @@ class OnboardingForm {
             stepData.progress_communication_sustainability_report = this.getCheckboxValue('progress_communication_sustainability_report');
             stepData.progress_communication_cdp_disclosure = this.getCheckboxValue('progress_communication_cdp_disclosure');
             stepData.progress_communication_sbti_registry = this.getCheckboxValue('progress_communication_sbti_registry');
+        } else if (targetStep === 6) {
+            // Step 6: Method of Calculation
+            stepData.method_of_calculation_option_a = this.getCheckboxValue('method_of_calculation_option_a');
+            stepData.method_of_calculation_option_b = this.getCheckboxValue('method_of_calculation_option_b');
+            stepData.method_of_calculation_option_c = this.getCheckboxValue('method_of_calculation_option_c');
+            stepData.method_of_calculation_option_d = this.getCheckboxValue('method_of_calculation_option_d');
+            stepData.method_of_calculation_option_e = this.getCheckboxValue('method_of_calculation_option_e');
         }
         
         return stepData;
@@ -4237,6 +4299,13 @@ class OnboardingForm {
             progress_communication_sustainability_report: this.getCheckboxValue('progress_communication_sustainability_report'),
             progress_communication_cdp_disclosure: this.getCheckboxValue('progress_communication_cdp_disclosure'),
             progress_communication_sbti_registry: this.getCheckboxValue('progress_communication_sbti_registry'),
+            
+            // Step 6: Method of Calculation
+            method_of_calculation_option_a: this.getCheckboxValue('method_of_calculation_option_a'),
+            method_of_calculation_option_b: this.getCheckboxValue('method_of_calculation_option_b'),
+            method_of_calculation_option_c: this.getCheckboxValue('method_of_calculation_option_c'),
+            method_of_calculation_option_d: this.getCheckboxValue('method_of_calculation_option_d'),
+            method_of_calculation_option_e: this.getCheckboxValue('method_of_calculation_option_e'),
             
             // Step 3: Units and Users
             units: [],

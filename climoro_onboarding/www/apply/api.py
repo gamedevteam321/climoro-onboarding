@@ -444,8 +444,15 @@ def submit_onboarding_form(form_data):
                 "recalculation_policy": form_data.get("recalculation_policy"),
                 "progress_communication": form_data.get("progress_communication"),
                 
+                # Step 6: Method of Calculation
+                "method_of_calculation_option_a": form_data.get("method_of_calculation_option_a"),
+                "method_of_calculation_option_b": form_data.get("method_of_calculation_option_b"),
+                "method_of_calculation_option_c": form_data.get("method_of_calculation_option_c"),
+                "method_of_calculation_option_d": form_data.get("method_of_calculation_option_d"),
+                "method_of_calculation_option_e": form_data.get("method_of_calculation_option_e"),
+                
                 "status": "Submitted",
-                "current_step": 5
+                "current_step": 6
             })
             
             frappe.logger().info(f"📍 Creating new doc with GPS coordinates: '{form_data.get('gps_coordinates')}'")
@@ -781,6 +788,16 @@ def save_step_data(step_data):
             doc.progress_communication_sbti_registry = step_data.get("progress_communication_sbti_registry")
             
             doc.current_step = 5
+            
+        elif step_number == 6:
+            # Step 6: Method of Calculation
+            doc.method_of_calculation_option_a = step_data.get("method_of_calculation_option_a")
+            doc.method_of_calculation_option_b = step_data.get("method_of_calculation_option_b")
+            doc.method_of_calculation_option_c = step_data.get("method_of_calculation_option_c")
+            doc.method_of_calculation_option_d = step_data.get("method_of_calculation_option_d")
+            doc.method_of_calculation_option_e = step_data.get("method_of_calculation_option_e")
+            
+            doc.current_step = 6
         
         doc.save()
         frappe.db.commit()
@@ -1328,7 +1345,10 @@ def get_saved_data():
                    "recalculation_policy_structural", "recalculation_policy_methodology", "recalculation_policy_boundary",
                    # Progress Communication
                    "progress_communication_esg_dashboard", "progress_communication_sustainability_report",
-                   "progress_communication_cdp_disclosure", "progress_communication_sbti_registry"],
+                   "progress_communication_cdp_disclosure", "progress_communication_sbti_registry",
+                   # Step 6: Method of Calculation
+                   "method_of_calculation_option_a", "method_of_calculation_option_b", "method_of_calculation_option_c",
+                   "method_of_calculation_option_d", "method_of_calculation_option_e"],
             order_by="creation desc",
             limit=1
         )

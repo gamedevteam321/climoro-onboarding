@@ -163,6 +163,13 @@
   "progress_communication_sustainability_report",
   "progress_communication_cdp_disclosure",
   "progress_communication_sbti_registry",
+  "section_break_method_of_calculation",
+  "method_of_calculation_tab",
+  "method_of_calculation_option_a",
+  "method_of_calculation_option_b",
+  "method_of_calculation_option_c",
+  "method_of_calculation_option_d",
+  "method_of_calculation_option_e",
   "created_at",
   "modified_at"
  ],
@@ -1036,6 +1043,40 @@
   {
    "fieldname": "progress_communication_sbti_registry",
    "label": "SBTi registry updates",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "section_break_method_of_calculation",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "method_of_calculation_tab",
+   "fieldtype": "Tab Break",
+   "label": "Method of Calculation (Step 6)"
+  },
+  {
+   "fieldname": "method_of_calculation_option_a",
+   "label": "A",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "method_of_calculation_option_b",
+   "label": "B",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "method_of_calculation_option_c",
+   "label": "C",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "method_of_calculation_option_d",
+   "label": "D",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "method_of_calculation_option_e",
+   "label": "E",
    "fieldtype": "Check"
   },
 
