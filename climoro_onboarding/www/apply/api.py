@@ -1537,7 +1537,13 @@ def verify_resume_token(token):
             
             if applications:
                 doc = frappe.get_doc("Onboarding Form", applications[0].name)
-                session_data["application_data"] = doc.as_dict()
+                # Convert doc to dict and handle datetime serialization
+                doc_dict = doc.as_dict()
+                # Convert datetime objects to strings
+                for key, value in doc_dict.items():
+                    if hasattr(value, 'strftime'):  # Check if it's a datetime object
+                        doc_dict[key] = value.strftime('%Y-%m-%d %H:%M:%S')
+                session_data["application_data"] = doc_dict
                 session_data["current_step"] = doc.current_step or 1
                 
                 # Refresh the cache with updated data
@@ -1612,4 +1618,66 @@ def debug_resume_token(token):
             "success": False,
             "message": f"Debug error: {str(e)}",
             "debug_info": {"error": str(e)}
+        }
+
+@frappe.whitelist(allow_guest=True)
+def check_current_step_debug(application_id):
+    """Debug function to check current step in database"""
+    try:
+        if not application_id:
+            return {
+                "success": False,
+                "message": "Application ID is required"
+            }
+        
+        doc = frappe.get_doc("Onboarding Form", application_id)
+        
+        return {
+            "success": True,
+            "application_id": application_id,
+            "current_step": doc.current_step,
+            "modified": str(doc.modified),
+            "modified_by": doc.modified_by,
+            "status": doc.status
+        }
+        
+    except Exception as e:
+        return {
+            "success": False,
+            "message": f"Error checking current step: {str(e)}"
+        }
+
+@frappe.whitelist(allow_guest=True)
+def update_current_step_debug(application_id, new_step):
+    """Debug function to update current step in database"""
+    try:
+        if not application_id:
+            return {
+                "success": False,
+                "message": "Application ID is required"
+            }
+        
+        if not new_step:
+            return {
+                "success": False,
+                "message": "New step is required"
+            }
+        
+        doc = frappe.get_doc("Onboarding Form", application_id)
+        old_step = doc.current_step
+        doc.current_step = int(new_step)
+        doc.save()
+        
+        return {
+            "success": True,
+            "application_id": application_id,
+            "old_step": old_step,
+            "new_step": doc.current_step,
+            "message": f"Updated current step from {old_step} to {doc.current_step}"
+        }
+        
+    except Exception as e:
+        return {
+            "success": False,
+            "message": f"Error updating current step: {str(e)}"
         }

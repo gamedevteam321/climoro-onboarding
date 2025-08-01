@@ -2480,15 +2480,38 @@ body {
 // Onboarding Form JavaScript
 class OnboardingForm {
     constructor() {
+        // Check if there's a resume token in URL and get the current step
+        const urlParams = new URLSearchParams(window.location.search);
+        const resumeToken = urlParams.get('resume');
+        
+        // Initialize with step 1, but will be updated if resume token is present
         this.currentStep = 1;
         this.totalSteps = 6;
         this.unitCounter = 0;
         this.userCounters = {};
         
+        console.log('OnboardingForm constructor - initial currentStep:', this.currentStep);
+        console.log('Resume token in constructor:', resumeToken);
+        
         this.initializeForm();
         this.bindEvents();
         this.initializeFileUploads();
         this.loadSavedData(); // Load any previously saved data
+        
+        // If there's a resume token, wait a bit for the resume functionality to run
+        if (resumeToken) {
+            // Set resume mode immediately
+            window.isResumeMode = true;
+            console.log('Resume token detected - setting resume mode');
+            
+            setTimeout(() => {
+                console.log('Checking for resume data after form initialization...');
+                if (window.resumeSessionData && window.resumeSessionData.current_step) {
+                    console.log('Found resume data, updating form to step:', window.resumeSessionData.current_step);
+                    this.handleResume(window.resumeSessionData);
+                }
+            }, 500);
+        }
     }
     
     initializeForm() {
@@ -2816,10 +2839,23 @@ class OnboardingForm {
                 }
             }
             
-            // If completing Step 1, send verification email
+            // If completing Step 1, send verification email (unless in resume mode)
             if (this.currentStep === 1) {
-                await this.sendVerificationEmail();
-                return;
+                console.log('Step 1 completion - checking resume mode...');
+                console.log('window.isResumeMode:', window.isResumeMode);
+                console.log('window.resumeSessionData:', window.resumeSessionData);
+                
+                // Check if we're in resume mode
+                if (window.isResumeMode || window.resumeSessionData) {
+                    console.log('🔄 Resume mode detected - skipping verification email and proceeding to step 2');
+                    this.currentStep++;
+                    this.updateStep();
+                    return;
+                } else {
+                    console.log('📧 Normal mode - sending verification email');
+                    await this.sendVerificationEmail();
+                    return;
+                }
             }
             
             // Save current step data before moving to next step
@@ -2860,9 +2896,22 @@ class OnboardingForm {
     }
     
     updateNavigation() {
-        this.prevBtn.style.display = this.currentStep > 1 ? 'block' : 'none';
-        this.nextBtn.style.display = this.currentStep < this.totalSteps ? 'block' : 'none';
-        this.submitBtn.style.display = this.currentStep === this.totalSteps ? 'block' : 'none';
+        console.log('Form class updateNavigation called with currentStep:', this.currentStep);
+        console.log('Total steps:', this.totalSteps);
+        
+        const showPrev = this.currentStep > 1;
+        const showNext = this.currentStep < this.totalSteps;
+        const showSubmit = this.currentStep === this.totalSteps;
+        
+        console.log('Show prev button:', showPrev);
+        console.log('Show next button:', showNext);
+        console.log('Show submit button:', showSubmit);
+        
+        this.prevBtn.style.display = showPrev ? 'block' : 'none';
+        this.nextBtn.style.display = showNext ? 'block' : 'none';
+        this.submitBtn.style.display = showSubmit ? 'block' : 'none';
+        
+        console.log('Navigation buttons updated');
     }
     
     updateProgress() {
@@ -2890,6 +2939,40 @@ class OnboardingForm {
                 line.classList.remove('onboarding-completed');
             }
         });
+    }
+    
+    // Method to handle resume functionality
+    handleResume(resumeData) {
+        if (resumeData && resumeData.current_step) {
+            console.log('Form class handling resume to step:', resumeData.current_step);
+            this.currentStep = resumeData.current_step;
+            this.showStep(this.currentStep);
+            this.updateNavigation();
+            this.updateProgress();
+        }
+    }
+    
+    // Form class showStep method
+    showStep(step) {
+        console.log('Form class showStep called with step:', step);
+        
+        // Hide all steps
+        document.querySelectorAll('.form-step').forEach(stepElement => {
+            stepElement.classList.remove('active');
+        });
+        
+        // Show current step
+        const currentStepElement = document.getElementById(`step-${step}`);
+        if (currentStepElement) {
+            currentStepElement.classList.add('active');
+            console.log('Form class activated step element:', `step-${step}`);
+        } else {
+            console.log('Form class step element not found:', `step-${step}`);
+        }
+        
+        // Update navigation and progress
+        this.updateNavigation();
+        this.updateProgress();
     }
     
     validateCurrentStep() {
@@ -5603,6 +5686,10 @@ function updateSubIndustryOptions() {
     const industrySelect = document.getElementById('industry_type');
     const subIndustrySelect = document.getElementById('sub_industry_type');
     
+    console.log('🔄 updateSubIndustryOptions called');
+    console.log('Industry select value:', industrySelect?.value);
+    console.log('Industry subtypes available:', industrySubTypes);
+    
     // Clear existing options
     subIndustrySelect.innerHTML = '<option value="">Select Sub-Industry Type</option>';
     
@@ -5620,6 +5707,7 @@ function updateSubIndustryOptions() {
         // Enable the sub-industry select
         subIndustrySelect.disabled = false;
         console.log(`✅ Updated sub-industry options for: ${selectedIndustry}`);
+        console.log('Available sub-industry options:', industrySubTypes[selectedIndustry]);
     } else {
         // Disable the sub-industry select if no industry is selected
         subIndustrySelect.disabled = true;
@@ -6614,11 +6702,16 @@ function verifyResumeToken(token) {
         callback: function(response) {
             if (response.message && response.message.success) {
                 console.log('Resume token valid:', response.message);
+                console.log('Current step from API:', response.message.current_step);
+                console.log('Session data current step:', response.message.session_data.current_step);
                 resumeSessionData = response.message.session_data;
+                // Make it globally available for the form class
+                window.resumeSessionData = response.message.session_data;
                 
-                // Show resume application modal
-                const applicationModal = document.getElementById('resume-application-modal');
-                applicationModal.style.display = 'block';
+                // Automatically restore form data without showing modal
+                if (resumeSessionData) {
+                    restoreFormData(resumeSessionData);
+                }
                 
                 // Clean URL
                 const url = new URL(window.location);
@@ -6636,10 +6729,16 @@ function verifyResumeToken(token) {
 }
 
 function restoreFormData(sessionData) {
+    console.log('Restoring form data:', sessionData);
     isResumeMode = true;
+    // Make it globally accessible
+    window.isResumeMode = true;
     
     const applicationData = sessionData.application_data;
     const currentStep = sessionData.current_step || 1;
+    
+    console.log('Application data:', applicationData);
+    console.log('Current step:', currentStep);
     
     if (applicationData) {
         // Pre-fill form fields
@@ -6648,19 +6747,93 @@ function restoreFormData(sessionData) {
             if (field) {
                 if (field.type === 'checkbox') {
                     field.checked = applicationData[key] === 1 || applicationData[key] === true;
+                } else if (field.type === 'file') {
+                    // Skip file inputs - they can't be set programmatically for security reasons
+                    console.log(`Skipping file field ${key} (cannot set programmatically)`);
                 } else {
                     field.value = applicationData[key] || '';
                 }
+                console.log(`Set field ${key} to ${applicationData[key]}`);
+            } else {
+                console.log(`Field ${key} not found in form`);
+            }
+        });
+        
+        // Handle dependent dropdowns first
+        const industryTypeField = document.querySelector('[name="industry_type"]');
+        if (industryTypeField && industryTypeField.value) {
+            console.log('Setting up dependent dropdowns for industry type:', industryTypeField.value);
+            // Update sub-industry options first
+            updateSubIndustryOptions();
+            
+            // Wait a bit for the options to be populated, then set the sub-industry value
+            setTimeout(() => {
+                const subIndustryField = document.querySelector('[name="sub_industry_type"]');
+                if (subIndustryField && applicationData.sub_industry_type) {
+                    subIndustryField.value = applicationData.sub_industry_type;
+                    console.log('Set sub-industry type to:', applicationData.sub_industry_type);
+                }
+            }, 100);
+        }
+        
+        // Trigger change events for other select fields to update dependent fields
+        document.querySelectorAll('select').forEach(select => {
+            if (select.value && select.name !== 'industry_type' && select.name !== 'sub_industry_type') {
+                select.dispatchEvent(new Event('change', { bubbles: true }));
             }
         });
         
         // Set current step
+        console.log('Setting current step to:', currentStep);
         setCurrentStep(currentStep);
         showStep(currentStep);
         updateProgressIndicator();
         
+        // Also update the form class current step
+        if (window.onboardingForm) {
+            window.onboardingForm.handleResume(sessionData);
+        } else {
+            // If form is not initialized yet, wait a bit and try again
+            setTimeout(() => {
+                if (window.onboardingForm) {
+                    window.onboardingForm.handleResume(sessionData);
+                }
+            }, 100);
+        }
+        
         // Show success message
         showResumeMessage('Application resumed successfully! Your previous data has been loaded.', 'success');
+        
+        // Hide welcome modal and remove blur
+        const welcomeModal = document.getElementById('welcome-modal');
+        const formContainer = document.getElementById('form-container');
+        if (welcomeModal) {
+            welcomeModal.style.display = 'none';
+        }
+        if (formContainer) {
+            formContainer.classList.remove('form-blur');
+        }
+    } else {
+        console.log('No application data found in session data');
+        // Try to at least set the current step
+        setCurrentStep(currentStep);
+        showStep(currentStep);
+        updateProgressIndicator();
+        
+        // Also update the form class current step
+        if (window.onboardingForm) {
+            window.onboardingForm.handleResume(sessionData);
+        } else {
+            // If form is not initialized yet, wait a bit and try again
+            setTimeout(() => {
+                if (window.onboardingForm) {
+                    window.onboardingForm.handleResume(sessionData);
+                }
+            }, 100);
+        }
+        
+        // Show success message
+        showResumeMessage('Application resumed successfully! You are now at step ' + currentStep, 'success');
         
         // Hide welcome modal and remove blur
         const welcomeModal = document.getElementById('welcome-modal');
@@ -6676,7 +6849,9 @@ function restoreFormData(sessionData) {
 
 function resetForm() {
     isResumeMode = false;
+    window.isResumeMode = false;
     resumeSessionData = null;
+    window.resumeSessionData = null;
     
     // Reset form
     document.getElementById('onboarding-form').reset();
@@ -6718,6 +6893,8 @@ function setCurrentStep(step) {
 }
 
 function showStep(step) {
+    console.log('Global showStep called with step:', step);
+    
     // Hide all steps
     document.querySelectorAll('.form-step').forEach(stepElement => {
         stepElement.classList.remove('active');
@@ -6727,10 +6904,20 @@ function showStep(step) {
     const currentStepElement = document.getElementById(`step-${step}`);
     if (currentStepElement) {
         currentStepElement.classList.add('active');
+        console.log('Global showStep activated step element:', `step-${step}`);
+    } else {
+        console.log('Global showStep step element not found:', `step-${step}`);
     }
     
     // Update progress indicator
     updateProgressIndicator();
+    
+    // Also update form class navigation if available
+    if (window.onboardingForm) {
+        console.log('Global showStep updating form class navigation');
+        window.onboardingForm.currentStep = step;
+        window.onboardingForm.updateNavigation();
+    }
 }
 
 function updateProgressIndicator() {
