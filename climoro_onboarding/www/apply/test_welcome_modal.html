@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome Modal Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        
+        .test-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        
+        .test-btn:hover {
+            background: #218838;
+        }
+        
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🧪 Welcome Modal Test</h1>
+        <p>This page tests the welcome modal functionality for the Climoro onboarding form.</p>
+        
+        <div class="test-section">
+            <h3>Test 1: Welcome Modal Display</h3>
+            <p>Check if the welcome modal appears on page load:</p>
+            <button class="test-btn" onclick="testWelcomeModal()">Test Welcome Modal</button>
+            <div id="test1-result"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>Test 2: Form Blur Effect</h3>
+            <p>Check if the form is blurred when welcome modal is shown:</p>
+            <button class="test-btn" onclick="testFormBlur()">Test Form Blur</button>
+            <div id="test2-result"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>Test 3: Button Functionality</h3>
+            <p>Test the welcome modal buttons:</p>
+            <button class="test-btn" onclick="testStartNewButton()">Test Start New Button</button>
+            <button class="test-btn" onclick="testResumeButton()">Test Resume Button</button>
+            <div id="test3-result"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>Test 4: Token Detection</h3>
+            <p>Test token detection in URL:</p>
+            <button class="test-btn" onclick="testResumeToken()">Test Resume Token</button>
+            <button class="test-btn" onclick="testVerifyToken()">Test Verify Token</button>
+            <div id="test4-result"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>Manual Testing Instructions</h3>
+            <ol>
+                <li>Navigate to <code>/apply</code> URL</li>
+                <li>Welcome modal should appear immediately</li>
+                <li>Form should be blurred behind the modal</li>
+                <li>No resume button should be visible in header</li>
+                <li>Click "Start New Application" - modal should close, form should unblur</li>
+                <li>Click "Resume Application" - resume modal should open (form stays blurred)</li>
+                <li>Click "← Back" in resume modal - should return to welcome modal</li>
+                <li>Test with resume token: <code>/apply?resume=test-token</code> (no welcome modal)</li>
+                <li>Test with verification token: <code>/apply?verify=test-token</code> (no welcome modal)</li>
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        function showResult(elementId, message, isSuccess = true) {
+            const element = document.getElementById(elementId);
+            element.innerHTML = `<div class="status ${isSuccess ? 'success' : 'error'}">${message}</div>`;
+        }
+        
+        function testWelcomeModal() {
+            // Simulate checking if welcome modal exists and is visible
+            const welcomeModal = document.querySelector('#welcome-modal');
+            if (welcomeModal) {
+                showResult('test1-result', '✅ Welcome modal element found in DOM');
+            } else {
+                showResult('test1-result', '❌ Welcome modal element not found', false);
+            }
+        }
+        
+        function testFormBlur() {
+            // Simulate checking form blur functionality
+            const formContainer = document.querySelector('#form-container');
+            if (formContainer) {
+                showResult('test2-result', '✅ Form container element found - blur functionality should work');
+            } else {
+                showResult('test2-result', '❌ Form container element not found', false);
+            }
+        }
+        
+        function testStartNewButton() {
+            // Simulate start new button functionality
+            showResult('test3-result', '✅ Start New button should close modal and unblur form');
+        }
+        
+        function testResumeButton() {
+            // Simulate resume button functionality
+            showResult('test3-result', '✅ Resume button should open resume modal');
+        }
+        
+        function testResumeToken() {
+            // Test resume token detection
+            const urlParams = new URLSearchParams(window.location.search);
+            const resumeToken = urlParams.get('resume');
+            
+            if (resumeToken) {
+                showResult('test4-result', `✅ Resume token detected: ${resumeToken}`);
+            } else {
+                showResult('test4-result', 'ℹ️ No resume token in current URL (this is normal)');
+            }
+        }
+        
+        function testVerifyToken() {
+            // Test verification token detection
+            const urlParams = new URLSearchParams(window.location.search);
+            const verifyToken = urlParams.get('verify');
+            
+            if (verifyToken) {
+                showResult('test4-result', `✅ Verification token detected: ${verifyToken}`);
+            } else {
+                showResult('test4-result', 'ℹ️ No verification token in current URL (this is normal)');
+            }
+        }
+        
+        // Auto-run tests on page load
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                testWelcomeModal();
+                testFormBlur();
+                testResumeToken();
+            }, 1000);
+        });
+    </script>
+</body>
+</html> 

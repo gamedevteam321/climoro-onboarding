@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Token Debug Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; border-radius: 5px; }
+        .result { margin: 10px 0; padding: 10px; background: #f5f5f5; border-radius: 3px; }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        button { padding: 10px 15px; margin: 5px; cursor: pointer; }
+        input { padding: 8px; margin: 5px; width: 300px; }
+    </style>
+</head>
+<body>
+    <h1>🔍 Resume Token Debug Test</h1>
+    
+    <div class="test-section">
+        <h3>1. Test Send Resume Email</h3>
+        <input type="email" id="testEmail" placeholder="Enter email address" value="test@example.com">
+        <button onclick="testSendResumeEmail()">Send Resume Email</button>
+        <div id="sendResult" class="result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>2. Test Verify Resume Token</h3>
+        <input type="text" id="testToken" placeholder="Enter resume token">
+        <button onclick="testVerifyToken()">Verify Token</button>
+        <div id="verifyResult" class="result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>3. Test with URL Token</h3>
+        <button onclick="testUrlToken()">Test Token from URL</button>
+        <div id="urlResult" class="result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>4. Debug Token Status</h3>
+        <button onclick="debugToken()">Debug Token</button>
+        <div id="debugResult" class="result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>5. Check Cache Status</h3>
+        <button onclick="checkCacheStatus()">Check Cache</button>
+        <div id="cacheResult" class="result"></div>
+    </div>
+
+    <script>
+        function testSendResumeEmail() {
+            const email = document.getElementById('testEmail').value;
+            const resultDiv = document.getElementById('sendResult');
+            
+            resultDiv.innerHTML = 'Sending resume email...';
+            resultDiv.className = 'result';
+            
+            frappe.call({
+                method: 'climoro_onboarding.www.apply.api.send_resume_email',
+                args: { email: email },
+                callback: function(response) {
+                    console.log('Send resume email response:', response);
+                    if (response.message && response.message.success) {
+                        resultDiv.innerHTML = `
+                            <strong>✅ Success!</strong><br>
+                            Message: ${response.message.message}<br>
+                            Token: ${response.message.token || 'No token returned'}
+                        `;
+                        resultDiv.className = 'result success';
+                        
+                        // Auto-fill the token field for testing
+                        if (response.message.token) {
+                            document.getElementById('testToken').value = response.message.token;
+                        }
+                    } else {
+                        resultDiv.innerHTML = `
+                            <strong>❌ Failed!</strong><br>
+                            Message: ${response.message ? response.message.message : 'Unknown error'}
+                        `;
+                        resultDiv.className = 'result error';
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Send resume email error:', error);
+                    resultDiv.innerHTML = `
+                        <strong>❌ Error!</strong><br>
+                        Status: ${status}<br>
+                        Error: ${error}
+                    `;
+                    resultDiv.className = 'result error';
+                }
+            });
+        }
+        
+        function testVerifyToken() {
+            const token = document.getElementById('testToken').value;
+            const resultDiv = document.getElementById('verifyResult');
+            
+            if (!token) {
+                resultDiv.innerHTML = '<strong>❌ Please enter a token first!</strong>';
+                resultDiv.className = 'result error';
+                return;
+            }
+            
+            resultDiv.innerHTML = 'Verifying token...';
+            resultDiv.className = 'result';
+            
+            frappe.call({
+                method: 'climoro_onboarding.www.apply.api.verify_resume_token',
+                args: { token: token },
+                callback: function(response) {
+                    console.log('Verify token response:', response);
+                    if (response.message && response.message.success) {
+                        resultDiv.innerHTML = `
+                            <strong>✅ Token Valid!</strong><br>
+                            Message: ${response.message.message}<br>
+                            Current Step: ${response.message.current_step}<br>
+                            Email: ${response.message.session_data ? response.message.session_data.email : 'N/A'}<br>
+                            Company: ${response.message.session_data && response.message.session_data.company_name ? response.message.session_data.company_name : 'N/A'}
+                        `;
+                        resultDiv.className = 'result success';
+                    } else {
+                        resultDiv.innerHTML = `
+                            <strong>❌ Token Invalid!</strong><br>
+                            Message: ${response.message ? response.message.message : 'Unknown error'}
+                        `;
+                        resultDiv.className = 'result error';
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Verify token error:', error);
+                    resultDiv.innerHTML = `
+                        <strong>❌ Error!</strong><br>
+                        Status: ${status}<br>
+                        Error: ${error}
+                    `;
+                    resultDiv.className = 'result error';
+                }
+            });
+        }
+        
+        function testUrlToken() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const resumeToken = urlParams.get('resume');
+            const resultDiv = document.getElementById('urlResult');
+            
+            if (!resumeToken) {
+                resultDiv.innerHTML = '<strong>❌ No resume token found in URL!</strong>';
+                resultDiv.className = 'result error';
+                return;
+            }
+            
+            resultDiv.innerHTML = `Testing token from URL: ${resumeToken}`;
+            resultDiv.className = 'result';
+            
+            // Auto-fill the token field
+            document.getElementById('testToken').value = resumeToken;
+            
+            // Test the token
+            testVerifyToken();
+        }
+        
+        function debugToken() {
+            const token = document.getElementById('testToken').value;
+            const resultDiv = document.getElementById('debugResult');
+            
+            if (!token) {
+                resultDiv.innerHTML = '<strong>❌ Please enter a token first!</strong>';
+                resultDiv.className = 'result error';
+                return;
+            }
+            
+            resultDiv.innerHTML = 'Debugging token...';
+            resultDiv.className = 'result';
+            
+            frappe.call({
+                method: 'climoro_onboarding.www.apply.api.debug_resume_token',
+                args: { token: token },
+                callback: function(response) {
+                    console.log('Debug token response:', response);
+                    if (response.message && response.message.success) {
+                        const debug = response.message.debug_info;
+                        resultDiv.innerHTML = `
+                            <strong>🔍 Debug Information</strong><br>
+                            Token: ${debug.token}<br>
+                            Session Key: ${debug.session_key}<br>
+                            Cache Exists: ${debug.cache_exists ? '✅ Yes' : '❌ No'}<br>
+                            Email: ${debug.email || 'N/A'}<br>
+                            Current Step: ${debug.current_step || 'N/A'}<br>
+                            Expires At: ${debug.expires_at || 'N/A'}<br>
+                            Application Count: ${debug.application_count || 0}<br>
+                            ${debug.cache_data ? `<br><strong>Cache Data:</strong><br><pre>${JSON.stringify(debug.cache_data, null, 2)}</pre>` : ''}
+                        `;
+                        resultDiv.className = 'result success';
+                    } else {
+                        resultDiv.innerHTML = `
+                            <strong>❌ Debug Failed!</strong><br>
+                            Message: ${response.message ? response.message.message : 'Unknown error'}
+                        `;
+                        resultDiv.className = 'result error';
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Debug token error:', error);
+                    resultDiv.innerHTML = `
+                        <strong>❌ Error!</strong><br>
+                        Status: ${status}<br>
+                        Error: ${error}
+                    `;
+                    resultDiv.className = 'result error';
+                }
+            });
+        }
+        
+        function checkCacheStatus() {
+            const resultDiv = document.getElementById('cacheResult');
+            resultDiv.innerHTML = 'Checking cache status...';
+            resultDiv.className = 'result';
+            
+            // This is a simple test - in a real scenario, you'd need a backend API
+            resultDiv.innerHTML = `
+                <strong>ℹ️ Cache Status</strong><br>
+                Note: Cache status can only be checked from the backend.<br>
+                Try testing with a token to see if it's working.
+            `;
+            resultDiv.className = 'result';
+        }
+        
+        // Auto-test URL token on page load
+        window.onload = function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const resumeToken = urlParams.get('resume');
+            if (resumeToken) {
+                console.log('Auto-testing URL token:', resumeToken);
+                document.getElementById('testToken').value = resumeToken;
+                setTimeout(() => testUrlToken(), 1000);
+            }
+        };
+    </script>
+</body>
+</html> 

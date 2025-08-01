@@ -47,7 +47,7 @@
     </div>
 
     <!-- Form Container -->
-    <div class="form-container">
+    <div class="form-container" id="form-container">
         <form id="onboarding-form" class="onboarding-form">
             <!-- Step 1: Contact Details -->
             <div class="form-step active" id="step-1">
@@ -6160,4 +6160,596 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 </script>
+
+<!-- Welcome Modal (Shows on page load) -->
+<div id="welcome-modal" class="modal welcome-modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>🎯 Welcome to Climoro Onboarding</h3>
+        </div>
+        <div class="modal-body">
+            <div style="text-align: center; padding: 20px;">
+                <div style="font-size: 48px; margin-bottom: 20px;">🚀</div>
+                <h4>Get Started with Your Onboarding</h4>
+                <p>Choose how you'd like to proceed with your Climoro onboarding application:</p>
+                <div class="welcome-options">
+                    <button type="button" class="btn btn-primary welcome-btn" id="start-new-application">
+                        <div class="btn-icon">🆕</div>
+                        <div class="btn-content">
+                            <div class="btn-title">Start New Application</div>
+                            <div class="btn-subtitle">Begin a fresh onboarding process</div>
+                        </div>
+                    </button>
+                    <button type="button" class="btn btn-secondary welcome-btn" id="resume-application">
+                        <div class="btn-icon">🔄</div>
+                        <div class="btn-content">
+                            <div class="btn-title">Resume Application</div>
+                            <div class="btn-subtitle">Continue where you left off</div>
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Resume Modal -->
+<div id="resume-modal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>🔄 Resume Your Application</h3>
+            <span class="close" id="close-resume-modal">&times;</span>
+        </div>
+        <div class="modal-body">
+            <div id="resume-form-container">
+                <p>Enter your email address to resume your incomplete onboarding application:</p>
+                <form id="resume-form">
+                    <div class="form-group">
+                        <label for="resume-email">Email Address *</label>
+                        <input type="email" id="resume-email" name="resume-email" class="form-control" required>
+                    </div>
+                                    <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Send Resume Link</button>
+                    <button type="button" class="btn btn-secondary" id="back-to-welcome">← Back</button>
+                </div>
+                </form>
+                <div id="resume-message"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Resume Success Modal -->
+<div id="resume-success-modal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>✅ Resume Link Sent</h3>
+            <span class="close" id="close-success-modal">&times;</span>
+        </div>
+        <div class="modal-body">
+            <div style="text-align: center; padding: 20px;">
+                <div style="font-size: 48px; margin-bottom: 20px;">📧</div>
+                <h4>Check Your Email</h4>
+                <p>We've sent a resume link to your email address. The link will expire in 24 hours.</p>
+                <p><strong>Didn't receive the email?</strong> Check your spam folder or try again.</p>
+                <button type="button" class="btn btn-primary" id="close-success-btn">Got it!</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Resume Application Modal -->
+<div id="resume-application-modal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>🔄 Resume Application</h3>
+            <span class="close" id="close-application-modal">&times;</span>
+        </div>
+        <div class="modal-body">
+            <div style="text-align: center; padding: 20px;">
+                <div style="font-size: 48px; margin-bottom: 20px;">📋</div>
+                <h4>Welcome Back!</h4>
+                <p>We found your incomplete application. You can resume from where you left off or start fresh.</p>
+                <div class="resume-options">
+                    <button type="button" class="btn btn-primary" id="resume-existing">🔄 Resume Existing Application</button>
+                    <button type="button" class="btn btn-secondary" id="start-fresh">🆕 Start Fresh</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Styles -->
+<style>
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+}
+
+.welcome-modal {
+    display: block;
+    z-index: 2000;
+}
+
+.form-blur {
+    filter: blur(5px);
+    pointer-events: none;
+    opacity: 0.3;
+    transition: all 0.3s ease;
+}
+
+.welcome-options {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.welcome-btn {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    border-radius: 10px;
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+    text-align: left;
+    min-height: 80px;
+}
+
+.welcome-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+.welcome-btn .btn-icon {
+    font-size: 32px;
+    margin-right: 20px;
+    flex-shrink: 0;
+}
+
+.welcome-btn .btn-content {
+    flex: 1;
+}
+
+.welcome-btn .btn-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.welcome-btn .btn-subtitle {
+    font-size: 14px;
+    opacity: 0.8;
+}
+
+#form-container {
+    transition: all 0.3s ease;
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 5% auto;
+    padding: 0;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.modal-header {
+    background: #28a745;
+    color: white;
+    padding: 20px;
+    border-radius: 8px 8px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header h3 {
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+.close {
+    color: white;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.close:hover {
+    opacity: 0.7;
+}
+
+.modal-body {
+    padding: 20px;
+}
+
+.form-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.resume-options {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.resume-options .btn {
+    padding: 15px 20px;
+    font-size: 16px;
+}
+
+
+
+#resume-message {
+    margin-top: 15px;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+#resume-message .success {
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+#resume-message .error {
+    background: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+#resume-message .info {
+    background: #d1ecf1;
+    color: #0c5460;
+    border: 1px solid #bee5eb;
+}
+</style>
+
+<!-- Resume JavaScript -->
+<script>
+// Resume functionality
+let isResumeMode = false;
+let resumeSessionData = null;
+let welcomeModalShown = false;
+
+// Initialize resume functionality
+document.addEventListener('DOMContentLoaded', function() {
+    initializeWelcomeModal();
+    initializeResumeFunctionality();
+    checkForResumeToken();
+});
+
+function initializeWelcomeModal() {
+    const welcomeModal = document.getElementById('welcome-modal');
+    const formContainer = document.getElementById('form-container');
+    const startNewBtn = document.getElementById('start-new-application');
+    const resumeBtn = document.getElementById('resume-application');
+    
+    // Check for tokens in URL before showing welcome modal
+    const urlParams = new URLSearchParams(window.location.search);
+    const resumeToken = urlParams.get('resume');
+    const verifyToken = urlParams.get('verify');
+    
+    // Only show welcome modal if no tokens are present
+    if (welcomeModal && !welcomeModalShown && !resumeToken && !verifyToken) {
+        welcomeModal.style.display = 'block';
+        formContainer.classList.add('form-blur');
+        welcomeModalShown = true;
+    }
+    
+    // Start new application
+    startNewBtn.addEventListener('click', function() {
+        welcomeModal.style.display = 'none';
+        formContainer.classList.remove('form-blur');
+        resetForm();
+        // Focus on first field
+        const firstInput = document.querySelector('#onboarding-form input');
+        if (firstInput) {
+            firstInput.focus();
+        }
+    });
+    
+    // Resume application
+    resumeBtn.addEventListener('click', function() {
+        welcomeModal.style.display = 'none';
+        // Don't remove blur yet - keep form blurred while in resume modal
+        // Show resume modal
+        const resumeModal = document.getElementById('resume-modal');
+        if (resumeModal) {
+            resumeModal.style.display = 'block';
+        }
+    });
+}
+
+function initializeResumeFunctionality() {
+    const resumeModal = document.getElementById('resume-modal');
+    const closeResumeModal = document.getElementById('close-resume-modal');
+    const resumeForm = document.getElementById('resume-form');
+    const backToWelcome = document.getElementById('back-to-welcome');
+    
+    const successModal = document.getElementById('resume-success-modal');
+    const closeSuccessModal = document.getElementById('close-success-modal');
+    const closeSuccessBtn = document.getElementById('close-success-btn');
+    
+    const applicationModal = document.getElementById('resume-application-modal');
+    const closeApplicationModal = document.getElementById('close-application-modal');
+    const resumeExisting = document.getElementById('resume-existing');
+    const startFresh = document.getElementById('start-fresh');
+    
+    // Close modal events
+    closeResumeModal.addEventListener('click', function() {
+        resumeModal.style.display = 'none';
+    });
+    
+    closeSuccessModal.addEventListener('click', function() {
+        successModal.style.display = 'none';
+    });
+    
+    closeSuccessBtn.addEventListener('click', function() {
+        successModal.style.display = 'none';
+    });
+    
+    closeApplicationModal.addEventListener('click', function() {
+        applicationModal.style.display = 'none';
+    });
+    
+    // Back to welcome modal
+    backToWelcome.addEventListener('click', function() {
+        resumeModal.style.display = 'none';
+        const welcomeModal = document.getElementById('welcome-modal');
+        const formContainer = document.getElementById('form-container');
+        if (welcomeModal) {
+            welcomeModal.style.display = 'block';
+        }
+        if (formContainer) {
+            formContainer.classList.add('form-blur');
+        }
+    });
+    
+    startFresh.addEventListener('click', function() {
+        applicationModal.style.display = 'none';
+        resetForm();
+    });
+    
+    // Resume existing application
+    resumeExisting.addEventListener('click', function() {
+        applicationModal.style.display = 'none';
+        if (resumeSessionData) {
+            restoreFormData(resumeSessionData);
+        }
+    });
+    
+    // Resume form submission
+    resumeForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const email = document.getElementById('resume-email').value;
+        
+        if (!email) {
+            showResumeMessage('Please enter your email address.', 'error');
+            return;
+        }
+        
+        showResumeMessage('Sending resume link...', 'info');
+        
+        frappe.call({
+            method: 'climoro_onboarding.www.apply.api.send_resume_email',
+            args: {
+                email: email
+            },
+            callback: function(response) {
+                if (response.message && response.message.success) {
+                    resumeModal.style.display = 'none';
+                    successModal.style.display = 'block';
+                } else {
+                    showResumeMessage(response.message?.message || 'Failed to send resume link. Please try again.', 'error');
+                }
+            },
+            error: function() {
+                showResumeMessage('Error sending resume link. Please try again.', 'error');
+            }
+        });
+    });
+    
+    // Close modals when clicking outside
+    window.addEventListener('click', function(event) {
+        if (event.target === resumeModal) {
+            resumeModal.style.display = 'none';
+        }
+        if (event.target === successModal) {
+            successModal.style.display = 'none';
+        }
+        if (event.target === applicationModal) {
+            applicationModal.style.display = 'none';
+        }
+        // Don't allow closing welcome modal by clicking outside
+        // User must make a choice
+    });
+}
+
+function checkForResumeToken() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const resumeToken = urlParams.get('resume');
+    const verifyToken = urlParams.get('verify');
+    
+    // If there's a resume token or verification token, skip welcome modal
+    if (resumeToken || verifyToken) {
+        console.log('Token detected:', resumeToken ? 'resume' : 'verify', resumeToken || verifyToken);
+        // Hide welcome modal if any token is present
+        const welcomeModal = document.getElementById('welcome-modal');
+        const formContainer = document.getElementById('form-container');
+        if (welcomeModal) {
+            welcomeModal.style.display = 'none';
+        }
+        if (formContainer) {
+            formContainer.classList.remove('form-blur');
+        }
+        
+        // Handle resume token
+        if (resumeToken) {
+            verifyResumeToken(resumeToken);
+        }
+        // Note: Verification token handling is done by existing verification logic
+    }
+}
+
+function verifyResumeToken(token) {
+    frappe.call({
+        method: 'climoro_onboarding.www.apply.api.verify_resume_token',
+        args: {
+            token: token
+        },
+        callback: function(response) {
+            if (response.message && response.message.success) {
+                console.log('Resume token valid:', response.message);
+                resumeSessionData = response.message.session_data;
+                
+                // Show resume application modal
+                const applicationModal = document.getElementById('resume-application-modal');
+                applicationModal.style.display = 'block';
+                
+                // Clean URL
+                const url = new URL(window.location);
+                url.searchParams.delete('resume');
+                window.history.replaceState({}, document.title, url);
+                
+            } else {
+                alert('Invalid or expired resume link. Please start a new application.');
+            }
+        },
+        error: function() {
+            alert('Error verifying resume link. Please start a new application.');
+        }
+    });
+}
+
+function restoreFormData(sessionData) {
+    isResumeMode = true;
+    
+    const applicationData = sessionData.application_data;
+    const currentStep = sessionData.current_step || 1;
+    
+    if (applicationData) {
+        // Pre-fill form fields
+        Object.keys(applicationData).forEach(key => {
+            const field = document.querySelector(`[name="${key}"]`);
+            if (field) {
+                if (field.type === 'checkbox') {
+                    field.checked = applicationData[key] === 1 || applicationData[key] === true;
+                } else {
+                    field.value = applicationData[key] || '';
+                }
+            }
+        });
+        
+        // Set current step
+        setCurrentStep(currentStep);
+        showStep(currentStep);
+        updateProgressIndicator();
+        
+        // Show success message
+        showResumeMessage('Application resumed successfully! Your previous data has been loaded.', 'success');
+        
+        // Hide welcome modal and remove blur
+        const welcomeModal = document.getElementById('welcome-modal');
+        const formContainer = document.getElementById('form-container');
+        if (welcomeModal) {
+            welcomeModal.style.display = 'none';
+        }
+        if (formContainer) {
+            formContainer.classList.remove('form-blur');
+        }
+    }
+}
+
+function resetForm() {
+    isResumeMode = false;
+    resumeSessionData = null;
+    
+    // Reset form
+    document.getElementById('onboarding-form').reset();
+    
+    // Reset to step 1
+    setCurrentStep(1);
+    showStep(1);
+    updateProgressIndicator();
+    
+    // Clear any messages
+    const resumeMessage = document.getElementById('resume-message');
+    if (resumeMessage) {
+        resumeMessage.innerHTML = '';
+    }
+    
+    // Hide welcome modal and remove blur
+    const welcomeModal = document.getElementById('welcome-modal');
+    const formContainer = document.getElementById('form-container');
+    if (welcomeModal) {
+        welcomeModal.style.display = 'none';
+    }
+    if (formContainer) {
+        formContainer.classList.remove('form-blur');
+    }
+}
+
+function showResumeMessage(message, type) {
+    const resumeMessage = document.getElementById('resume-message');
+    if (resumeMessage) {
+        resumeMessage.innerHTML = `<div class="${type}">${message}</div>`;
+    }
+}
+
+// Override existing functions to handle resume mode
+function setCurrentStep(step) {
+    currentStep = step;
+    // Store in session storage for persistence
+    sessionStorage.setItem('climoro_current_step', step);
+}
+
+function showStep(step) {
+    // Hide all steps
+    document.querySelectorAll('.form-step').forEach(stepElement => {
+        stepElement.classList.remove('active');
+    });
+    
+    // Show current step
+    const currentStepElement = document.getElementById(`step-${step}`);
+    if (currentStepElement) {
+        currentStepElement.classList.add('active');
+    }
+    
+    // Update progress indicator
+    updateProgressIndicator();
+}
+
+function updateProgressIndicator() {
+    // Remove current class from all steps
+    document.querySelectorAll('.onboarding-progress-step').forEach(step => {
+        step.classList.remove('onboarding-current');
+        step.classList.remove('onboarding-completed');
+    });
+    
+    // Add current class to current step and completed to previous steps
+    for (let i = 1; i <= 6; i++) {
+        const stepElement = document.querySelector(`[data-step="${i}"]`);
+        if (i < currentStep) {
+            stepElement.classList.add('onboarding-completed');
+        } else if (i === currentStep) {
+            stepElement.classList.add('onboarding-current');
+        }
+    }
+}
+</script>
+
 {% endblock %} 

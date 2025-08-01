@@ -1,0 +1,232 @@
+{% extends "templates/web.html" %}
+
+{% block page_content %}
+<div class="container mt-4">
+    <h1>🔍 Resume Token Debug Test</h1>
+    
+    <div class="card mb-4">
+        <div class="card-header">
+            <h3>1. Test Send Resume Email</h3>
+        </div>
+        <div class="card-body">
+            <div class="form-group">
+                <input type="email" id="testEmail" class="form-control" placeholder="Enter email address" value="test@example.com">
+            </div>
+            <button class="btn btn-primary" onclick="testSendResumeEmail()">Send Resume Email</button>
+            <div id="sendResult" class="mt-3"></div>
+        </div>
+    </div>
+    
+    <div class="card mb-4">
+        <div class="card-header">
+            <h3>2. Test Verify Resume Token</h3>
+        </div>
+        <div class="card-body">
+            <div class="form-group">
+                <input type="text" id="testToken" class="form-control" placeholder="Enter resume token">
+            </div>
+            <button class="btn btn-primary" onclick="testVerifyToken()">Verify Token</button>
+            <div id="verifyResult" class="mt-3"></div>
+        </div>
+    </div>
+    
+    <div class="card mb-4">
+        <div class="card-header">
+            <h3>3. Test with URL Token</h3>
+        </div>
+        <div class="card-body">
+            <button class="btn btn-secondary" onclick="testUrlToken()">Test Token from URL</button>
+            <div id="urlResult" class="mt-3"></div>
+        </div>
+    </div>
+    
+    <div class="card mb-4">
+        <div class="card-header">
+            <h3>4. Debug Token Status</h3>
+        </div>
+        <div class="card-body">
+            <button class="btn btn-info" onclick="debugToken()">Debug Token</button>
+            <div id="debugResult" class="mt-3"></div>
+        </div>
+    </div>
+    
+    <div class="card mb-4">
+        <div class="card-header">
+            <h3>5. Check Cache Status</h3>
+        </div>
+        <div class="card-body">
+            <button class="btn btn-warning" onclick="checkCacheStatus()">Check Cache</button>
+            <div id="cacheResult" class="mt-3"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function showResult(elementId, message, isSuccess = true) {
+        const element = document.getElementById(elementId);
+        element.innerHTML = `<div class="alert alert-${isSuccess ? 'success' : 'danger'}">${message}</div>`;
+    }
+    
+    function testSendResumeEmail() {
+        const email = document.getElementById('testEmail').value;
+        showResult('sendResult', 'Sending resume email...', true);
+        
+        frappe.call({
+            method: 'climoro_onboarding.www.apply.api.send_resume_email',
+            args: { email: email },
+            callback: function(response) {
+                console.log('Send resume email response:', response);
+                if (response.message && response.message.success) {
+                    showResult('sendResult', `
+                        <strong>✅ Success!</strong><br>
+                        Message: ${response.message.message}<br>
+                        Token: ${response.message.token || 'No token returned'}
+                    `, true);
+                    
+                    // Auto-fill the token field for testing
+                    if (response.message.token) {
+                        document.getElementById('testToken').value = response.message.token;
+                    }
+                } else {
+                    showResult('sendResult', `
+                        <strong>❌ Failed!</strong><br>
+                        Message: ${response.message ? response.message.message : 'Unknown error'}
+                    `, false);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Send resume email error:', error);
+                showResult('sendResult', `
+                    <strong>❌ Error!</strong><br>
+                    Status: ${status}<br>
+                    Error: ${error}
+                `, false);
+            }
+        });
+    }
+    
+    function testVerifyToken() {
+        const token = document.getElementById('testToken').value;
+        
+        if (!token) {
+            showResult('verifyResult', '<strong>❌ Please enter a token first!</strong>', false);
+            return;
+        }
+        
+        showResult('verifyResult', 'Verifying token...', true);
+        
+        frappe.call({
+            method: 'climoro_onboarding.www.apply.api.verify_resume_token',
+            args: { token: token },
+            callback: function(response) {
+                console.log('Verify token response:', response);
+                if (response.message && response.message.success) {
+                    showResult('verifyResult', `
+                        <strong>✅ Token Valid!</strong><br>
+                        Message: ${response.message.message}<br>
+                        Current Step: ${response.message.current_step}<br>
+                        Email: ${response.message.session_data ? response.message.session_data.email : 'N/A'}<br>
+                        Company: ${response.message.session_data && response.message.session_data.company_name ? response.message.session_data.company_name : 'N/A'}
+                    `, true);
+                } else {
+                    showResult('verifyResult', `
+                        <strong>❌ Token Invalid!</strong><br>
+                        Message: ${response.message ? response.message.message : 'Unknown error'}
+                    `, false);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Verify token error:', error);
+                showResult('verifyResult', `
+                    <strong>❌ Error!</strong><br>
+                    Status: ${status}<br>
+                    Error: ${error}
+                `, false);
+            }
+        });
+    }
+    
+    function testUrlToken() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const resumeToken = urlParams.get('resume');
+        
+        if (!resumeToken) {
+            showResult('urlResult', '<strong>❌ No resume token found in URL!</strong>', false);
+            return;
+        }
+        
+        showResult('urlResult', `Testing token from URL: ${resumeToken}`, true);
+        
+        // Auto-fill the token field
+        document.getElementById('testToken').value = resumeToken;
+        
+        // Test the token
+        testVerifyToken();
+    }
+    
+    function debugToken() {
+        const token = document.getElementById('testToken').value;
+        
+        if (!token) {
+            showResult('debugResult', '<strong>❌ Please enter a token first!</strong>', false);
+            return;
+        }
+        
+        showResult('debugResult', 'Debugging token...', true);
+        
+        frappe.call({
+            method: 'climoro_onboarding.www.apply.api.debug_resume_token',
+            args: { token: token },
+            callback: function(response) {
+                console.log('Debug token response:', response);
+                if (response.message && response.message.success) {
+                    const debug = response.message.debug_info;
+                    showResult('debugResult', `
+                        <strong>🔍 Debug Information</strong><br>
+                        Token: ${debug.token}<br>
+                        Session Key: ${debug.session_key}<br>
+                        Cache Exists: ${debug.cache_exists ? '✅ Yes' : '❌ No'}<br>
+                        Email: ${debug.email || 'N/A'}<br>
+                        Current Step: ${debug.current_step || 'N/A'}<br>
+                        Expires At: ${debug.expires_at || 'N/A'}<br>
+                        Application Count: ${debug.application_count || 0}<br>
+                        ${debug.cache_data ? `<br><strong>Cache Data:</strong><br><pre>${JSON.stringify(debug.cache_data, null, 2)}</pre>` : ''}
+                    `, true);
+                } else {
+                    showResult('debugResult', `
+                        <strong>❌ Debug Failed!</strong><br>
+                        Message: ${response.message ? response.message.message : 'Unknown error'}
+                    `, false);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Debug token error:', error);
+                showResult('debugResult', `
+                    <strong>❌ Error!</strong><br>
+                    Status: ${status}<br>
+                    Error: ${error}
+                `, false);
+            }
+        });
+    }
+    
+    function checkCacheStatus() {
+        showResult('cacheResult', `
+            <strong>ℹ️ Cache Status</strong><br>
+            Note: Cache status can only be checked from the backend.<br>
+            Try testing with a token to see if it's working.
+        `, true);
+    }
+    
+    // Auto-test URL token on page load
+    window.onload = function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const resumeToken = urlParams.get('resume');
+        if (resumeToken) {
+            console.log('Auto-testing URL token:', resumeToken);
+            document.getElementById('testToken').value = resumeToken;
+            setTimeout(() => testUrlToken(), 1000);
+        }
+    };
+</script>
+{% endblock %} 

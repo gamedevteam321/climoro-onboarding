@@ -1,10 +1,12 @@
 import frappe
 from frappe import _
-from frappe.utils import now
+from frappe.utils import now, now_datetime, get_url
 import uuid
 import json
 import os
 import datetime
+import time
+from datetime import timedelta
 
 
 @frappe.whitelist(allow_guest=True)
@@ -684,9 +686,11 @@ def save_step_data(step_data):
             doc.current_step = 4
             
         elif step_number == 5:
-            # Step 5: Reduction Form - Section A: Emissions Inventory Setup
+            # Step 5: Reduction Form
+            # Section A: Emissions Inventory Setup
             doc.base_year = step_data.get("base_year")
             doc.base_year_reason = step_data.get("base_year_reason")
+            doc.emissions_exclusions = step_data.get("emissions_exclusions")
             
             # Scopes Covered
             doc.scopes_covered_scope1 = step_data.get("scopes_covered_scope1")
@@ -708,8 +712,6 @@ def save_step_data(step_data):
             doc.scope_3_categories_use_sold_products = step_data.get("scope_3_categories_use_sold_products")
             doc.scope_3_categories_end_life_treatment = step_data.get("scope_3_categories_end_life_treatment")
             doc.scope_3_categories_leased_assets = step_data.get("scope_3_categories_leased_assets")
-            
-            doc.emissions_exclusions = step_data.get("emissions_exclusions")
             
             # Section B: Emissions Reduction Targets
             doc.target_type = step_data.get("target_type")
@@ -799,18 +801,18 @@ def save_step_data(step_data):
             
             doc.current_step = 6
         
-        doc.save()
+        # Save the document
+        doc.save(ignore_permissions=True)
         frappe.db.commit()
         
         return {
             "success": True,
             "message": f"Step {step_number} data saved successfully",
-            "application_id": doc.name
+            "current_step": doc.current_step
         }
         
     except Exception as e:
-        frappe.logger().error(f"❌ Error saving step data: {str(e)}")
-        frappe.log_error(f"Error saving step data: {str(e)}", "Climoro Onboarding Step Save Error")
+        frappe.log_error(f"Error saving step data: {str(e)}")
         return {
             "success": False,
             "message": f"Error saving step data: {str(e)}"
@@ -1373,3 +1375,241 @@ def get_saved_data():
             "success": False,
             "message": f"Error retrieving saved data: {str(e)}"
         } 
+
+@frappe.whitelist(allow_guest=True)
+def send_resume_email(email):
+    """Send resume email to user with unique token"""
+    try:
+        if not email:
+            return {
+                "success": False,
+                "message": "Email address is required"
+            }
+        
+        # Check if there's an existing draft application
+        existing_applications = frappe.get_all(
+            "Onboarding Form",
+            filters={"email": email, "status": "Draft"},
+            fields=["name", "current_step", "company_name"],
+            order_by="modified desc",
+            limit=1
+        )
+        
+        if not existing_applications:
+            return {
+                "success": False,
+                "message": "No incomplete application found for this email address. Please start a new application."
+            }
+        
+        application = existing_applications[0]
+        
+        # Generate unique resume token
+        resume_token = str(uuid.uuid4())
+        
+        # Create resume URL
+        site_url = get_url()
+        resume_url = f"{site_url}/apply?resume={resume_token}"
+        
+        # Store session data in cache for 24 hours
+        session_data = {
+            "email": email,
+            "application_id": application.name,
+            "current_step": application.current_step or 1,
+            "company_name": application.company_name,
+            "created_at": now_datetime().isoformat(),
+            "expires_at": (now_datetime() + timedelta(hours=24)).isoformat()
+        }
+        
+        session_key = f"climoro_resume_{resume_token}"
+        frappe.cache().set_value(session_key, json.dumps(session_data), expires_in_sec=86400)  # 24 hours
+        
+        # Send resume email
+        send_resume_email_to_user(email, application.company_name, resume_url)
+        
+        return {
+            "success": True,
+            "message": "Resume link sent to your email address. Please check your inbox."
+        }
+        
+    except Exception as e:
+        frappe.log_error(f"Error sending resume email: {str(e)}")
+        return {
+            "success": False,
+            "message": f"Error sending resume email: {str(e)}"
+        }
+
+
+def send_resume_email_to_user(email, company_name, resume_url):
+    """Send resume email with custom climoro template"""
+    subject = "Resume Your Climoro Onboarding Application"
+    message = f"""
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+            <div style="text-align: center; margin-bottom: 30px;">
+                <img src="/assets/climoro_onboarding/images/climoro.png" alt="Climoro Logo" style="max-width: 200px; height: auto;">
+            </div>
+            
+            <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+                <h2 style="color: #2c3e50; margin-top: 0;">Resume Your Onboarding Application</h2>
+                <p style="color: #555; line-height: 1.6;">
+                    Dear {company_name or 'Valued Customer'},
+                </p>
+                <p style="color: #555; line-height: 1.6;">
+                    We noticed you started your Climoro onboarding application but didn't complete it. 
+                    You can resume your application from where you left off by clicking the button below.
+                </p>
+                <p style="color: #555; line-height: 1.6;">
+                    <strong>Important:</strong> This link will expire in 24 hours for security reasons.
+                </p>
+            </div>
+            
+            <div style="text-align: center; margin: 30px 0;">
+                <a href='{resume_url}' style="background: #28a745; color: white; padding: 15px 30px; border-radius: 5px; text-decoration: none; font-weight: bold; display: inline-block;">
+                    🔄 Resume Application
+                </a>
+            </div>
+            
+            <div style="background: #e9ecef; padding: 15px; border-radius: 5px; margin-top: 20px;">
+                <p style="color: #6c757d; margin: 0; font-size: 14px;">
+                    <strong>Need help?</strong> If you have any questions about your onboarding process, 
+                    please don't hesitate to contact our support team.
+                </p>
+            </div>
+            
+            <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #dee2e6; text-align: center;">
+                <p style="color: #6c757d; font-size: 12px; margin: 0;">
+                    Best regards,<br>
+                    The Climoro Team
+                </p>
+            </div>
+        </div>
+    """
+    
+    frappe.sendmail(
+        recipients=[email], 
+        subject=subject, 
+        message=message, 
+        now=True
+    )
+
+
+@frappe.whitelist(allow_guest=True)
+def verify_resume_token(token):
+    """Verify resume token and return application data"""
+    try:
+        if not token:
+            return {
+                "success": False,
+                "message": "Resume token is required"
+            }
+        
+        session_key = f"climoro_resume_{token}"
+        session_data_str = frappe.cache().get_value(session_key)
+        
+        if not session_data_str:
+            return {
+                "success": False,
+                "message": "Invalid or expired resume token"
+            }
+        
+        session_data = json.loads(session_data_str)
+        
+        # Check if token has expired
+        expires_at = session_data.get("expires_at")
+        if expires_at:
+            from frappe.utils import get_datetime
+            if get_datetime(expires_at) < now_datetime():
+                frappe.cache().delete_value(session_key)
+                return {
+                    "success": False,
+                    "message": "Resume token has expired. Please request a new one."
+                }
+        
+        # Get the latest application data
+        email = session_data.get("email")
+        if email:
+            applications = frappe.get_all(
+                "Onboarding Form",
+                filters={"email": email, "status": "Draft"},
+                fields=["name", "current_step"],
+                order_by="modified desc",
+                limit=1
+            )
+            
+            if applications:
+                doc = frappe.get_doc("Onboarding Form", applications[0].name)
+                session_data["application_data"] = doc.as_dict()
+                session_data["current_step"] = doc.current_step or 1
+                
+                # Refresh the cache with updated data
+                frappe.cache().set_value(session_key, json.dumps(session_data), expires_in_sec=86400)
+        
+        return {
+            "success": True,
+            "message": "Resume token valid",
+            "session_data": session_data,
+            "current_step": session_data.get("current_step", 1)
+        }
+        
+    except Exception as e:
+        frappe.log_error(f"Error verifying resume token: {str(e)}")
+        return {
+            "success": False,
+            "message": f"Error verifying resume token: {str(e)}"
+        }
+
+@frappe.whitelist(allow_guest=True)
+def debug_resume_token(token):
+    """Debug function to check token status"""
+    try:
+        if not token:
+            return {
+                "success": False,
+                "message": "Token is required"
+            }
+        
+        session_key = f"climoro_resume_{token}"
+        
+        # Check if token exists in cache
+        session_data_str = frappe.cache().get_value(session_key)
+        
+        debug_info = {
+            "token": token,
+            "session_key": session_key,
+            "cache_exists": session_data_str is not None,
+            "cache_data": session_data_str
+        }
+        
+        if session_data_str:
+            try:
+                session_data = json.loads(session_data_str)
+                debug_info["parsed_data"] = session_data
+                debug_info["email"] = session_data.get("email")
+                debug_info["current_step"] = session_data.get("current_step")
+                debug_info["expires_at"] = session_data.get("expires_at")
+                
+                # Check if application exists in database
+                if session_data.get("email"):
+                    applications = frappe.get_all(
+                        "Onboarding Form",
+                        filters={"email": session_data["email"], "status": "Draft"},
+                        fields=["name", "current_step", "company_name"],
+                        order_by="modified desc",
+                        limit=1
+                    )
+                    debug_info["database_applications"] = applications
+                    debug_info["application_count"] = len(applications)
+                
+            except json.JSONDecodeError as e:
+                debug_info["json_error"] = str(e)
+        
+        return {
+            "success": True,
+            "debug_info": debug_info
+        }
+        
+    except Exception as e:
+        return {
+            "success": False,
+            "message": f"Debug error: {str(e)}",
+            "debug_info": {"error": str(e)}
+        }
