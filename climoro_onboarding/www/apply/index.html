@@ -1016,6 +1016,9 @@ body {
     max-height: 18px !important;
     /* Default unchecked state */
     border: 2px solid var(--border-color) !important;
+    border-radius: 4px !important;
+    -webkit-border-radius: 4px !important;
+    -moz-border-radius: 4px !important;
     background-color: var(--card-background) !important;
     position: relative !important;
     display: inline-block !important;
@@ -1035,9 +1038,9 @@ body {
     -moz-background-image: none !important;
     -ms-background-image: none !important;
     content: none !important;
-    border-radius: 0 !important;
-    -webkit-border-radius: 0 !important;
-    -moz-border-radius: 0 !important;
+    border-radius: 4px !important;
+    -webkit-border-radius: 4px !important;
+    -moz-border-radius: 4px !important;
     -webkit-box-shadow: none !important;
     -moz-box-shadow: none !important;
     box-shadow: none !important;
@@ -1054,18 +1057,22 @@ body {
     left: 50% !important;
     transform: translate(-50%, -50%) !important;
     color: white !important;
-    font-size: 12px !important;
+    font-size: 11px !important;
     font-weight: bold !important;
     line-height: 1 !important;
-    display: block !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
     z-index: 10 !important;
     pointer-events: none !important;
     background: none !important;
     border: none !important;
     box-shadow: none !important;
     text-align: center !important;
-    width: auto !important;
-    height: auto !important;
+    width: 100% !important;
+    height: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
 }
 
 /* Hover state */
@@ -1817,7 +1824,7 @@ body {
 }
 
 /* Success States */
-.form-group input.success,
+.form-group input.success:not([type="checkbox"]),
 .form-group select.success,
 .form-group textarea.success {
     border-color: var(--success-color);
@@ -1901,10 +1908,12 @@ body {
     left: 50% !important;
     transform: translate(-50%, -50%) !important;
     color: white !important;
-    font-size: 12px !important;
+    font-size: 11px !important;
     font-weight: bold !important;
     line-height: 1 !important;
-    display: block !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
     /* Ensure this is the only checkmark visible */
     z-index: 10 !important;
     pointer-events: none !important;
@@ -1914,6 +1923,10 @@ body {
     box-shadow: none !important;
     background: none !important;
     border: none !important;
+    width: 100% !important;
+    height: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
 }
 
 .checkbox-label {
@@ -1969,10 +1982,16 @@ body {
     left: 50% !important;
     transform: translate(-50%, -50%) !important;
     color: white !important;
-    font-size: 12px !important;
+    font-size: 11px !important;
     font-weight: bold !important;
     line-height: 1 !important;
-    display: block !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100% !important;
+    height: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
 }
 
 .checkbox-label input[type="checkbox"]:focus {
@@ -2246,7 +2265,7 @@ body {
     position: relative;
 }
 
-.form-group input.success::after,
+.form-group input.success:not([type="checkbox"])::after,
 .form-group select.success::after,
 .form-group textarea.success::after {
     content: '✓';
@@ -2859,7 +2878,10 @@ class OnboardingForm {
                     warnings.push(fieldWarning);
                 } else {
                     field.classList.remove('error', 'warning');
-                    field.classList.add('success');
+                    // Don't add success class to checkboxes
+                    if (field.type !== 'checkbox') {
+                        field.classList.add('success');
+                    }
                 }
             }
         });
@@ -3101,7 +3123,10 @@ class OnboardingForm {
                 }
                 return false;
             } else {
-                field.classList.add('success');
+                // Don't add success class to checkboxes
+                if (field.type !== 'checkbox') {
+                    field.classList.add('success');
+                }
                 this.clearFieldWarning(field);
                 return true;
             }
@@ -4739,7 +4764,10 @@ class OnboardingForm {
                 warnings.push(`${this.getFieldLabel(field)} is required`);
             } else {
                 field.classList.remove('error', 'warning');
-                field.classList.add('success');
+                // Don't add success class to checkboxes
+                if (field.type !== 'checkbox') {
+                    field.classList.add('success');
+                }
             }
         });
         
