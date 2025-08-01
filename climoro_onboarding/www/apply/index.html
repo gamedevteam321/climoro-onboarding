@@ -2320,7 +2320,7 @@ body {
 
 .map-buttons {
     position: absolute !important;
-    bottom: 12px !important;
+    bottom: 1px !important;
     left: 20px !important;
     right: 20px !important;
     padding: 16px !important;
@@ -5116,7 +5116,100 @@ function addMarkerAtLocation(location) {
     const geocoder = new google.maps.Geocoder();
     geocoder.geocode({ location: location }, (results, status) => {
         if (status === 'OK' && results[0]) {
-            selectedCoordinates.locationName = results[0].formatted_address;
+            // Extract a more user-friendly location name
+            const addressComponents = results[0].address_components;
+            let locationParts = [];
+            
+            // Look for building name, establishment, or point of interest
+            const building = addressComponents.find(component => 
+                component.types.includes('establishment') || 
+                component.types.includes('point_of_interest') ||
+                component.types.includes('premise')
+            );
+            
+            // Look for street name
+            const street = addressComponents.find(component => 
+                component.types.includes('route')
+            );
+            
+            // Look for street number
+            const streetNumber = addressComponents.find(component => 
+                component.types.includes('street_number')
+            );
+            
+            // Look for sublocality (area/neighborhood)
+            const sublocality = addressComponents.find(component => 
+                component.types.includes('sublocality_level_1') || 
+                component.types.includes('sublocality')
+            );
+            
+            // Look for postal code
+            const postalCode = addressComponents.find(component => 
+                component.types.includes('postal_code')
+            );
+            
+            // Look for administrative area level 2 (district)
+            const district = addressComponents.find(component => 
+                component.types.includes('administrative_area_level_2')
+            );
+            
+            // Look for locality (city)
+            const locality = addressComponents.find(component => 
+                component.types.includes('locality') || component.types.includes('sublocality')
+            );
+            
+            // Look for state
+            const state = addressComponents.find(component => 
+                component.types.includes('administrative_area_level_1')
+            );
+            
+            // Look for country
+            const country = addressComponents.find(component => 
+                component.types.includes('country')
+            );
+            
+            // Build location name from available components in order of specificity
+            if (building) locationParts.push(building.long_name);
+            if (streetNumber && street) locationParts.push(`${streetNumber.long_name} ${street.long_name}`);
+            else if (street) locationParts.push(street.long_name);
+            if (sublocality) locationParts.push(sublocality.long_name);
+            if (locality) locationParts.push(locality.long_name);
+            if (district) locationParts.push(district.long_name);
+            if (state) locationParts.push(state.long_name);
+            if (postalCode) locationParts.push(postalCode.long_name);
+            if (country) locationParts.push(country.long_name);
+            
+            // If we have meaningful location parts, use them; otherwise fall back to formatted address
+            if (locationParts.length > 0) {
+                // Create a concise but informative location name
+                let finalLocationParts = [];
+                
+                // Always include building/establishment if available
+                if (building) finalLocationParts.push(building.long_name);
+                
+                // Include street info if available
+                if (streetNumber && street) finalLocationParts.push(`${streetNumber.long_name} ${street.long_name}`);
+                else if (street) finalLocationParts.push(street.long_name);
+                
+                // Include area/neighborhood if available
+                if (sublocality) finalLocationParts.push(sublocality.long_name);
+                
+                // Include city
+                if (locality) finalLocationParts.push(locality.long_name);
+                
+                // Include state and country (always include these for context)
+                if (state) finalLocationParts.push(state.long_name);
+                if (country) finalLocationParts.push(country.long_name);
+                
+                selectedCoordinates.locationName = finalLocationParts.join(', ');
+            } else {
+                // Remove Plus Codes from formatted address if present
+                let cleanAddress = results[0].formatted_address;
+                // Remove Plus Code patterns (e.g., "28GP+7H ")
+                cleanAddress = cleanAddress.replace(/[A-Z0-9]{2}[A-Z0-9]{2}\+[A-Z0-9]{2,3}\s*/g, '');
+                selectedCoordinates.locationName = cleanAddress.trim();
+            }
+            
             console.log('📍 Location name:', selectedCoordinates.locationName);
             
             // Update coordinates display with location name
@@ -5196,7 +5289,7 @@ function confirmLocation() {
         
         // Show success message
         const message = selectedCoordinates.locationName 
-            ? `Location selected: ${selectedCoordinates.locationName} (${coordinatesText})`
+            ? `Location selected: ${selectedCoordinates.locationName}`
             : `Location selected: ${coordinatesText}`;
         showNotification(message, 'success');
         
