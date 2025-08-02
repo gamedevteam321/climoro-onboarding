@@ -2605,8 +2605,46 @@ class OnboardingForm {
                 if (field.type === 'checkbox') {
                     field.checked = appData[key] === 1 || appData[key] === true;
                 } else if (field.type === 'file') {
-                    // Skip file inputs
-                    console.log(`Skipping file field ${key}`);
+                    // Handle file fields by showing the file name and updating UI
+                    console.log(`Restoring file field ${key}: ${appData[key]}`);
+                    if (appData[key]) {
+                        // Set the data-file-url attribute for the file field
+                        field.setAttribute('data-file-url', appData[key]);
+                        
+                        // Update the file upload area UI to show the uploaded file
+                        const fileUploadArea = field.closest('.file-upload-area');
+                        if (fileUploadArea) {
+                            const filePreview = fileUploadArea.querySelector('.file-preview');
+                            const uploadPlaceholder = fileUploadArea.querySelector('.upload-placeholder');
+                            
+                            if (filePreview && uploadPlaceholder) {
+                                // Extract filename from URL
+                                const fileName = appData[key].split('/').pop() || 'Uploaded File';
+                                
+                                // Show file preview
+                                filePreview.innerHTML = `
+                                    <div class="file-item">
+                                        <div class="file-item-info">
+                                            <div class="file-item-icon">
+                                                <i class="fa fa-file"></i>
+                                            </div>
+                                            <div class="file-item-details">
+                                                <div class="file-item-name">${fileName}</div>
+                                                <div class="file-item-status">✓ Previously uploaded</div>
+                                            </div>
+                                        </div>
+                                        <div class="file-item-actions">
+                                            <button type="button" class="file-action-btn download" onclick="window.open('${appData[key]}', '_blank')">
+                                                <i class="fa fa-download"></i> View
+                                            </button>
+                                        </div>
+                                    </div>
+                                `;
+                                filePreview.style.display = 'block';
+                                uploadPlaceholder.style.display = 'none';
+                            }
+                        }
+                    }
                 } else {
                     field.value = appData[key] || '';
                 }
@@ -2899,14 +2937,24 @@ class OnboardingForm {
                     const industryField = document.getElementById('industry_type');
                     if (industryField) {
                         industryField.value = savedData.industry_type;
-                        // Trigger the change event to update sub-industry options
-                        updateSubIndustryOptions();
+                        // Trigger the change event to update sub-industry options with callback
+                        updateSubIndustryOptions(() => {
+                            if (savedData.sub_industry_type) {
+                                const subIndustryField = document.getElementById('sub_industry_type');
+                                if (subIndustryField) {
+                                    subIndustryField.value = savedData.sub_industry_type;
+                                    console.log('Set sub-industry type to:', savedData.sub_industry_type);
+                                }
+                            }
+                        });
                     }
-                }
-                
-                if (savedData.sub_industry_type) {
+                } else if (savedData.sub_industry_type) {
+                    // If no industry type but sub-industry exists, set it directly
                     const subIndustryField = document.getElementById('sub_industry_type');
-                    if (subIndustryField) subIndustryField.value = savedData.sub_industry_type;
+                    if (subIndustryField) {
+                        subIndustryField.value = savedData.sub_industry_type;
+                        console.log('Set sub-industry type to:', savedData.sub_industry_type);
+                    }
                 }
                 
                 if (savedData.website) {
@@ -3256,8 +3304,46 @@ class OnboardingForm {
                     // Trigger change event for checkboxes to update dependent options
                     field.dispatchEvent(new Event('change', { bubbles: true }));
                 } else if (field.type === 'file') {
-                    // Skip file inputs
-                    console.log(`Skipping file field ${key}`);
+                    // Handle file fields by showing the file name and updating UI
+                    console.log(`Restoring file field ${key}: ${appData[key]}`);
+                    if (appData[key]) {
+                        // Set the data-file-url attribute for the file field
+                        field.setAttribute('data-file-url', appData[key]);
+                        
+                        // Update the file upload area UI to show the uploaded file
+                        const fileUploadArea = field.closest('.file-upload-area');
+                        if (fileUploadArea) {
+                            const filePreview = fileUploadArea.querySelector('.file-preview');
+                            const uploadPlaceholder = fileUploadArea.querySelector('.upload-placeholder');
+                            
+                            if (filePreview && uploadPlaceholder) {
+                                // Extract filename from URL
+                                const fileName = appData[key].split('/').pop() || 'Uploaded File';
+                                
+                                // Show file preview
+                                filePreview.innerHTML = `
+                                    <div class="file-item">
+                                        <div class="file-item-info">
+                                            <div class="file-item-icon">
+                                                <i class="fa fa-file"></i>
+                                            </div>
+                                            <div class="file-item-details">
+                                                <div class="file-item-name">${fileName}</div>
+                                                <div class="file-item-status">✓ Previously uploaded</div>
+                                            </div>
+                                        </div>
+                                        <div class="file-item-actions">
+                                            <button type="button" class="file-action-btn download" onclick="window.open('${appData[key]}', '_blank')">
+                                                <i class="fa fa-download"></i> View
+                                            </button>
+                                        </div>
+                                    </div>
+                                `;
+                                filePreview.style.display = 'block';
+                                uploadPlaceholder.style.display = 'none';
+                            }
+                        }
+                    }
                 } else {
                     field.value = appData[key] || '';
                 }
@@ -3267,9 +3353,24 @@ class OnboardingForm {
             }
         });
         
-        // Trigger change events for select fields to update dependent dropdowns
+        // Handle dependent dropdowns properly
+        const industryTypeField = document.querySelector('[name="industry_type"]');
+        if (industryTypeField && industryTypeField.value) {
+            // Update sub-industry options with callback to set the value
+            updateSubIndustryOptions(() => {
+                if (appData.sub_industry_type) {
+                    const subIndustryField = document.querySelector('[name="sub_industry_type"]');
+                    if (subIndustryField) {
+                        subIndustryField.value = appData.sub_industry_type;
+                        console.log('Set sub-industry type to:', appData.sub_industry_type);
+                    }
+                }
+            });
+        }
+        
+        // Trigger change events for other select fields (not industry_type)
         document.querySelectorAll('select').forEach(select => {
-            if (select.value) {
+            if (select.value && select.name !== 'industry_type') {
                 select.dispatchEvent(new Event('change', { bubbles: true }));
             }
         });
@@ -6275,7 +6376,7 @@ const industrySubTypes = {
 };
 
 // Function to update sub-industry options based on selected industry
-function updateSubIndustryOptions() {
+function updateSubIndustryOptions(callback = null) {
     const industrySelect = document.getElementById('industry_type');
     const subIndustrySelect = document.getElementById('sub_industry_type');
     
@@ -6301,6 +6402,11 @@ function updateSubIndustryOptions() {
         subIndustrySelect.disabled = false;
         console.log(`✅ Updated sub-industry options for: ${selectedIndustry}`);
         console.log('Available sub-industry options:', industrySubTypes[selectedIndustry]);
+        
+        // Call callback if provided
+        if (callback && typeof callback === 'function') {
+            callback();
+        }
     } else {
         // Disable the sub-industry select if no industry is selected
         subIndustrySelect.disabled = true;
@@ -7111,6 +7217,9 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeWelcomeModal();
     initializeResumeFunctionality();
     
+    // Check for any tokens (resume or verify) and handle them
+    checkForResumeToken();
+    
     // Check for resume token and wait for verification before initializing form
     const urlParams = new URLSearchParams(window.location.search);
     const resumeToken = urlParams.get('resume');
@@ -7389,8 +7498,46 @@ function restoreFormData(sessionData) {
                 if (field.type === 'checkbox') {
                     field.checked = applicationData[key] === 1 || applicationData[key] === true;
                 } else if (field.type === 'file') {
-                    // Skip file inputs - they can't be set programmatically for security reasons
-                    console.log(`Skipping file field ${key} (cannot set programmatically)`);
+                    // Handle file fields by showing the file name and updating UI
+                    console.log(`Restoring file field ${key}: ${applicationData[key]}`);
+                    if (applicationData[key]) {
+                        // Set the data-file-url attribute for the file field
+                        field.setAttribute('data-file-url', applicationData[key]);
+                        
+                        // Update the file upload area UI to show the uploaded file
+                        const fileUploadArea = field.closest('.file-upload-area');
+                        if (fileUploadArea) {
+                            const filePreview = fileUploadArea.querySelector('.file-preview');
+                            const uploadPlaceholder = fileUploadArea.querySelector('.upload-placeholder');
+                            
+                            if (filePreview && uploadPlaceholder) {
+                                // Extract filename from URL
+                                const fileName = applicationData[key].split('/').pop() || 'Uploaded File';
+                                
+                                // Show file preview
+                                filePreview.innerHTML = `
+                                    <div class="file-item">
+                                        <div class="file-item-info">
+                                            <div class="file-item-icon">
+                                                <i class="fa fa-file"></i>
+                                            </div>
+                                            <div class="file-item-details">
+                                                <div class="file-item-name">${fileName}</div>
+                                                <div class="file-item-status">✓ Previously uploaded</div>
+                                            </div>
+                                        </div>
+                                        <div class="file-item-actions">
+                                            <button type="button" class="file-action-btn download" onclick="window.open('${applicationData[key]}', '_blank')">
+                                                <i class="fa fa-download"></i> View
+                                            </button>
+                                        </div>
+                                    </div>
+                                `;
+                                filePreview.style.display = 'block';
+                                uploadPlaceholder.style.display = 'none';
+                            }
+                        }
+                    }
                 } else {
                     field.value = applicationData[key] || '';
                 }
@@ -7404,17 +7551,14 @@ function restoreFormData(sessionData) {
         const industryTypeField = document.querySelector('[name="industry_type"]');
         if (industryTypeField && industryTypeField.value) {
             console.log('Setting up dependent dropdowns for industry type:', industryTypeField.value);
-            // Update sub-industry options first
-            updateSubIndustryOptions();
-            
-            // Wait a bit for the options to be populated, then set the sub-industry value
-            setTimeout(() => {
+            // Update sub-industry options with callback
+            updateSubIndustryOptions(() => {
                 const subIndustryField = document.querySelector('[name="sub_industry_type"]');
                 if (subIndustryField && applicationData.sub_industry_type) {
                     subIndustryField.value = applicationData.sub_industry_type;
                     console.log('Set sub-industry type to:', applicationData.sub_industry_type);
                 }
-            }, 100);
+            });
         }
         
         // Trigger change events for other select fields to update dependent fields
