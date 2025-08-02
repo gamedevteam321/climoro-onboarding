@@ -306,10 +306,24 @@ def update_step_fields(doc, step_data, step_number):
     elif step_number == 4:
         # Step 4: GHG Accounting
         ghg_fields = [
+            # Basic GHG fields
             "purpose_of_reporting", "gases_to_report_co2", "gases_to_report_ch4",
             "gases_to_report_n2o", "gases_to_report_hfcs", "gases_to_report_pfcs",
             "gases_to_report_sf6", "gases_to_report_nf3", "scopes_to_report_scope1",
-            "scopes_to_report_scope2", "scopes_to_report_scope3", "scopes_to_report_reductions"
+            "scopes_to_report_scope2", "scopes_to_report_scope3", "scopes_to_report_reductions",
+            
+            # Scope 1 Options
+            "scope_1_options_process", "scope_1_options_stationary", "scope_1_options_mobile", "scope_1_options_fugitive",
+            
+            # Scope 2 Options
+            "scope_2_options_electricity", "scope_2_options_heating", "scope_2_options_cooling",
+            
+            # Scope 3 Options
+            "scope_3_options_upstream", "scope_3_options_downstream",
+            
+            # Reduction Options
+            "reduction_options_energy_efficiency", "reduction_options_renewable_energy", "reduction_options_process_optimization",
+            "reduction_options_waste_management", "reduction_options_transportation", "reduction_options_other"
         ]
         for field in ghg_fields:
             if field in step_data:
