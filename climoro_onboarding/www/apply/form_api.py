@@ -125,46 +125,50 @@ def get_existing_application(email):
 
 @frappe.whitelist(allow_guest=True)
 def save_step_data(step_data):
-    """Save step data to existing draft application"""
+    """Save step data for onboarding form (step-by-step save)"""
+    import json
     try:
-        # Handle JSON string data from frontend
         if isinstance(step_data, str):
             step_data = json.loads(step_data)
-        
+
+        # Debug: Log all incoming step_data
+        frappe.logger().info(f"[DEBUG] Incoming step_data: {step_data}")
+
+        # Debug: Log Section D fields specifically
+        section_d_fields = [
+            "ghg_tracking_tools_excel", "ghg_tracking_tools_software", "ghg_tracking_tools_software_name",
+            "ghg_tracking_tools_web_platform", "recalculation_policy_structural", "recalculation_policy_methodology",
+            "recalculation_policy_boundary", "progress_communication_esg_dashboard", "progress_communication_sustainability_report",
+            "progress_communication_cdp_disclosure", "progress_communication_sbti_registry"
+        ]
+        section_d_data = {k: step_data.get(k, "<not present>") for k in section_d_fields}
+        frappe.logger().info(f"[DEBUG] Section D fields in step_data: {section_d_data}")
+
         # Validate required fields
         if not step_data.get("email"):
             return {
                 "success": False,
-                "message": "Email is required"
+                "message": "Missing required field: email"
             }
-        
-        if not step_data.get("step_number"):
-            return {
-                "success": False,
-                "message": "Step number is required"
-            }
-        
-        email = step_data.get("email")
-        step_number = step_data.get("step_number")
-        
-        # Find existing draft application
-        existing_applications = frappe.get_all(
+
+        email = step_data["email"]
+        step_number = int(step_data.get("step_number", 1))
+
+        # Find the latest draft application for this email
+        application = frappe.get_all(
             "Onboarding Form",
-            filters={"email": email, "status": "Draft"},
-            fields=["name", "current_step"],
-            order_by="modified desc",
+            filters={"email": email},
+            fields=["name", "status", "current_step"],
+            order_by="creation desc",
             limit=1
         )
-        
-        if not existing_applications:
+        if not application:
             return {
                 "success": False,
-                "message": "No draft application found. Please start from Step 1."
+                "message": "No draft application found for this email"
             }
-        
-        existing_app = existing_applications[0]
-        doc_name = existing_app["name"]
-        
+        doc_name = application[0]["name"]
+
         # Update the existing document
         doc = frappe.get_doc("Onboarding Form", doc_name)
         
@@ -180,7 +184,6 @@ def save_step_data(step_data):
             "message": f"Step {step_number} data saved successfully",
             "current_step": doc.current_step
         }
-        
     except Exception as e:
         frappe.log_error(f"Error saving step data: {str(e)}")
         return {
@@ -314,10 +317,56 @@ def update_step_fields(doc, step_data, step_number):
         doc.current_step = 4
         
     elif step_number == 5:
-        # Step 5: Reduction Form
+        # Step 5: Reduction Form - Section A: Emissions Inventory Setup
         step5_fields = [
-            "base_year", "base_year_reason", "target_type", "monitoring_frequency",
-            "assurance_validation"
+            # Section A: Emissions Inventory Setup
+            "base_year", "base_year_reason", 
+            "scopes_covered_scope1", "scopes_covered_scope2", "scopes_covered_scope3",
+            "ghg_boundary_approach_operational_control", "ghg_boundary_approach_financial_control", "ghg_boundary_approach_equity_share",
+            "scope_3_categories_purchased_goods", "scope_3_categories_capital_goods", "scope_3_categories_fuel_energy",
+            "scope_3_categories_transportation", "scope_3_categories_waste", "scope_3_categories_business_travel",
+            "scope_3_categories_use_sold_products", "scope_3_categories_end_life_treatment", "scope_3_categories_leased_assets",
+            "emissions_exclusions",
+            
+            # Section B: Emissions Reduction Targets
+            "target_type", "scope_1_2_intensity_percentage", "scope_1_2_target_year",
+            "scope_3_intensity_percentage", "scope_3_target_year", "absolute_emissions_percentage",
+            "near_term_target_year", "long_term_target_year",
+            
+            # Target Metrics
+            "target_metrics_absolute_emissions", "target_metrics_kgco2e_mwh", "target_metrics_kgco2e_tonne",
+            "target_metrics_kgco2e_unit_service", "target_metrics_kgco2e_usd_revenue", "target_metrics_kgco2e_stove_year",
+            "target_metrics_kgco2e_tonne_biochar", "target_metrics_kgco2e_km_travelled",
+            
+            # Target Boundary
+            "target_boundary_scope1_2_95_percent", "target_boundary_scope3_90_percent_long_term",
+            "target_boundary_scope3_67_percent_near_term", "target_boundary_prioritize_relevance",
+            
+            # Operational Emissions Reduction Strategies
+            "operational_emissions_energy_efficiency", "operational_emissions_onsite_renewable",
+            "operational_emissions_offsite_renewable", "operational_emissions_fuel_switching",
+            "operational_emissions_process_optimization",
+            
+            # Value Chain Emissions Reduction Strategies
+            "value_chain_emissions_supplier_engagement", "value_chain_emissions_low_carbon_materials",
+            "value_chain_emissions_redesign_use_phase", "value_chain_emissions_optimize_logistics",
+            "value_chain_emissions_circular_economy",
+            
+            # Land Sector Removals
+            "land_sector_removals_afforestation", "land_sector_removals_soil_carbon",
+            "land_sector_removals_urban_greening", "land_sector_removals_biochar",
+            "land_sector_removals_carbon_capture", "land_sector_removals_certified_removals",
+            
+            # Residual Emissions
+            "residual_emissions_high_quality_credits", "residual_emissions_bvcm",
+            "residual_emissions_temporary_solutions",
+            
+            # Monitoring and Assurance
+            "monitoring_frequency", "monitoring_frequency_other_text", "assurance_validation",
+            "ghg_tracking_tools_excel", "ghg_tracking_tools_software", "ghg_tracking_tools_software_name",
+            "ghg_tracking_tools_web_platform", "recalculation_policy_structural", "recalculation_policy_methodology",
+            "recalculation_policy_boundary", "progress_communication_esg_dashboard", "progress_communication_sustainability_report",
+            "progress_communication_cdp_disclosure", "progress_communication_sbti_registry"
         ]
         for field in step5_fields:
             if field in step_data:

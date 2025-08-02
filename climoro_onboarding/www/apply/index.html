@@ -2523,7 +2523,7 @@ class OnboardingForm {
         // Check if resume data is already available
         if (window.resumeSessionData) {
             console.log('Resume data already available, updating form...');
-            this.handleResume(window.resumeSessionData);
+                    this.handleResume(window.resumeSessionData);
             return;
         }
         
@@ -3118,7 +3118,9 @@ class OnboardingForm {
             
             // Save current step data before moving to next step
             if (this.currentStep >= 2 && this.currentStep <= 6) {
+                console.log('🔍 nextStep: About to call saveStepData for step:', this.currentStep);
                 const saveSuccess = await this.saveStepData();
+                console.log('🔍 nextStep: saveStepData returned:', saveSuccess);
                 if (!saveSuccess) {
                     console.log('❌ Failed to save step data, not proceeding to next step');
                     return;
@@ -4265,10 +4267,14 @@ class OnboardingForm {
     }
     
     async saveStepData() {
+        console.log('🔍 saveStepData method called');
+        console.log('🔍 Current step:', this.currentStep);
         try {
             this.showLoading(true);
             
+            console.log('🔍 About to call collectStepData...');
             const stepData = this.collectStepData();
+            console.log('🔍 collectStepData returned:', stepData);
             stepData.step_number = this.currentStep;
             
             console.log('📋 Step data to save:', stepData);
@@ -4345,8 +4351,13 @@ class OnboardingForm {
             email: document.getElementById('email').value
         };
         
+        console.log('🔍 collectStepData called for step:', step || this.currentStep);
+        
         // Determine which step to collect data for
         const targetStep = step || this.currentStep;
+        console.log('🔍 Target step for data collection:', targetStep);
+        console.log('🔍 Current step:', this.currentStep);
+        console.log('🔍 Step parameter:', step);
         
         if (targetStep === 1) {
             // Step 1: Contact Details
@@ -4447,6 +4458,123 @@ class OnboardingForm {
             stepData.reduction_options_other = this.getCheckboxValue('reduction_options_other');
         } else if (targetStep === 5) {
             // Step 5: Reduction Form - Section A: Emissions Inventory Setup
+            console.log('🔍 Collecting Step 5 data...');
+            console.log('🔍 base_year element:', document.getElementById('base_year'));
+            console.log('🔍 base_year value:', document.getElementById('base_year')?.value);
+            
+            stepData.base_year = document.getElementById('base_year')?.value || '';
+            stepData.base_year_reason = document.getElementById('base_year_reason')?.value || '';
+            
+            // Scopes Covered
+            stepData.scopes_covered_scope1 = this.getCheckboxValue('scopes_covered_scope1');
+            stepData.scopes_covered_scope2 = this.getCheckboxValue('scopes_covered_scope2');
+            stepData.scopes_covered_scope3 = this.getCheckboxValue('scopes_covered_scope3');
+            
+            // GHG Boundary Approach
+            stepData.ghg_boundary_approach_operational_control = this.getCheckboxValue('ghg_boundary_approach_operational_control');
+            stepData.ghg_boundary_approach_financial_control = this.getCheckboxValue('ghg_boundary_approach_financial_control');
+            stepData.ghg_boundary_approach_equity_share = this.getCheckboxValue('ghg_boundary_approach_equity_share');
+            
+            // Scope 3 Categories Included
+            stepData.scope_3_categories_purchased_goods = this.getCheckboxValue('scope_3_categories_purchased_goods');
+            stepData.scope_3_categories_capital_goods = this.getCheckboxValue('scope_3_categories_capital_goods');
+            stepData.scope_3_categories_fuel_energy = this.getCheckboxValue('scope_3_categories_fuel_energy');
+            stepData.scope_3_categories_transportation = this.getCheckboxValue('scope_3_categories_transportation');
+            stepData.scope_3_categories_waste = this.getCheckboxValue('scope_3_categories_waste');
+            stepData.scope_3_categories_business_travel = this.getCheckboxValue('scope_3_categories_business_travel');
+            stepData.scope_3_categories_use_sold_products = this.getCheckboxValue('scope_3_categories_use_sold_products');
+            stepData.scope_3_categories_end_life_treatment = this.getCheckboxValue('scope_3_categories_end_life_treatment');
+            stepData.scope_3_categories_leased_assets = this.getCheckboxValue('scope_3_categories_leased_assets');
+            
+            stepData.emissions_exclusions = document.getElementById('emissions_exclusions')?.value || '';
+            
+            // Section B: Emissions Reduction Targets
+            stepData.target_type = document.getElementById('target_type')?.value || '';
+            stepData.scope_1_2_intensity_percentage = document.getElementById('scope_1_2_intensity_percentage')?.value || '';
+            stepData.scope_1_2_target_year = document.getElementById('scope_1_2_target_year')?.value || '';
+            stepData.scope_3_intensity_percentage = document.getElementById('scope_3_intensity_percentage')?.value || '';
+            stepData.scope_3_target_year = document.getElementById('scope_3_target_year')?.value || '';
+            stepData.absolute_emissions_percentage = document.getElementById('absolute_emissions_percentage')?.value || '';
+            stepData.near_term_target_year = document.getElementById('near_term_target_year')?.value || '';
+            stepData.long_term_target_year = document.getElementById('long_term_target_year')?.value || '';
+            
+            // Target Metrics
+            stepData.target_metrics_absolute_emissions = this.getCheckboxValue('target_metrics_absolute_emissions');
+            stepData.target_metrics_kgco2e_mwh = this.getCheckboxValue('target_metrics_kgco2e_mwh');
+            stepData.target_metrics_kgco2e_tonne = this.getCheckboxValue('target_metrics_kgco2e_tonne');
+            stepData.target_metrics_kgco2e_unit_service = this.getCheckboxValue('target_metrics_kgco2e_unit_service');
+            stepData.target_metrics_kgco2e_usd_revenue = this.getCheckboxValue('target_metrics_kgco2e_usd_revenue');
+            stepData.target_metrics_kgco2e_stove_year = this.getCheckboxValue('target_metrics_kgco2e_stove_year');
+            stepData.target_metrics_kgco2e_tonne_biochar = this.getCheckboxValue('target_metrics_kgco2e_tonne_biochar');
+            stepData.target_metrics_kgco2e_km_travelled = this.getCheckboxValue('target_metrics_kgco2e_km_travelled');
+            
+            // Target Boundary
+            stepData.target_boundary_scope1_2_95_percent = this.getCheckboxValue('target_boundary_scope1_2_95_percent');
+            stepData.target_boundary_scope3_90_percent_long_term = this.getCheckboxValue('target_boundary_scope3_90_percent_long_term');
+            stepData.target_boundary_scope3_67_percent_near_term = this.getCheckboxValue('target_boundary_scope3_67_percent_near_term');
+            stepData.target_boundary_prioritize_relevance = this.getCheckboxValue('target_boundary_prioritize_relevance');
+            
+            // Operational Emissions Reduction Strategies
+            stepData.operational_emissions_energy_efficiency = this.getCheckboxValue('operational_emissions_energy_efficiency');
+            stepData.operational_emissions_onsite_renewable = this.getCheckboxValue('operational_emissions_onsite_renewable');
+            stepData.operational_emissions_offsite_renewable = this.getCheckboxValue('operational_emissions_offsite_renewable');
+            stepData.operational_emissions_fuel_switching = this.getCheckboxValue('operational_emissions_fuel_switching');
+            stepData.operational_emissions_process_optimization = this.getCheckboxValue('operational_emissions_process_optimization');
+            
+            // Value Chain Emissions Reduction Strategies
+            stepData.value_chain_emissions_supplier_engagement = this.getCheckboxValue('value_chain_emissions_supplier_engagement');
+            stepData.value_chain_emissions_low_carbon_materials = this.getCheckboxValue('value_chain_emissions_low_carbon_materials');
+            stepData.value_chain_emissions_redesign_use_phase = this.getCheckboxValue('value_chain_emissions_redesign_use_phase');
+            stepData.value_chain_emissions_optimize_logistics = this.getCheckboxValue('value_chain_emissions_optimize_logistics');
+            stepData.value_chain_emissions_circular_economy = this.getCheckboxValue('value_chain_emissions_circular_economy');
+            
+            // Land Sector Removals
+            stepData.land_sector_removals_afforestation = this.getCheckboxValue('land_sector_removals_afforestation');
+            stepData.land_sector_removals_soil_carbon = this.getCheckboxValue('land_sector_removals_soil_carbon');
+            stepData.land_sector_removals_urban_greening = this.getCheckboxValue('land_sector_removals_urban_greening');
+            stepData.land_sector_removals_biochar = this.getCheckboxValue('land_sector_removals_biochar');
+            stepData.land_sector_removals_carbon_capture = this.getCheckboxValue('land_sector_removals_carbon_capture');
+            stepData.land_sector_removals_certified_removals = this.getCheckboxValue('land_sector_removals_certified_removals');
+            
+            // Residual Emissions
+            stepData.residual_emissions_high_quality_credits = this.getCheckboxValue('residual_emissions_high_quality_credits');
+            stepData.residual_emissions_bvcm = this.getCheckboxValue('residual_emissions_bvcm');
+            stepData.residual_emissions_temporary_solutions = this.getCheckboxValue('residual_emissions_temporary_solutions');
+
+            // Section D: Monitoring, Adjustments & Reporting
+            stepData.monitoring_frequency = document.getElementById('monitoring_frequency')?.value || '';
+            stepData.monitoring_frequency_other_text = document.getElementById('monitoring_frequency_other_text')?.value || '';
+            stepData.assurance_validation = document.getElementById('assurance_validation')?.value || '';
+            
+            // GHG Tracking Tools
+            stepData.ghg_tracking_tools_excel = this.getCheckboxValue('ghg_tracking_tools_excel');
+            stepData.ghg_tracking_tools_software = this.getCheckboxValue('ghg_tracking_tools_software');
+            stepData.ghg_tracking_tools_software_name = document.getElementById('ghg_tracking_tools_software_name')?.value || '';
+            stepData.ghg_tracking_tools_web_platform = this.getCheckboxValue('ghg_tracking_tools_web_platform');
+            
+            // Recalculation Policy
+            stepData.recalculation_policy_structural = this.getCheckboxValue('recalculation_policy_structural');
+            stepData.recalculation_policy_methodology = this.getCheckboxValue('recalculation_policy_methodology');
+            stepData.recalculation_policy_boundary = this.getCheckboxValue('recalculation_policy_boundary');
+            
+            // Progress Communication
+            stepData.progress_communication_esg_dashboard = this.getCheckboxValue('progress_communication_esg_dashboard');
+            stepData.progress_communication_sustainability_report = this.getCheckboxValue('progress_communication_sustainability_report');
+            stepData.progress_communication_cdp_disclosure = this.getCheckboxValue('progress_communication_cdp_disclosure');
+            stepData.progress_communication_sbti_registry = this.getCheckboxValue('progress_communication_sbti_registry');
+            
+            // Debug Section D fields
+            console.log('🔍 Section D fields collected:');
+            console.log('  ghg_tracking_tools_excel:', stepData.ghg_tracking_tools_excel);
+            console.log('  ghg_tracking_tools_software:', stepData.ghg_tracking_tools_software);
+            console.log('  ghg_tracking_tools_web_platform:', stepData.ghg_tracking_tools_web_platform);
+            console.log('  recalculation_policy_structural:', stepData.recalculation_policy_structural);
+            console.log('  recalculation_policy_methodology:', stepData.recalculation_policy_methodology);
+            console.log('  recalculation_policy_boundary:', stepData.recalculation_policy_boundary);
+            console.log('  progress_communication_esg_dashboard:', stepData.progress_communication_esg_dashboard);
+            console.log('  progress_communication_sustainability_report:', stepData.progress_communication_sustainability_report);
+            console.log('  progress_communication_cdp_disclosure:', stepData.progress_communication_cdp_disclosure);
+            console.log('  progress_communication_sbti_registry:', stepData.progress_communication_sbti_registry);
         } else if (targetStep === 6) {
             // Step 6: Method of Calculation
             stepData.base_year = document.getElementById('base_year')?.value || '';
@@ -4550,6 +4678,19 @@ class OnboardingForm {
             stepData.progress_communication_sustainability_report = this.getCheckboxValue('progress_communication_sustainability_report');
             stepData.progress_communication_cdp_disclosure = this.getCheckboxValue('progress_communication_cdp_disclosure');
             stepData.progress_communication_sbti_registry = this.getCheckboxValue('progress_communication_sbti_registry');
+            
+            // Debug Section D fields
+            console.log('🔍 Section D fields collected:');
+            console.log('  ghg_tracking_tools_excel:', stepData.ghg_tracking_tools_excel);
+            console.log('  ghg_tracking_tools_software:', stepData.ghg_tracking_tools_software);
+            console.log('  ghg_tracking_tools_web_platform:', stepData.ghg_tracking_tools_web_platform);
+            console.log('  recalculation_policy_structural:', stepData.recalculation_policy_structural);
+            console.log('  recalculation_policy_methodology:', stepData.recalculation_policy_methodology);
+            console.log('  recalculation_policy_boundary:', stepData.recalculation_policy_boundary);
+            console.log('  progress_communication_esg_dashboard:', stepData.progress_communication_esg_dashboard);
+            console.log('  progress_communication_sustainability_report:', stepData.progress_communication_sustainability_report);
+            console.log('  progress_communication_cdp_disclosure:', stepData.progress_communication_cdp_disclosure);
+            console.log('  progress_communication_sbti_registry:', stepData.progress_communication_sbti_registry);
         } else if (targetStep === 6) {
             // Step 6: Method of Calculation
             stepData.method_of_calculation_option_a = this.getCheckboxValue('method_of_calculation_option_a');
@@ -4559,6 +4700,8 @@ class OnboardingForm {
             stepData.method_of_calculation_option_e = this.getCheckboxValue('method_of_calculation_option_e');
         }
         
+        stepData.step_number = targetStep;
+        console.log('🔍 collectStepData collected data:', stepData);
         return stepData;
     }
     
