@@ -6954,7 +6954,7 @@ document.addEventListener('DOMContentLoaded', function() {
 }
 
 .welcome-modal {
-    display: block;
+    display: none;
     z-index: 2000;
 }
 
@@ -7110,6 +7110,7 @@ let welcomeModalShown = false;
 document.addEventListener('DOMContentLoaded', function() {
     initializeWelcomeModal();
     initializeResumeFunctionality();
+    checkForResumeToken();
     
     // Check for resume token and wait for verification before initializing form
     const urlParams = new URLSearchParams(window.location.search);
