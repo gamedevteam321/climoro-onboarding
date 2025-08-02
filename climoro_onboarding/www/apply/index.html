@@ -2480,38 +2480,293 @@ body {
 // Onboarding Form JavaScript
 class OnboardingForm {
     constructor() {
-        // Check if there's a resume token in URL and get the current step
-        const urlParams = new URLSearchParams(window.location.search);
-        const resumeToken = urlParams.get('resume');
-        
-        // Initialize with step 1, but will be updated if resume token is present
         this.currentStep = 1;
         this.totalSteps = 6;
-        this.unitCounter = 0;
-        this.userCounters = {};
+        this.formData = {};
+        this.isSubmitting = false;
         
-        console.log('OnboardingForm constructor - initial currentStep:', this.currentStep);
-        console.log('Resume token in constructor:', resumeToken);
+        // Check for resume token in URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const resumeToken = urlParams.get('resume');
+        const verifyToken = urlParams.get('verify');
         
+        console.log('🔗 OnboardingForm constructor - URL:', window.location.href);
+        console.log('🔗 OnboardingForm constructor - initial currentStep:', this.currentStep);
+        if (resumeToken) {
+            console.log('🔗 Resume token in constructor:', resumeToken);
+        } else {
+            console.log('🔗 No resume token found in URL');
+        }
+        
+        // Initialize form elements
         this.initializeForm();
         this.bindEvents();
-        this.initializeFileUploads();
-        this.loadSavedData(); // Load any previously saved data
         
-        // If there's a resume token, wait a bit for the resume functionality to run
-        if (resumeToken) {
+        // Check if resume data is already available (form initialized after resume verification)
+        if (window.resumeSessionData) {
+            console.log('Resume data already available in constructor, handling resume...');
+            this.handleResume(window.resumeSessionData);
+        } else if (resumeToken) {
             // Set resume mode immediately
             window.isResumeMode = true;
             console.log('Resume token detected - setting resume mode');
             
-            setTimeout(() => {
-                console.log('Checking for resume data after form initialization...');
-                if (window.resumeSessionData && window.resumeSessionData.current_step) {
-                    console.log('Found resume data, updating form to step:', window.resumeSessionData.current_step);
-                    this.handleResume(window.resumeSessionData);
-                }
-            }, 500);
+            // Wait for resume data to be loaded
+            this.waitForResumeData();
+        } else {
+            // No resume token, proceed with normal initialization
+            this.loadSavedData();
         }
+    }
+    
+    waitForResumeData() {
+        // Check if resume data is already available
+        if (window.resumeSessionData) {
+            console.log('Resume data already available, updating form...');
+            this.handleResume(window.resumeSessionData);
+            return;
+        }
+        
+        // Wait for resume data to be loaded
+        let attempts = 0;
+        const maxAttempts = 50; // 5 seconds max wait
+        
+        const checkResumeData = () => {
+            attempts++;
+            console.log(`Checking for resume data (attempt ${attempts}/${maxAttempts})...`);
+            
+            if (window.resumeSessionData) {
+                console.log('Resume data found, updating form...');
+                this.handleResume(window.resumeSessionData);
+                return;
+            }
+            
+            if (attempts >= maxAttempts) {
+                console.log('Timeout waiting for resume data, proceeding with normal initialization');
+                this.loadSavedData();
+                return;
+            }
+            
+            // Check again in 100ms
+            setTimeout(checkResumeData, 100);
+        };
+        
+        // Start checking
+        setTimeout(checkResumeData, 100);
+    }
+    
+    initializeFileUploads() {
+        console.log('Initializing file uploads...');
+        // File upload initialization code here
+    }
+    
+    handleResume(sessionData) {
+        console.log('🔍 handleResume called with session data:', sessionData);
+        
+        if (sessionData && sessionData.application_data) {
+            const appData = sessionData.application_data;
+            const currentStep = sessionData.current_step || 1;
+            
+            console.log('🔍 Resuming application at step:', currentStep);
+            console.log('🔍 Application data keys:', Object.keys(appData));
+            console.log('🔍 Units data present:', !!appData.units);
+            console.log('🔍 Assigned users data present:', !!appData.assigned_users);
+            
+            // Set current step
+            this.currentStep = currentStep;
+            
+            // Restore form data
+            console.log('🔍 About to call restoreFormDataFromSession...');
+            this.restoreFormDataFromSession(appData);
+            console.log('🔍 restoreFormDataFromSession completed');
+            
+            // Update UI
+            this.goToStep(currentStep);
+            this.updateNavigation();
+            this.updateProgress();
+            
+            console.log('🔍 Resume completed successfully');
+        } else {
+            console.log('❌ No valid session data for resume');
+        }
+    }
+    
+    restoreFormDataFromSession(appData) {
+        console.log('🔍 🔍 🔍 restoreFormDataFromSession FUNCTION CALLED 🔍 🔍 🔍');
+        console.log('🔍 Restoring form data from session:', appData);
+        console.log('🔍 Application data keys:', Object.keys(appData));
+        console.log('🔍 Units data:', appData.units);
+        console.log('🔍 Assigned users data:', appData.assigned_users);
+        
+        // Restore form fields
+        Object.keys(appData).forEach(key => {
+            const field = document.querySelector(`[name="${key}"]`);
+            if (field) {
+                if (field.type === 'checkbox') {
+                    field.checked = appData[key] === 1 || appData[key] === true;
+                } else if (field.type === 'file') {
+                    // Skip file inputs
+                    console.log(`Skipping file field ${key}`);
+                } else {
+                    field.value = appData[key] || '';
+                }
+                console.log(`Restored field ${key}: ${appData[key]}`);
+            } else {
+                console.log(`Field name not found in form: ${key}`);
+            }
+        });
+        
+        // Restore child table data (units and assigned_users)
+        console.log('🔍 About to call restoreChildTableData...');
+        this.restoreChildTableData(appData);
+        console.log('🔍 restoreChildTableData call completed');
+        
+        // Update form data object
+        this.formData = { ...appData };
+    }
+    
+    restoreChildTableData(appData) {
+        console.log('🔍 restoreChildTableData function called');
+        console.log('🔍 AppData received:', appData);
+        console.log('🔍 AppData type:', typeof appData);
+        console.log('🔍 AppData keys:', Object.keys(appData));
+        console.log('🔍 Units:', appData.units);
+        console.log('🔍 Assigned users:', appData.assigned_users);
+        console.log('Restoring child table data:', appData);
+        
+        // Restore units data
+        if (appData.units && Array.isArray(appData.units)) {
+            console.log(`Restoring ${appData.units.length} units...`);
+            
+            // Clear existing units
+            this.unitsContainer.innerHTML = '';
+            this.unitCounter = 0;
+            this.userCounters = {};
+            
+            // Restore each unit
+            appData.units.forEach((unitData, unitIndex) => {
+                this.addUnit();
+                const unitNumber = unitIndex + 1;
+                const unitContainer = this.unitsContainer.querySelector(`[data-unit-number="${unitNumber}"]`);
+                
+                if (unitContainer) {
+                    // Map unit data to CSS classes
+                    const unitFieldMappings = {
+                        'type_of_unit': '.unit-type',
+                        'name_of_unit': '.unit-name',
+                        'size_of_unit': '.unit-size',
+                        'address': '.unit-address',
+                        'gst': '.unit-gst',
+                        'phone_number': '.unit-phone',
+                        'position': '.unit-position',
+                        'gps_coordinates': '.unit-gps-coordinates',
+                        'location_name': '.unit-location-name'
+                    };
+                    
+                    Object.keys(unitFieldMappings).forEach(dataField => {
+                        const cssSelector = unitFieldMappings[dataField];
+                        const field = unitContainer.querySelector(cssSelector);
+                        if (field && unitData[dataField]) {
+                            field.value = unitData[dataField];
+                            console.log(`Restored unit ${unitNumber} field ${dataField}: ${unitData[dataField]}`);
+                        }
+                    });
+                }
+            });
+            
+            console.log('✅ Units restored successfully');
+        } else {
+            console.log('No units data found in session');
+        }
+        
+        // Restore assigned users data (separate child table)
+        if (appData.assigned_users && Array.isArray(appData.assigned_users)) {
+            console.log(`Restoring ${appData.assigned_users.length} assigned users...`);
+            
+            // Group users by assigned unit
+            const usersByUnit = {};
+            appData.assigned_users.forEach(userData => {
+                const unitName = userData.assigned_unit;
+                if (!usersByUnit[unitName]) {
+                    usersByUnit[unitName] = [];
+                }
+                usersByUnit[unitName].push(userData);
+            });
+            
+            // Add users to their respective units
+            Object.keys(usersByUnit).forEach(unitName => {
+                // Find unit container by unit name
+                const unitContainers = this.unitsContainer.querySelectorAll('.unit-container');
+                let targetUnitContainer = null;
+                
+                for (const unitContainer of unitContainers) {
+                    const unitNameField = unitContainer.querySelector('.unit-name');
+                    if (unitNameField && unitNameField.value === unitName) {
+                        targetUnitContainer = unitContainer;
+                        break;
+                    }
+                }
+                
+                if (targetUnitContainer) {
+                    const unitNumber = parseInt(targetUnitContainer.dataset.unitNumber);
+                    const users = usersByUnit[unitName];
+                    
+                    console.log(`Adding ${users.length} users to unit: ${unitName}`);
+                    
+                    users.forEach((userData, userIndex) => {
+                        this.addUser(unitNumber);
+                        const userNumber = userIndex + 1;
+                        const userContainer = targetUnitContainer.querySelector(`[data-user-number="${userNumber}"]`);
+                        
+                        if (userContainer) {
+                            // Map user data to CSS classes
+                            const userFieldMappings = {
+                                'email': '.user-email',
+                                'first_name': '.user-first-name',
+                                'user_role': '.user-role'
+                            };
+                            
+                            Object.keys(userFieldMappings).forEach(dataField => {
+                                const cssSelector = userFieldMappings[dataField];
+                                const field = userContainer.querySelector(cssSelector);
+                                if (field && userData[dataField]) {
+                                    field.value = userData[dataField];
+                                    console.log(`Restored user ${userNumber} field ${dataField}: ${userData[dataField]}`);
+                                }
+                            });
+                        }
+                    });
+                } else {
+                    console.log(`⚠️ Unit container not found for unit name: ${unitName}`);
+                }
+            });
+            
+            console.log('✅ Assigned users restored successfully');
+        } else {
+            console.log('No assigned users data found in session');
+        }
+    }
+    
+    goToStep(stepNumber) {
+        console.log(`Going to step ${stepNumber}`);
+        
+        // Hide all steps
+        for (let i = 1; i <= this.totalSteps; i++) {
+            const stepElement = document.getElementById(`step${i}`);
+            if (stepElement) {
+                stepElement.style.display = 'none';
+            }
+        }
+        
+        // Show the target step
+        const targetStep = document.getElementById(`step${stepNumber}`);
+        if (targetStep) {
+            targetStep.style.display = 'block';
+            this.currentStep = stepNumber;
+        }
+        
+        // Update progress indicators
+        this.updateProgress();
     }
     
     initializeForm() {
@@ -2521,9 +2776,12 @@ class OnboardingForm {
         this.submitBtn = document.getElementById('submit-btn');
         this.unitsContainer = document.getElementById('units-container');
         this.addUnitBtn = document.getElementById('add-unit-btn');
+        this.unitCounter = 0;
+        this.userCounters = {};
         
         this.updateNavigation();
         this.updateProgress();
+        this.initializeFileUploads();
     }
     
     bindEvents() {
@@ -2943,12 +3201,206 @@ class OnboardingForm {
     
     // Method to handle resume functionality
     handleResume(resumeData) {
-        if (resumeData && resumeData.current_step) {
+        console.log('🔍 OnboardingForm handleResume called with:', resumeData);
+        
+        if (resumeData && resumeData.application_data) {
+            const appData = resumeData.application_data;
+            const currentStep = resumeData.current_step || 1;
+            
+            console.log('🔍 Resuming application at step:', currentStep);
+            console.log('🔍 Application data keys:', Object.keys(appData));
+            console.log('🔍 Units data present:', !!appData.units);
+            console.log('🔍 Assigned users data present:', !!appData.assigned_users);
+            
+            // Set current step
+            this.currentStep = currentStep;
+            
+            // Restore form data
+            console.log('🔍 About to call restoreFormDataFromSession...');
+            this.restoreFormDataFromSession(appData);
+            console.log('🔍 restoreFormDataFromSession completed');
+            
+            // Update UI
+            this.showStep(this.currentStep);
+            this.updateNavigation();
+            this.updateProgress();
+            
+            console.log('🔍 OnboardingForm resume completed successfully');
+        } else if (resumeData && resumeData.current_step) {
             console.log('Form class handling resume to step:', resumeData.current_step);
             this.currentStep = resumeData.current_step;
             this.showStep(this.currentStep);
             this.updateNavigation();
             this.updateProgress();
+        } else {
+            console.log('❌ No valid resume data provided');
+        }
+    }
+    
+    // Method to restore form data from session
+    restoreFormDataFromSession(appData) {
+        console.log('🔍 🔍 🔍 OnboardingForm restoreFormDataFromSession FUNCTION CALLED 🔍 🔍 🔍');
+        console.log('🔍 Restoring form data from session:', appData);
+        console.log('🔍 Application data keys:', Object.keys(appData));
+        console.log('🔍 Units data:', appData.units);
+        console.log('🔍 Assigned users data:', appData.assigned_users);
+        
+        // Restore form fields
+        Object.keys(appData).forEach(key => {
+            const field = document.querySelector(`[name="${key}"]`);
+            if (field) {
+                if (field.type === 'checkbox') {
+                    field.checked = appData[key] === 1 || appData[key] === true;
+                    // Trigger change event for checkboxes to update dependent options
+                    field.dispatchEvent(new Event('change', { bubbles: true }));
+                } else if (field.type === 'file') {
+                    // Skip file inputs
+                    console.log(`Skipping file field ${key}`);
+                } else {
+                    field.value = appData[key] || '';
+                }
+                console.log(`Restored field ${key}: ${appData[key]}`);
+            } else {
+                console.log(`Field name not found in form: ${key}`);
+            }
+        });
+        
+        // Trigger change events for select fields to update dependent dropdowns
+        document.querySelectorAll('select').forEach(select => {
+            if (select.value) {
+                select.dispatchEvent(new Event('change', { bubbles: true }));
+            }
+        });
+        
+        // Restore child table data (units and assigned_users)
+        console.log('🔍 About to call restoreChildTableData...');
+        this.restoreChildTableData(appData);
+        console.log('🔍 restoreChildTableData call completed');
+        
+        // Update form data object
+        this.formData = { ...appData };
+    }
+    
+    // Method to restore child table data
+    restoreChildTableData(appData) {
+        console.log('🔍 OnboardingForm restoreChildTableData function called');
+        console.log('🔍 AppData received:', appData);
+        console.log('🔍 AppData type:', typeof appData);
+        console.log('🔍 AppData keys:', Object.keys(appData));
+        console.log('🔍 Units:', appData.units);
+        console.log('🔍 Assigned users:', appData.assigned_users);
+        console.log('Restoring child table data:', appData);
+        
+        // Restore units data
+        if (appData.units && Array.isArray(appData.units)) {
+            console.log(`Restoring ${appData.units.length} units...`);
+            
+            // Clear existing units
+            this.unitsContainer.innerHTML = '';
+            this.unitCounter = 0;
+            this.userCounters = {};
+            
+            // Restore each unit
+            appData.units.forEach((unitData, unitIndex) => {
+                this.addUnit();
+                const unitNumber = unitIndex + 1;
+                const unitContainer = this.unitsContainer.querySelector(`[data-unit-number="${unitNumber}"]`);
+                
+                if (unitContainer) {
+                    // Map unit data to CSS classes
+                    const unitFieldMappings = {
+                        'type_of_unit': '.unit-type',
+                        'name_of_unit': '.unit-name',
+                        'size_of_unit': '.unit-size',
+                        'address': '.unit-address',
+                        'gst': '.unit-gst',
+                        'phone_number': '.unit-phone',
+                        'position': '.unit-position',
+                        'gps_coordinates': '.unit-gps-coordinates',
+                        'location_name': '.unit-location-name'
+                    };
+                    
+                    Object.keys(unitFieldMappings).forEach(dataField => {
+                        const cssSelector = unitFieldMappings[dataField];
+                        const field = unitContainer.querySelector(cssSelector);
+                        if (field && unitData[dataField]) {
+                            field.value = unitData[dataField];
+                            console.log(`Restored unit ${unitNumber} field ${dataField}: ${unitData[dataField]}`);
+                        }
+                    });
+                }
+            });
+            
+            console.log('✅ Units restored successfully');
+        } else {
+            console.log('No units data found in session');
+        }
+        
+        // Restore assigned users data (separate child table)
+        if (appData.assigned_users && Array.isArray(appData.assigned_users)) {
+            console.log(`Restoring ${appData.assigned_users.length} assigned users...`);
+            
+            // Group users by assigned unit
+            const usersByUnit = {};
+            appData.assigned_users.forEach(userData => {
+                const unitName = userData.assigned_unit;
+                if (!usersByUnit[unitName]) {
+                    usersByUnit[unitName] = [];
+                }
+                usersByUnit[unitName].push(userData);
+            });
+            
+            // Add users to their respective units
+            Object.keys(usersByUnit).forEach(unitName => {
+                // Find unit container by unit name
+                const unitContainers = this.unitsContainer.querySelectorAll('.unit-container');
+                let targetUnitContainer = null;
+                
+                for (const unitContainer of unitContainers) {
+                    const unitNameField = unitContainer.querySelector('.unit-name');
+                    if (unitNameField && unitNameField.value === unitName) {
+                        targetUnitContainer = unitContainer;
+                        break;
+                    }
+                }
+                
+                if (targetUnitContainer) {
+                    const unitNumber = parseInt(targetUnitContainer.dataset.unitNumber);
+                    const users = usersByUnit[unitName];
+                    
+                    console.log(`Adding ${users.length} users to unit: ${unitName}`);
+                    
+                    users.forEach((userData, userIndex) => {
+                        this.addUser(unitNumber);
+                        const userNumber = userIndex + 1;
+                        const userContainer = targetUnitContainer.querySelector(`[data-user-number="${userNumber}"]`);
+                        
+                        if (userContainer) {
+                            // Map user data to CSS classes
+                            const userFieldMappings = {
+                                'email': '.user-email',
+                                'first_name': '.user-first-name',
+                                'user_role': '.user-role'
+                            };
+                            
+                            Object.keys(userFieldMappings).forEach(dataField => {
+                                const cssSelector = userFieldMappings[dataField];
+                                const field = userContainer.querySelector(cssSelector);
+                                if (field && userData[dataField]) {
+                                    field.value = userData[dataField];
+                                    console.log(`Restored user ${userNumber} field ${dataField}: ${userData[dataField]}`);
+                                }
+                            });
+                        }
+                    });
+                } else {
+                    console.log(`⚠️ Unit container not found for unit name: ${unitName}`);
+                }
+            });
+            
+            console.log('✅ Assigned users restored successfully');
+        } else {
+            console.log('No assigned users data found in session');
         }
     }
     
@@ -4932,10 +5384,8 @@ class OnboardingForm {
     }
 }
 
-// Initialize the form when page loads
+// Initialize Google Maps functionality when page loads
 document.addEventListener('DOMContentLoaded', () => {
-    window.onboardingForm = new OnboardingForm();
-    
     // Initialize Google Maps functionality
     initializeGoogleMaps();
 });
@@ -6517,7 +6967,47 @@ let welcomeModalShown = false;
 document.addEventListener('DOMContentLoaded', function() {
     initializeWelcomeModal();
     initializeResumeFunctionality();
-    checkForResumeToken();
+    
+    // Check for resume token and wait for verification before initializing form
+    const urlParams = new URLSearchParams(window.location.search);
+    const resumeToken = urlParams.get('resume');
+    
+    if (resumeToken) {
+        console.log('Resume token found, verifying before form initialization...');
+        verifyResumeToken(resumeToken);
+        
+        // Wait for resume data to be loaded before initializing form
+        let attempts = 0;
+        const maxAttempts = 100; // 10 seconds max wait
+        
+        const waitForResumeData = () => {
+            attempts++;
+            console.log(`Waiting for resume data (attempt ${attempts}/${maxAttempts})...`);
+            
+            if (window.resumeSessionData) {
+                console.log('Resume data loaded, initializing form...');
+                // Initialize form after resume data is loaded
+                window.onboardingForm = new OnboardingForm();
+                return;
+            }
+            
+            if (attempts >= maxAttempts) {
+                console.log('Timeout waiting for resume data, initializing form normally');
+                window.onboardingForm = new OnboardingForm();
+                return;
+            }
+            
+            // Check again in 100ms
+            setTimeout(waitForResumeData, 100);
+        };
+        
+        // Start waiting
+        setTimeout(waitForResumeData, 100);
+    } else {
+        // No resume token, initialize form immediately
+        console.log('No resume token, initializing form immediately...');
+        window.onboardingForm = new OnboardingForm();
+    }
 });
 
 function initializeWelcomeModal() {
@@ -6694,35 +7184,43 @@ function checkForResumeToken() {
 }
 
 function verifyResumeToken(token) {
+    console.log('🔍 Starting verifyResumeToken with token:', token);
+    
     frappe.call({
         method: 'climoro_onboarding.www.apply.api.verify_resume_token',
         args: {
             token: token
         },
         callback: function(response) {
+            console.log('📡 verifyResumeToken callback received:', response);
+            
             if (response.message && response.message.success) {
-                console.log('Resume token valid:', response.message);
+                console.log('✅ Resume token valid:', response.message);
                 console.log('Current step from API:', response.message.current_step);
                 console.log('Session data current step:', response.message.session_data.current_step);
                 resumeSessionData = response.message.session_data;
                 // Make it globally available for the form class
                 window.resumeSessionData = response.message.session_data;
                 
+                console.log('🌐 Set window.resumeSessionData:', window.resumeSessionData);
+                
                 // Automatically restore form data without showing modal
                 if (resumeSessionData) {
                     restoreFormData(resumeSessionData);
                 }
                 
-                // Clean URL
-                const url = new URL(window.location);
-                url.searchParams.delete('resume');
-                window.history.replaceState({}, document.title, url);
+                // Keep resume token in URL for refresh functionality
+                // Don't clean the URL - preserve the resume token
+                console.log('✅ Resume token verified, keeping token in URL for refresh functionality');
+                console.log('🔗 Current URL with resume token:', window.location.href);
                 
             } else {
+                console.log('❌ Resume token invalid:', response.message);
                 alert('Invalid or expired resume link. Please start a new application.');
             }
         },
-        error: function() {
+        error: function(xhr, status, error) {
+            console.log('❌ verifyResumeToken error:', {xhr, status, error});
             alert('Error verifying resume link. Please start a new application.');
         }
     });
