@@ -350,11 +350,42 @@ class OnboardingForm(Document):
             # Continue with user creation even if module blocking fails
 
     def _generate_company_abbr(self, company_name):
-        """Generate company abbreviation"""
+        """Generate unique company abbreviation"""
         # Take first letter of each word, max 3 characters
         words = company_name.split()
-        abbr = ''.join(word[0].upper() for word in words[:3])
-        return abbr[:3] if abbr else company_name[:3].upper()
+        base_abbr = ''.join(word[0].upper() for word in words[:3])
+        base_abbr = base_abbr[:3] if base_abbr else company_name[:3].upper()
+        
+        # Ensure we have at least something
+        if not base_abbr:
+            base_abbr = "COM"
+        
+        # Check if base abbreviation is available
+        if not frappe.db.exists("Company", {"abbr": base_abbr}):
+            return base_abbr
+        
+        # If base abbreviation exists, try variations with numbers
+        counter = 1
+        while counter <= 99:  # Limit to prevent infinite loop
+            variant_abbr = f"{base_abbr[:2]}{counter}"  # Keep first 2 chars + number
+            if not frappe.db.exists("Company", {"abbr": variant_abbr}):
+                return variant_abbr
+            counter += 1
+        
+        # If all variations from 1-99 are taken, try different approach
+        # Use first 2 characters + random suffix
+        import random
+        import string
+        for _ in range(10):  # Try 10 random combinations
+            random_suffix = random.choice(string.ascii_uppercase)
+            variant_abbr = f"{base_abbr[:2]}{random_suffix}"
+            if not frappe.db.exists("Company", {"abbr": variant_abbr}):
+                return variant_abbr
+        
+        # Last resort: use timestamp-based suffix
+        from frappe.utils import now_datetime
+        timestamp_suffix = str(now_datetime().microsecond)[-2:]
+        return f"{base_abbr[:1]}{timestamp_suffix}"
 
     def send_approval_email(self):
         """Send approval email to applicant"""

@@ -1056,27 +1056,37 @@
   },
   {
    "fieldname": "method_of_calculation_option_a",
-   "label": "A",
+   "label": "Direct Measurement Method",
    "fieldtype": "Check"
   },
   {
    "fieldname": "method_of_calculation_option_b",
-   "label": "B",
+   "label": "Emission factor Method",
    "fieldtype": "Check"
   },
   {
    "fieldname": "method_of_calculation_option_c",
-   "label": "C",
+   "label": "Stoichiometric Calculation",
    "fieldtype": "Check"
   },
   {
    "fieldname": "method_of_calculation_option_d",
-   "label": "D",
+   "label": "Modeling and Simulation",
    "fieldtype": "Check"
   },
   {
    "fieldname": "method_of_calculation_option_e",
-   "label": "E",
+   "label": "Default or Proxy Data",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "method_of_calculation_option_f",
+   "label": "Life Cycle assessment",
+   "fieldtype": "Check"
+  },
+  {
+   "fieldname": "method_of_calculation_option_g",
+   "label": "Digital MRU and IoT-Based System",
    "fieldtype": "Check"
   },
 

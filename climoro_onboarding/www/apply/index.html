@@ -323,9 +323,9 @@
                     <h3>Section A: Emissions Inventory Setup</h3>
                     
                     <div class="form-group">
-                        <label for="base_year">Base Year *</label>
+                        <label for="base_year">Baseline Year *</label>
                         <select id="base_year" name="base_year" required>
-                            <option value="">Select Base Year</option>
+                            <option value="">Select Baseline Year</option>
                             <option value="2024">2024</option>
                             <option value="2025">2025</option>
                             <option value="2026">2026</option>
@@ -377,8 +377,8 @@
                     </div>
                     
                     <div class="form-group">
-                        <label for="base_year_reason">Reason for Base Year Selection</label>
-                        <textarea id="base_year_reason" name="base_year_reason" rows="3" placeholder="Explain why this year was chosen as the base year"></textarea>
+                        <label for="base_year_reason">Reason for Baseline Year Selection</label>
+                        <textarea id="base_year_reason" name="base_year_reason" rows="3" placeholder="Explain why this year was chosen as the baseline year"></textarea>
                     </div>
                     
                     <div class="form-group">
@@ -586,7 +586,7 @@
                         </div>
                         <div class="form-row">
                             <div class="form-col">
-                                <label for="absolute_emissions_percentage">Optional: Maintain absolute emission with ___ % base year levels</label>
+                                <label for="absolute_emissions_percentage">Optional: Maintain absolute emission with ___ % baseline year levels</label>
                                 <input type="number" id="absolute_emissions_percentage" name="absolute_emissions_percentage" step="0.1" min="0" max="100">
                             </div>
                         </div>
@@ -770,9 +770,6 @@
                         </select>
                     </div>
                     
-
-                </div>
-                    
                     <div class="form-group">
                         <label for="ghg_tracking_tools">GHG Tracking Tools Used</label>
                         <div class="checkbox-group">
@@ -836,19 +833,25 @@
                     <label>Select Method of Calculation *</label>
                     <div class="checkbox-group">
                         <label class="checkbox-label">
-                            <input type="checkbox" name="method_of_calculation_option_a" value="1"> A
+                            <input type="checkbox" name="method_of_calculation_option_a" value="1"> Direct Measurement Method
                         </label>
                         <label class="checkbox-label">
-                            <input type="checkbox" name="method_of_calculation_option_b" value="1"> B
+                            <input type="checkbox" name="method_of_calculation_option_b" value="1"> Emission factor Method
                         </label>
                         <label class="checkbox-label">
-                            <input type="checkbox" name="method_of_calculation_option_c" value="1"> C
+                            <input type="checkbox" name="method_of_calculation_option_c" value="1"> Stoichiometric Calculation
                         </label>
                         <label class="checkbox-label">
-                            <input type="checkbox" name="method_of_calculation_option_d" value="1"> D
+                            <input type="checkbox" name="method_of_calculation_option_d" value="1"> Modeling and Simulation
                         </label>
                         <label class="checkbox-label">
-                            <input type="checkbox" name="method_of_calculation_option_e" value="1"> E
+                            <input type="checkbox" name="method_of_calculation_option_e" value="1"> Default or Proxy Data
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="method_of_calculation_option_f" value="1"> Life Cycle assessment
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="method_of_calculation_option_g" value="1"> Digital MRU and IoT-Based System
                         </label>
                     </div>
                 </div>
@@ -2514,8 +2517,15 @@ class OnboardingForm {
             // Wait for resume data to be loaded
             this.waitForResumeData();
         } else {
-            // No resume token, proceed with normal initialization
-            this.loadSavedData();
+            // No resume token, check for local backup first
+            const localBackup = this.restoreFromLocalBackup();
+            if (localBackup) {
+                console.log('🔄 Restoring from local backup');
+                this.restoreFromBackup(localBackup);
+            } else {
+                // No local backup, proceed with normal initialization
+                this.loadSavedData();
+            }
         }
     }
     
@@ -2598,23 +2608,54 @@ class OnboardingForm {
         console.log('🔍 Units data:', appData.units);
         console.log('🔍 Assigned users data:', appData.assigned_users);
         
-        // Restore form fields
+        // Restore form fields with enhanced logic
         Object.keys(appData).forEach(key => {
-            const field = document.querySelector(`[name="${key}"]`);
+            // Try multiple selectors to find the field
+            let field = document.querySelector(`[name="${key}"]`) || 
+                       document.querySelector(`#${key}`) ||
+                       document.querySelector(`input[name="${key}"]`) ||
+                       document.querySelector(`select[name="${key}"]`) ||
+                       document.querySelector(`textarea[name="${key}"]`);
+            
             if (field) {
                 if (field.type === 'checkbox') {
-                    field.checked = appData[key] === 1 || appData[key] === true;
+                    field.checked = appData[key] === 1 || appData[key] === true || appData[key] === '1';
+                    // Trigger change event for checkboxes to update dependent fields
+                    field.dispatchEvent(new Event('change', { bubbles: true }));
                 } else if (field.type === 'file') {
-                    // Skip file inputs
-                    console.log(`Skipping file field ${key}`);
+                    // Skip file inputs but log for debugging
+                    console.log(`Skipping file field ${key}, value was: ${appData[key]}`);
+                } else if (field.type === 'select-one') {
+                    // Special handling for select fields
+                    field.value = appData[key] || '';
+                    // Trigger change event for selects to update dependent fields
+                    field.dispatchEvent(new Event('change', { bubbles: true }));
                 } else {
                     field.value = appData[key] || '';
+                    // Trigger input event for text fields
+                    field.dispatchEvent(new Event('input', { bubbles: true }));
                 }
-                console.log(`Restored field ${key}: ${appData[key]}`);
+                console.log(`✅ Restored field ${key}: ${appData[key]}`);
+                
+                // Mark field as successfully restored for visual feedback
+                if (field.type !== 'checkbox' && field.value) {
+                    field.classList.add('success');
+                    field.classList.remove('error', 'warning');
+                }
             } else {
-                console.log(`Field name not found in form: ${key}`);
+                console.log(`⚠️ Field not found in form: ${key}`);
             }
         });
+        
+        // Special handling for industry type to trigger sub-industry update
+        if (appData.industry_type) {
+            console.log('🏭 Triggering sub-industry update for:', appData.industry_type);
+            setTimeout(() => {
+                if (typeof updateSubIndustryOptions === 'function') {
+                    updateSubIndustryOptions();
+                }
+            }, 100);
+        }
         
         // Restore child table data (units and assigned_users)
         console.log('🔍 About to call restoreChildTableData...');
@@ -2623,6 +2664,44 @@ class OnboardingForm {
         
         // Update form data object
         this.formData = { ...appData };
+        
+        // Force update of any dynamic elements
+        this.updateFormState();
+        
+        console.log('✅ Form data restoration completed successfully');
+    }
+    
+    updateFormState() {
+        console.log('🔄 Updating form state after data restoration');
+        
+        // Update any scope-dependent fields
+        const scopeCheckboxes = document.querySelectorAll('input[name^="scopes_to_report_"]');
+        scopeCheckboxes.forEach(checkbox => {
+            if (checkbox.checked) {
+                const scopeName = checkbox.name.replace('scopes_to_report_', '');
+                if (typeof toggleScopeOptions === 'function') {
+                    toggleScopeOptions(scopeName);
+                }
+            }
+        });
+        
+        // Update monitoring frequency dependent fields
+        const monitoringFreq = document.getElementById('monitoring_frequency');
+        if (monitoringFreq && monitoringFreq.value === 'Other') {
+            if (typeof toggleOtherFrequency === 'function') {
+                toggleOtherFrequency();
+            }
+        }
+        
+        // Update software name field if software checkbox is checked
+        const softwareCheckbox = document.querySelector('input[name="ghg_tracking_tools_software"]');
+        if (softwareCheckbox && softwareCheckbox.checked) {
+            if (typeof toggleSoftwareName === 'function') {
+                toggleSoftwareName();
+            }
+        }
+        
+        console.log('✅ Form state update completed');
     }
     
     restoreChildTableData(appData) {
@@ -2782,6 +2861,143 @@ class OnboardingForm {
         this.updateNavigation();
         this.updateProgress();
         this.initializeFileUploads();
+        
+        // Setup automatic form data preservation
+        this.setupAutoSave();
+    }
+    
+    setupAutoSave() {
+        console.log('🔄 Setting up auto-save functionality');
+        
+        // Save form data on any input change (debounced)
+        let saveTimeout;
+        const debouncedSave = () => {
+            clearTimeout(saveTimeout);
+            saveTimeout = setTimeout(() => {
+                this.saveFormDataToLocal();
+            }, 1000); // Save 1 second after user stops typing
+        };
+        
+        document.addEventListener('input', debouncedSave);
+        document.addEventListener('change', debouncedSave);
+        
+        // Save before page unload
+        window.addEventListener('beforeunload', () => {
+            this.saveFormDataToLocal();
+        });
+        
+        console.log('✅ Auto-save setup completed');
+    }
+    
+    saveFormDataToLocal() {
+        try {
+            // Only save if not in resume mode to avoid overwriting resume data
+            if (window.isResumeMode) {
+                console.log('🔄 Skipping local save - in resume mode');
+                return;
+            }
+            
+            const formData = this.collectBasicFormData();
+            const backupData = {
+                data: formData,
+                timestamp: new Date().toISOString(),
+                currentStep: this.currentStep,
+                units: this.collectUnitsData(),
+                assignedUsers: this.collectAssignedUsersData()
+            };
+            
+            localStorage.setItem('onboarding_form_backup', JSON.stringify(backupData));
+            console.log('💾 Form data saved to local storage at', backupData.timestamp);
+        } catch (error) {
+            console.warn('⚠️ Failed to save form data to local storage:', error);
+        }
+    }
+    
+    restoreFromLocalBackup() {
+        try {
+            if (window.isResumeMode || window.resumeSessionData) {
+                console.log('🔄 Skipping local backup restore - resume data available');
+                return null;
+            }
+            
+            const backup = localStorage.getItem('onboarding_form_backup');
+            if (backup) {
+                const parsed = JSON.parse(backup);
+                console.log('🔄 Found local backup from:', parsed.timestamp);
+                
+                // Only restore if backup is less than 24 hours old
+                const backupDate = new Date(parsed.timestamp);
+                const now = new Date();
+                const hoursDiff = (now - backupDate) / (1000 * 60 * 60);
+                
+                if (hoursDiff < 24) {
+                    console.log('✅ Local backup is recent, can be restored');
+                    return parsed;
+                } else {
+                    console.log('⏰ Local backup is too old, clearing it');
+                    localStorage.removeItem('onboarding_form_backup');
+                }
+            }
+        } catch (error) {
+            console.warn('⚠️ Failed to restore from local backup:', error);
+        }
+        return null;
+    }
+    
+    collectBasicFormData() {
+        const formData = {};
+        
+        // Collect all form fields
+        const inputs = this.form.querySelectorAll('input, select, textarea');
+        inputs.forEach(input => {
+            if (input.name) {
+                if (input.type === 'checkbox') {
+                    formData[input.name] = input.checked ? '1' : '';
+                } else if (input.type !== 'file') {
+                    formData[input.name] = input.value || '';
+                }
+            }
+        });
+        
+        return formData;
+    }
+    
+    restoreFromBackup(backupData) {
+        console.log('🔄 Restoring form from local backup');
+        
+        if (backupData.data) {
+            // Restore basic form data
+            Object.keys(backupData.data).forEach(key => {
+                const field = document.querySelector(`[name="${key}"]`);
+                if (field) {
+                    if (field.type === 'checkbox') {
+                        field.checked = backupData.data[key] === '1' || backupData.data[key] === true;
+                    } else if (field.type !== 'file') {
+                        field.value = backupData.data[key] || '';
+                    }
+                    console.log(`✅ Restored ${key}: ${backupData.data[key]}`);
+                }
+            });
+        }
+        
+        // Restore current step
+        if (backupData.currentStep) {
+            this.currentStep = backupData.currentStep;
+            this.goToStep(this.currentStep);
+        }
+        
+        // Restore units and users
+        if (backupData.units) {
+            this.restoreUnitsFromBackup(backupData.units);
+        }
+        
+        console.log('✅ Local backup restoration completed');
+    }
+    
+    restoreUnitsFromBackup(unitsData) {
+        console.log('🔄 Restoring units from backup:', unitsData);
+        // Implementation would go here - for now just log
+        // This would need to recreate the unit elements and populate them
     }
     
     bindEvents() {
@@ -3053,27 +3269,35 @@ class OnboardingForm {
                     if (otherField) otherField.checked = true;
                 }
                 
-                // Load Step 6: Method of Calculation data
-                if (savedData.method_of_calculation_option_a) {
-                    const optionAField = document.querySelector('input[name="method_of_calculation_option_a"]');
-                    if (optionAField) optionAField.checked = true;
-                }
-                if (savedData.method_of_calculation_option_b) {
-                    const optionBField = document.querySelector('input[name="method_of_calculation_option_b"]');
-                    if (optionBField) optionBField.checked = true;
-                }
-                if (savedData.method_of_calculation_option_c) {
-                    const optionCField = document.querySelector('input[name="method_of_calculation_option_c"]');
-                    if (optionCField) optionCField.checked = true;
-                }
-                if (savedData.method_of_calculation_option_d) {
-                    const optionDField = document.querySelector('input[name="method_of_calculation_option_d"]');
-                    if (optionDField) optionDField.checked = true;
-                }
-                if (savedData.method_of_calculation_option_e) {
-                    const optionEField = document.querySelector('input[name="method_of_calculation_option_e"]');
-                    if (optionEField) optionEField.checked = true;
-                }
+                        // Load Step 6: Method of Calculation data
+        if (savedData.method_of_calculation_option_a) {
+            const optionAField = document.querySelector('input[name="method_of_calculation_option_a"]');
+            if (optionAField) optionAField.checked = true;
+        }
+        if (savedData.method_of_calculation_option_b) {
+            const optionBField = document.querySelector('input[name="method_of_calculation_option_b"]');
+            if (optionBField) optionBField.checked = true;
+        }
+        if (savedData.method_of_calculation_option_c) {
+            const optionCField = document.querySelector('input[name="method_of_calculation_option_c"]');
+            if (optionCField) optionCField.checked = true;
+        }
+        if (savedData.method_of_calculation_option_d) {
+            const optionDField = document.querySelector('input[name="method_of_calculation_option_d"]');
+            if (optionDField) optionDField.checked = true;
+        }
+        if (savedData.method_of_calculation_option_e) {
+            const optionEField = document.querySelector('input[name="method_of_calculation_option_e"]');
+            if (optionEField) optionEField.checked = true;
+        }
+        if (savedData.method_of_calculation_option_f) {
+            const optionFField = document.querySelector('input[name="method_of_calculation_option_f"]');
+            if (optionFField) optionFField.checked = true;
+        }
+        if (savedData.method_of_calculation_option_g) {
+            const optionGField = document.querySelector('input[name="method_of_calculation_option_g"]');
+            if (optionGField) optionGField.checked = true;
+        }
                 
                 console.log('✅ Saved data restored successfully');
             } else {
@@ -4250,20 +4474,99 @@ class OnboardingForm {
     }
     
     populateFormWithSessionData(sessionData) {
+        console.log('🔄 populateFormWithSessionData called with:', sessionData);
         const data = sessionData.data;
+        console.log('📄 Session data to populate:', data);
         
-        // Populate Step 1 fields
-        if (data.first_name) document.getElementById('first_name').value = data.first_name;
-        if (data.phone_number) document.getElementById('phone_number').value = data.phone_number;
-        if (data.email) document.getElementById('email').value = data.email;
-        if (data.position) document.getElementById('position').value = data.position;
+        // Populate Step 1 fields - INCLUDING last_name!
+        if (data.first_name) {
+            document.getElementById('first_name').value = data.first_name;
+            console.log('✅ Restored first_name:', data.first_name);
+        }
+        if (data.middle_name) {
+            document.getElementById('middle_name').value = data.middle_name;
+            console.log('✅ Restored middle_name:', data.middle_name);
+        }
+        if (data.last_name) {
+            document.getElementById('last_name').value = data.last_name;
+            console.log('✅ Restored last_name:', data.last_name);
+        }
+        if (data.phone_number) {
+            document.getElementById('phone_number').value = data.phone_number;
+            console.log('✅ Restored phone_number:', data.phone_number);
+        }
+        if (data.email) {
+            document.getElementById('email').value = data.email;
+            console.log('✅ Restored email:', data.email);
+        }
+        if (data.position) {
+            document.getElementById('position').value = data.position;
+            console.log('✅ Restored position:', data.position);
+        }
         
         // Populate Step 2 fields if available
-        if (data.company_name) document.getElementById('company_name').value = data.company_name;
-        if (data.address) document.getElementById('address').value = data.address;
-        if (data.gps_coordinates) document.getElementById('gps_coordinates').value = data.gps_coordinates;
-        if (data.cin) document.getElementById('cin').value = data.cin;
-        if (data.gst_number) document.getElementById('gst_number').value = data.gst_number;
+        if (data.company_name) {
+            document.getElementById('company_name').value = data.company_name;
+            console.log('✅ Restored company_name:', data.company_name);
+        }
+        if (data.address) {
+            document.getElementById('address').value = data.address;
+            console.log('✅ Restored address:', data.address);
+        }
+        if (data.gps_coordinates) {
+            document.getElementById('gps_coordinates').value = data.gps_coordinates;
+            console.log('✅ Restored gps_coordinates:', data.gps_coordinates);
+        }
+        if (data.location_name) {
+            document.getElementById('location_name').value = data.location_name;
+            console.log('✅ Restored location_name:', data.location_name);
+        }
+        if (data.cin) {
+            document.getElementById('cin').value = data.cin;
+            console.log('✅ Restored cin:', data.cin);
+        }
+        if (data.gst_number) {
+            document.getElementById('gst_number').value = data.gst_number;
+            console.log('✅ Restored gst_number:', data.gst_number);
+        }
+        if (data.industry_type) {
+            document.getElementById('industry_type').value = data.industry_type;
+            console.log('✅ Restored industry_type:', data.industry_type);
+            // Trigger change event to update sub-industry options
+            setTimeout(() => {
+                if (typeof updateSubIndustryOptions === 'function') {
+                    updateSubIndustryOptions();
+                    // Set sub-industry after updating options
+                    if (data.sub_industry_type) {
+                        setTimeout(() => {
+                            document.getElementById('sub_industry_type').value = data.sub_industry_type;
+                            console.log('✅ Restored sub_industry_type:', data.sub_industry_type);
+                        }, 100);
+                    }
+                }
+            }, 100);
+        }
+        if (data.website) {
+            document.getElementById('website').value = data.website;
+            console.log('✅ Restored website:', data.website);
+        }
+        
+        // Add visual feedback for restored fields
+        const restoredFields = ['first_name', 'middle_name', 'last_name', 'phone_number', 'email', 'position', 
+                               'company_name', 'address', 'gps_coordinates', 'location_name', 'cin', 'gst_number', 
+                               'industry_type', 'sub_industry_type', 'website'];
+        
+        restoredFields.forEach(fieldName => {
+            if (data[fieldName]) {
+                const field = document.getElementById(fieldName);
+                if (field && field.value) {
+                    field.classList.add('success');
+                    field.classList.remove('error', 'warning');
+                }
+            }
+        });
+        
+        console.log('✅ populateFormWithSessionData completed successfully');
     }
     
     async saveStepData() {
@@ -4577,127 +4880,13 @@ class OnboardingForm {
             console.log('  progress_communication_sbti_registry:', stepData.progress_communication_sbti_registry);
         } else if (targetStep === 6) {
             // Step 6: Method of Calculation
-            stepData.base_year = document.getElementById('base_year')?.value || '';
-            stepData.base_year_reason = document.getElementById('base_year_reason')?.value || '';
-            
-            // Scopes Covered
-            stepData.scopes_covered_scope1 = this.getCheckboxValue('scopes_covered_scope1');
-            stepData.scopes_covered_scope2 = this.getCheckboxValue('scopes_covered_scope2');
-            stepData.scopes_covered_scope3 = this.getCheckboxValue('scopes_covered_scope3');
-            
-            // GHG Boundary Approach
-            stepData.ghg_boundary_approach_operational_control = this.getCheckboxValue('ghg_boundary_approach_operational_control');
-            stepData.ghg_boundary_approach_financial_control = this.getCheckboxValue('ghg_boundary_approach_financial_control');
-            stepData.ghg_boundary_approach_equity_share = this.getCheckboxValue('ghg_boundary_approach_equity_share');
-            
-            // Scope 3 Categories Included
-            stepData.scope_3_categories_purchased_goods = this.getCheckboxValue('scope_3_categories_purchased_goods');
-            stepData.scope_3_categories_capital_goods = this.getCheckboxValue('scope_3_categories_capital_goods');
-            stepData.scope_3_categories_fuel_energy = this.getCheckboxValue('scope_3_categories_fuel_energy');
-            stepData.scope_3_categories_transportation = this.getCheckboxValue('scope_3_categories_transportation');
-            stepData.scope_3_categories_waste = this.getCheckboxValue('scope_3_categories_waste');
-            stepData.scope_3_categories_business_travel = this.getCheckboxValue('scope_3_categories_business_travel');
-            stepData.scope_3_categories_use_sold_products = this.getCheckboxValue('scope_3_categories_use_sold_products');
-            stepData.scope_3_categories_end_life_treatment = this.getCheckboxValue('scope_3_categories_end_life_treatment');
-            stepData.scope_3_categories_leased_assets = this.getCheckboxValue('scope_3_categories_leased_assets');
-            
-            stepData.emissions_exclusions = document.getElementById('emissions_exclusions')?.value || '';
-            
-            // Section B: Emissions Reduction Targets
-            stepData.target_type = document.getElementById('target_type')?.value || '';
-            stepData.scope_1_2_intensity_percentage = document.getElementById('scope_1_2_intensity_percentage')?.value || '';
-            stepData.scope_1_2_target_year = document.getElementById('scope_1_2_target_year')?.value || '';
-            stepData.scope_3_intensity_percentage = document.getElementById('scope_3_intensity_percentage')?.value || '';
-            stepData.scope_3_target_year = document.getElementById('scope_3_target_year')?.value || '';
-            stepData.absolute_emissions_percentage = document.getElementById('absolute_emissions_percentage')?.value || '';
-            stepData.near_term_target_year = document.getElementById('near_term_target_year')?.value || '';
-            stepData.long_term_target_year = document.getElementById('long_term_target_year')?.value || '';
-            
-            // Target Metrics
-            stepData.target_metrics_absolute_emissions = this.getCheckboxValue('target_metrics_absolute_emissions');
-            stepData.target_metrics_kgco2e_mwh = this.getCheckboxValue('target_metrics_kgco2e_mwh');
-                            stepData.target_metrics_kgco2e_tonne = this.getCheckboxValue('target_metrics_kgco2e_tonne');
-            stepData.target_metrics_kgco2e_unit_service = this.getCheckboxValue('target_metrics_kgco2e_unit_service');
-            stepData.target_metrics_kgco2e_usd_revenue = this.getCheckboxValue('target_metrics_kgco2e_usd_revenue');
-            stepData.target_metrics_kgco2e_stove_year = this.getCheckboxValue('target_metrics_kgco2e_stove_year');
-            stepData.target_metrics_kgco2e_tonne_biochar = this.getCheckboxValue('target_metrics_kgco2e_tonne_biochar');
-            stepData.target_metrics_kgco2e_km_travelled = this.getCheckboxValue('target_metrics_kgco2e_km_travelled');
-            
-            // Target Boundary
-            stepData.target_boundary_scope1_2_95_percent = this.getCheckboxValue('target_boundary_scope1_2_95_percent');
-            stepData.target_boundary_scope3_90_percent_long_term = this.getCheckboxValue('target_boundary_scope3_90_percent_long_term');
-            stepData.target_boundary_scope3_67_percent_near_term = this.getCheckboxValue('target_boundary_scope3_67_percent_near_term');
-            stepData.target_boundary_prioritize_relevance = this.getCheckboxValue('target_boundary_prioritize_relevance');
-            
-            // Section C: Mitigation Strategies
-            // Operational Emissions
-            stepData.operational_emissions_energy_efficiency = this.getCheckboxValue('operational_emissions_energy_efficiency');
-            stepData.operational_emissions_onsite_renewable = this.getCheckboxValue('operational_emissions_onsite_renewable');
-            stepData.operational_emissions_offsite_renewable = this.getCheckboxValue('operational_emissions_offsite_renewable');
-            stepData.operational_emissions_fuel_switching = this.getCheckboxValue('operational_emissions_fuel_switching');
-            stepData.operational_emissions_process_optimization = this.getCheckboxValue('operational_emissions_process_optimization');
-            
-            // Value Chain Emissions
-            stepData.value_chain_emissions_supplier_engagement = this.getCheckboxValue('value_chain_emissions_supplier_engagement');
-            stepData.value_chain_emissions_low_carbon_materials = this.getCheckboxValue('value_chain_emissions_low_carbon_materials');
-            stepData.value_chain_emissions_redesign_use_phase = this.getCheckboxValue('value_chain_emissions_redesign_use_phase');
-            stepData.value_chain_emissions_optimize_logistics = this.getCheckboxValue('value_chain_emissions_optimize_logistics');
-            stepData.value_chain_emissions_circular_economy = this.getCheckboxValue('value_chain_emissions_circular_economy');
-            
-            // Land Sector & Removals
-            stepData.land_sector_removals_afforestation = this.getCheckboxValue('land_sector_removals_afforestation');
-            stepData.land_sector_removals_soil_carbon = this.getCheckboxValue('land_sector_removals_soil_carbon');
-            stepData.land_sector_removals_urban_greening = this.getCheckboxValue('land_sector_removals_urban_greening');
-            stepData.land_sector_removals_biochar = this.getCheckboxValue('land_sector_removals_biochar');
-            stepData.land_sector_removals_carbon_capture = this.getCheckboxValue('land_sector_removals_carbon_capture');
-            stepData.land_sector_removals_certified_removals = this.getCheckboxValue('land_sector_removals_certified_removals');
-            
-            // Residual Emissions Strategy
-            stepData.residual_emissions_high_quality_credits = this.getCheckboxValue('residual_emissions_high_quality_credits');
-            stepData.residual_emissions_bvcm = this.getCheckboxValue('residual_emissions_bvcm');
-            stepData.residual_emissions_temporary_solutions = this.getCheckboxValue('residual_emissions_temporary_solutions');
-            
-            // Section D: Monitoring, Adjustments & Reporting
-            stepData.monitoring_frequency = document.getElementById('monitoring_frequency')?.value || '';
-            stepData.monitoring_frequency_other_text = document.getElementById('monitoring_frequency_other_text')?.value || '';
-            stepData.assurance_validation = document.getElementById('assurance_validation')?.value || '';
-            
-            // GHG Tracking Tools
-            stepData.ghg_tracking_tools_excel = this.getCheckboxValue('ghg_tracking_tools_excel');
-            stepData.ghg_tracking_tools_software = this.getCheckboxValue('ghg_tracking_tools_software');
-            stepData.ghg_tracking_tools_software_name = document.getElementById('ghg_tracking_tools_software_name')?.value || '';
-            stepData.ghg_tracking_tools_web_platform = this.getCheckboxValue('ghg_tracking_tools_web_platform');
-            
-            // Recalculation Policy
-            stepData.recalculation_policy_structural = this.getCheckboxValue('recalculation_policy_structural');
-            stepData.recalculation_policy_methodology = this.getCheckboxValue('recalculation_policy_methodology');
-            stepData.recalculation_policy_boundary = this.getCheckboxValue('recalculation_policy_boundary');
-            
-            // Progress Communication
-            stepData.progress_communication_esg_dashboard = this.getCheckboxValue('progress_communication_esg_dashboard');
-            stepData.progress_communication_sustainability_report = this.getCheckboxValue('progress_communication_sustainability_report');
-            stepData.progress_communication_cdp_disclosure = this.getCheckboxValue('progress_communication_cdp_disclosure');
-            stepData.progress_communication_sbti_registry = this.getCheckboxValue('progress_communication_sbti_registry');
-            
-            // Debug Section D fields
-            console.log('🔍 Section D fields collected:');
-            console.log('  ghg_tracking_tools_excel:', stepData.ghg_tracking_tools_excel);
-            console.log('  ghg_tracking_tools_software:', stepData.ghg_tracking_tools_software);
-            console.log('  ghg_tracking_tools_web_platform:', stepData.ghg_tracking_tools_web_platform);
-            console.log('  recalculation_policy_structural:', stepData.recalculation_policy_structural);
-            console.log('  recalculation_policy_methodology:', stepData.recalculation_policy_methodology);
-            console.log('  recalculation_policy_boundary:', stepData.recalculation_policy_boundary);
-            console.log('  progress_communication_esg_dashboard:', stepData.progress_communication_esg_dashboard);
-            console.log('  progress_communication_sustainability_report:', stepData.progress_communication_sustainability_report);
-            console.log('  progress_communication_cdp_disclosure:', stepData.progress_communication_cdp_disclosure);
-            console.log('  progress_communication_sbti_registry:', stepData.progress_communication_sbti_registry);
-        } else if (targetStep === 6) {
-            // Step 6: Method of Calculation
             stepData.method_of_calculation_option_a = this.getCheckboxValue('method_of_calculation_option_a');
             stepData.method_of_calculation_option_b = this.getCheckboxValue('method_of_calculation_option_b');
             stepData.method_of_calculation_option_c = this.getCheckboxValue('method_of_calculation_option_c');
             stepData.method_of_calculation_option_d = this.getCheckboxValue('method_of_calculation_option_d');
             stepData.method_of_calculation_option_e = this.getCheckboxValue('method_of_calculation_option_e');
+            stepData.method_of_calculation_option_f = this.getCheckboxValue('method_of_calculation_option_f');
+            stepData.method_of_calculation_option_g = this.getCheckboxValue('method_of_calculation_option_g');
         }
         
         stepData.step_number = targetStep;
@@ -4978,12 +5167,14 @@ class OnboardingForm {
             progress_communication_cdp_disclosure: this.getCheckboxValue('progress_communication_cdp_disclosure'),
             progress_communication_sbti_registry: this.getCheckboxValue('progress_communication_sbti_registry'),
             
-            // Step 6: Method of Calculation
-            method_of_calculation_option_a: this.getCheckboxValue('method_of_calculation_option_a'),
-            method_of_calculation_option_b: this.getCheckboxValue('method_of_calculation_option_b'),
-            method_of_calculation_option_c: this.getCheckboxValue('method_of_calculation_option_c'),
-            method_of_calculation_option_d: this.getCheckboxValue('method_of_calculation_option_d'),
-            method_of_calculation_option_e: this.getCheckboxValue('method_of_calculation_option_e'),
+                    // Step 6: Method of Calculation
+        method_of_calculation_option_a: this.getCheckboxValue('method_of_calculation_option_a'),
+        method_of_calculation_option_b: this.getCheckboxValue('method_of_calculation_option_b'),
+        method_of_calculation_option_c: this.getCheckboxValue('method_of_calculation_option_c'),
+        method_of_calculation_option_d: this.getCheckboxValue('method_of_calculation_option_d'),
+        method_of_calculation_option_e: this.getCheckboxValue('method_of_calculation_option_e'),
+        method_of_calculation_option_f: this.getCheckboxValue('method_of_calculation_option_f'),
+        method_of_calculation_option_g: this.getCheckboxValue('method_of_calculation_option_g'),
             
             // Step 3: Units and Users
             units: [],
@@ -5485,38 +5676,51 @@ class OnboardingForm {
         let isValid = true;
         let warnings = [];
         
-        // Only validate fields from the current step
-        const currentStepElement = document.getElementById(`step-${this.currentStep}`);
-        const currentStepRequiredFields = currentStepElement.querySelectorAll('[required]');
-        
-        console.log('🔍 Current Step Validation Debug:');
-        console.log('   Current step:', this.currentStep);
-        console.log('   Total required fields in current step:', currentStepRequiredFields.length);
-        
-        currentStepRequiredFields.forEach((field, index) => {
-            const fieldName = field.name || field.id;
-            const fieldValue = field.value.trim();
+        // Check all required fields across all steps, not just current step
+        for (let step = 1; step <= this.totalSteps; step++) {
+            const stepElement = document.getElementById(`step-${step}`);
+            const requiredFields = stepElement.querySelectorAll('[required]');
             
-            console.log(`🔍 Current Step Field ${index + 1}: ${fieldName}`);
-            console.log('   Field element:', field);
-            console.log('   Field value:', fieldValue);
-            console.log('   Field value length:', fieldValue.length);
-            console.log('   Is empty:', !fieldValue);
-            console.log('   Field visible:', field.offsetParent !== null);
-            
-            if (!fieldValue) {
-                field.classList.add('error');
-                field.classList.remove('success');
-                isValid = false;
-                warnings.push(`${this.getFieldLabel(field)} is required`);
-            } else {
-                field.classList.remove('error', 'warning');
-                // Don't add success class to checkboxes
-                if (field.type !== 'checkbox') {
-                    field.classList.add('success');
+            requiredFields.forEach((field) => {
+                const fieldName = field.name || field.id;
+                const fieldValue = field.value.trim();
+                
+                if (!fieldValue) {
+                    field.classList.add('error');
+                    field.classList.remove('success');
+                    isValid = false;
+                    warnings.push(`Step ${step}: ${this.getFieldLabel(field)} is required`);
                 }
+            });
+        }
+        
+        // Also check special validation for method of calculation - at least one option must be selected
+        if (this.currentStep === 6) {
+            const methodOptions = [
+                'method_of_calculation_option_a',
+                'method_of_calculation_option_b', 
+                'method_of_calculation_option_c',
+                'method_of_calculation_option_d',
+                'method_of_calculation_option_e',
+                'method_of_calculation_option_f',
+                'method_of_calculation_option_g'
+            ];
+            
+            const hasSelectedMethod = methodOptions.some(option => {
+                const checkbox = document.querySelector(`input[name="${option}"]`);
+                return checkbox && checkbox.checked;
+            });
+            
+            if (!hasSelectedMethod) {
+                isValid = false;
+                warnings.push('Please select at least one method of calculation');
             }
-        });
+        }
+        
+        console.log('🔍 Complete Form Validation Debug:');
+        console.log('   Current step:', this.currentStep);
+        console.log('   Is valid:', isValid);
+        console.log('   Warnings:', warnings);
         
         // Show warnings if any
         if (warnings.length > 0) {
@@ -7371,7 +7575,7 @@ function verifyResumeToken(token) {
 }
 
 function restoreFormData(sessionData) {
-    console.log('Restoring form data:', sessionData);
+    console.log('🔄 Global restoreFormData called with:', sessionData);
     isResumeMode = true;
     // Make it globally accessible
     window.isResumeMode = true;
@@ -7379,25 +7583,44 @@ function restoreFormData(sessionData) {
     const applicationData = sessionData.application_data;
     const currentStep = sessionData.current_step || 1;
     
-    console.log('Application data:', applicationData);
-    console.log('Current step:', currentStep);
+    console.log('📄 Application data:', applicationData);
+    console.log('🔢 Current step:', currentStep);
     
     if (applicationData) {
-        // Pre-fill form fields
+        // Enhanced form field restoration
         Object.keys(applicationData).forEach(key => {
-            const field = document.querySelector(`[name="${key}"]`);
+            // Try multiple selectors to find the field
+            let field = document.querySelector(`[name="${key}"]`) || 
+                       document.querySelector(`#${key}`) ||
+                       document.querySelector(`input[name="${key}"]`) ||
+                       document.querySelector(`select[name="${key}"]`) ||
+                       document.querySelector(`textarea[name="${key}"]`);
             if (field) {
                 if (field.type === 'checkbox') {
-                    field.checked = applicationData[key] === 1 || applicationData[key] === true;
+                    field.checked = applicationData[key] === 1 || applicationData[key] === true || applicationData[key] === '1';
+                    // Trigger change event for checkboxes
+                    field.dispatchEvent(new Event('change', { bubbles: true }));
                 } else if (field.type === 'file') {
                     // Skip file inputs - they can't be set programmatically for security reasons
-                    console.log(`Skipping file field ${key} (cannot set programmatically)`);
+                    console.log(`Skipping file field ${key} (cannot set programmatically), value was: ${applicationData[key]}`);
+                } else if (field.type === 'select-one') {
+                    field.value = applicationData[key] || '';
+                    // Trigger change event for selects
+                    field.dispatchEvent(new Event('change', { bubbles: true }));
                 } else {
                     field.value = applicationData[key] || '';
+                    // Trigger input event for text fields
+                    field.dispatchEvent(new Event('input', { bubbles: true }));
                 }
-                console.log(`Set field ${key} to ${applicationData[key]}`);
+                console.log(`✅ Global set field ${key} to ${applicationData[key]}`);
+                
+                // Add visual feedback for successfully restored fields
+                if (field.type !== 'checkbox' && field.value) {
+                    field.classList.add('success');
+                    field.classList.remove('error', 'warning');
+                }
             } else {
-                console.log(`Field ${key} not found in form`);
+                console.log(`⚠️ Global field ${key} not found in form`);
             }
         });
         
