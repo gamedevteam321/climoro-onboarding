@@ -2858,12 +2858,56 @@ class OnboardingForm {
         this.unitCounter = 0;
         this.userCounters = {};
         
+        // Initialize year dropdowns
+        this.initializeYearDropdowns();
+        
         this.updateNavigation();
         this.updateProgress();
         this.initializeFileUploads();
         
         // Setup automatic form data preservation
         this.setupAutoSave();
+    }
+    
+    initializeYearDropdowns() {
+        // Get current year
+        const currentYear = new Date().getFullYear();
+        
+        // Define year ranges for different fields
+        const yearRanges = {
+            'base_year': { start: currentYear - 20, end: currentYear + 20 }, // Past 20 years to future 50 years
+            'scope_1_2_target_year': { start: currentYear- 20, end: currentYear + 20 }, // Current year to future 50 years
+            'scope_3_target_year': { start: currentYear- 20, end: currentYear + 20 }, // Current year to future 50 years
+            'near_term_target_year': { start: currentYear- 20, end: currentYear + 20 }, // Current year to future 30 years
+            'long_term_target_year': { start: currentYear- 20, end: currentYear + 20 } // Current year to future 50 years
+        };
+        
+        // Initialize each year dropdown
+        Object.keys(yearRanges).forEach(fieldId => {
+            const dropdown = document.getElementById(fieldId);
+            if (dropdown) {
+                this.populateYearDropdown(dropdown, yearRanges[fieldId].start, yearRanges[fieldId].end);
+            }
+        });
+        
+        console.log('✅ Year dropdowns initialized');
+    }
+    
+    populateYearDropdown(dropdown, startYear, endYear) {
+        // Clear existing options except the first one (placeholder)
+        const placeholder = dropdown.querySelector('option[value=""]');
+        dropdown.innerHTML = '';
+        if (placeholder) {
+            dropdown.appendChild(placeholder);
+        }
+        
+        // Add year options
+        for (let year = startYear; year <= endYear; year++) {
+            const option = document.createElement('option');
+            option.value = year;
+            option.textContent = year;
+            dropdown.appendChild(option);
+        }
     }
     
     setupAutoSave() {
@@ -2902,8 +2946,8 @@ class OnboardingForm {
                 data: formData,
                 timestamp: new Date().toISOString(),
                 currentStep: this.currentStep,
-                units: this.collectUnitsData(),
-                assignedUsers: this.collectAssignedUsersData()
+                units: this.collectUnitsData ? this.collectUnitsData() : [],
+                assignedUsers: this.collectAssignedUsersData ? this.collectAssignedUsersData() : []
             };
             
             localStorage.setItem('onboarding_form_backup', JSON.stringify(backupData));
@@ -3354,6 +3398,8 @@ class OnboardingForm {
             if (this.currentStep < this.totalSteps) {
                 this.currentStep++;
                 this.updateStep();
+                // Scroll to the first input field of the new step
+                this.scrollToFirstInput();
             }
         }
     }
@@ -3377,6 +3423,27 @@ class OnboardingForm {
         this.updateNavigation();
         this.updateProgress();
         this.validateCurrentStep();
+    }
+    
+    scrollToFirstInput() {
+        // Find the first input field in the current step
+        const currentStepElement = document.getElementById(`step-${this.currentStep}`);
+        if (currentStepElement) {
+            const firstInput = currentStepElement.querySelector('input, select, textarea');
+            if (firstInput) {
+                // Scroll to the input field with smooth animation
+                firstInput.scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'center',
+                    inline: 'nearest'
+                });
+                
+                // Focus on the input field after a short delay
+                setTimeout(() => {
+                    firstInput.focus();
+                }, 300);
+            }
+        }
     }
     
     updateNavigation() {
@@ -4269,7 +4336,7 @@ class OnboardingForm {
             
             console.log('📤 Sending params:', params.toString());
             
-            const response = await fetch('/api/method/climoro_onboarding.www.apply.api.send_verification_email', {
+            const response = await fetch('/api/method/climoro_onboarding.www.apply.email_api.send_verification_email', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
@@ -4389,7 +4456,7 @@ class OnboardingForm {
                 
                 console.log('📤 Sending verification params:', params.toString());
                 
-                const response = await fetch('/api/method/climoro_onboarding.www.apply.api.verify_email', {
+                const response = await fetch('/api/method/climoro_onboarding.www.apply.email_api.verify_email', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded',
@@ -4420,7 +4487,7 @@ class OnboardingForm {
                     
                     console.log('📤 Sending session params:', sessionParams.toString());
                     
-                    const sessionResponse = await fetch('/api/method/climoro_onboarding.www.apply.api.get_session_data', {
+                    const sessionResponse = await fetch('/api/method/climoro_onboarding.www.apply.email_api.get_session_data', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/x-www-form-urlencoded',
@@ -4478,6 +4545,8 @@ class OnboardingForm {
         
         // Populate Step 1 fields
         if (data.first_name) document.getElementById('first_name').value = data.first_name;
+        if (data.middle_name) document.getElementById('middle_name').value = data.middle_name;
+        if (data.last_name) document.getElementById('last_name').value = data.last_name;
         if (data.phone_number) document.getElementById('phone_number').value = data.phone_number;
         if (data.email) document.getElementById('email').value = data.email;
         if (data.position) document.getElementById('position').value = data.position;
@@ -4486,8 +4555,12 @@ class OnboardingForm {
         if (data.company_name) document.getElementById('company_name').value = data.company_name;
         if (data.address) document.getElementById('address').value = data.address;
         if (data.gps_coordinates) document.getElementById('gps_coordinates').value = data.gps_coordinates;
+        if (data.location_name) document.getElementById('location_name').value = data.location_name;
         if (data.cin) document.getElementById('cin').value = data.cin;
         if (data.gst_number) document.getElementById('gst_number').value = data.gst_number;
+        if (data.industry_type) document.getElementById('industry_type').value = data.industry_type;
+        if (data.sub_industry_type) document.getElementById('sub_industry_type').value = data.sub_industry_type;
+        if (data.website) document.getElementById('website').value = data.website;
     }
     
     async saveStepData() {
@@ -5175,8 +5248,8 @@ class OnboardingForm {
     
     // Helper function to get single checkbox value
     getCheckboxValue(fieldName) {
-        const checkbox = document.querySelector(`input[name="${fieldName}"]:checked`);
-        return checkbox ? checkbox.value : '';
+        const checkbox = document.querySelector(`input[name="${fieldName}"]`);
+        return checkbox && checkbox.checked ? checkbox.value : '';
     }
     
     // Helper function to get multi-select value

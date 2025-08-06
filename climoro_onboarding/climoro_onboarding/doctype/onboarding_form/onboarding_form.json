@@ -561,8 +561,7 @@
   {
    "fieldname": "base_year",
    "label": "Base Year",
-   "fieldtype": "Select",
-   "options": "2024\n2025\n2026\n2027\n2028\n2029\n2030\n2031\n2032\n2033\n2034\n2035\n2036\n2037\n2038\n2039\n2040\n2041\n2042\n2043\n2044\n2045\n2046\n2047\n2048\n2049\n2050\n2051\n2052\n2053\n2054\n2055\n2056\n2057\n2058\n2059\n2060\n2061\n2062\n2063\n2064\n2065\n2066\n2067\n2068\n2069\n2070",
+   "fieldtype": "Int",
    "description": "Select the base year for emissions calculations"
   },
   {
@@ -696,8 +695,7 @@
   {
    "fieldname": "scope_1_2_target_year",
    "label": "Target Year",
-   "fieldtype": "Select",
-   "options": "2024\n2025\n2026\n2027\n2028\n2029\n2030\n2031\n2032\n2033\n2034\n2035\n2036\n2037\n2038\n2039\n2040\n2041\n2042\n2043\n2044\n2045\n2046\n2047\n2048\n2049\n2050\n2051\n2052\n2053\n2054\n2055\n2056\n2057\n2058\n2059\n2060\n2061\n2062\n2063\n2064\n2065\n2066\n2067\n2068\n2069\n2070",
+   "fieldtype": "Int",
    "description": "Select the target year for Scope 1 & 2 reduction"
   },
   {
@@ -709,8 +707,7 @@
   {
    "fieldname": "scope_3_target_year",
    "label": "Target year",
-   "fieldtype": "Select",
-   "options": "2024\n2025\n2026\n2027\n2028\n2029\n2030\n2031\n2032\n2033\n2034\n2035\n2036\n2037\n2038\n2039\n2040\n2041\n2042\n2043\n2044\n2045\n2046\n2047\n2048\n2049\n2050\n2051\n2052\n2053\n2054\n2055\n2056\n2057\n2058\n2059\n2060\n2061\n2062\n2063\n2064\n2065\n2066\n2067\n2068\n2069\n2070",
+   "fieldtype": "Int",
    "description": "Select the target year for Scope 3 reduction"
   },
   {

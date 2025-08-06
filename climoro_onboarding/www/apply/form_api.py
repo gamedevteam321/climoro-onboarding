@@ -269,7 +269,8 @@ def update_form_fields(doc, form_data):
     step5_fields = [
         "base_year", "base_year_reason", "target_type", "monitoring_frequency",
         "assurance_validation", "method_of_calculation_option_a", "method_of_calculation_option_b",
-        "method_of_calculation_option_c", "method_of_calculation_option_d", "method_of_calculation_option_e"
+        "method_of_calculation_option_c", "method_of_calculation_option_d", "method_of_calculation_option_e",
+        "method_of_calculation_option_f", "method_of_calculation_option_g"
     ]
     
     for field in step5_fields:
@@ -392,7 +393,8 @@ def update_step_fields(doc, step_data, step_number):
         calc_fields = [
             "method_of_calculation_option_a", "method_of_calculation_option_b",
             "method_of_calculation_option_c", "method_of_calculation_option_d",
-            "method_of_calculation_option_e"
+            "method_of_calculation_option_e", "method_of_calculation_option_f",
+            "method_of_calculation_option_g"
         ]
         for field in calc_fields:
             if field in step_data:
