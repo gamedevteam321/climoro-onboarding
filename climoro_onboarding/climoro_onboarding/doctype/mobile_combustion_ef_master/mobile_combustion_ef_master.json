@@ -1,0 +1,137 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "naming_series:",
+ "creation": "2025-08-05 12:17:56.015347",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "naming_series",
+  "calculation_method",
+  "region",
+  "vehicle_category",
+  "vehicle_sub_category_1",
+  "vehicle_sub_category_2",
+  "fuel_type",
+  "ef_co2",
+  "ef_ch4",
+  "ef_n2o",
+  "ef_unit"
+ ],
+ "fields": [
+  {
+   "default": "MCEF-.#####",
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "hidden": 1,
+   "label": "Series",
+   "options": "MCEF-.#####",
+   "reqd": 1
+  },
+  {
+   "fieldname": "calculation_method",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Calculation Method",
+   "options": "Fuel-Based\nDistance-Based",
+   "reqd": 1
+  },
+  {
+   "fieldname": "region",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Region",
+   "options": "US\nUK\nOther",
+   "reqd": 1
+  },
+  {
+   "fieldname": "vehicle_category",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Vehicle Category",
+   "reqd": 1
+  },
+  {
+   "fieldname": "vehicle_sub_category_1",
+   "fieldtype": "Data",
+   "label": "Vehicle Sub-Category 1"
+  },
+  {
+   "fieldname": "vehicle_sub_category_2",
+   "fieldtype": "Data",
+   "label": "Vehicle Sub-Category 2"
+  },
+  {
+   "fieldname": "fuel_type",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Fuel Type",
+   "reqd": 1
+  },
+  {
+   "fieldname": "ef_co2",
+   "fieldtype": "Float",
+   "label": "EF CO2",
+   "precision": "6"
+  },
+  {
+   "fieldname": "ef_ch4",
+   "fieldtype": "Float",
+   "label": "EF CH4",
+   "precision": "6"
+  },
+  {
+   "fieldname": "ef_n2o",
+   "fieldtype": "Float",
+   "label": "EF N2O",
+   "precision": "6"
+  },
+  {
+   "fieldname": "ef_unit",
+   "fieldtype": "Data",
+   "label": "EF Unit",
+   "reqd": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-08-05 15:47:59.052712",
+ "modified_by": "Administrator",
+ "module": "Climoro Onboarding",
+ "name": "Mobile Combustion EF Master",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "All",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "search_fields": "vehicle_category,fuel_type,region,calculation_method",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "vehicle_category"
+}

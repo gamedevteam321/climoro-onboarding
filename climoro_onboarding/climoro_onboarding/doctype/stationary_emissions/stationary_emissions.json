@@ -1,0 +1,198 @@
+{
+ "actions": [],
+ "allow_copy": 1,
+ "allow_import": 1,
+ "allow_rename": 1,
+ "creation": "2025-08-03 11:12:09.251354",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "s_no",
+  "date",
+  "invoice_no",
+  "upload_invoice",
+  "fuel_type",
+  "fuel_selection",
+  "activity_types",
+  "activity_data",
+  "unit_selection",
+  "efco2",
+  "efch4",
+  "efn20",
+  "eco2",
+  "ech4",
+  "en20",
+  "etco2eq"
+ ],
+ "fields": [
+  {
+   "fieldname": "s_no",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "S.No",
+   "reqd": 1
+  },
+  {
+   "fieldname": "date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "invoice_no",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Invoice No",
+   "reqd": 1
+  },
+  {
+   "fieldname": "upload_invoice",
+   "fieldtype": "Attach",
+   "label": "Upload Invoice"
+  },
+  {
+   "fieldname": "fuel_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Fuel Type",
+   "options": "Solid fossil\nLiquid fossil\nGaseous fossil\nBiomass\nOther",
+   "reqd": 1
+  },
+  {
+   "fieldname": "fuel_selection",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Fuel Selection",
+   "reqd": 1
+  },
+  {
+   "fieldname": "activity_types",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Activity Types",
+   "options": "Boilers\nBurners\nGen Sets\nFurnace (Including Blast Furnace)",
+   "reqd": 1
+  },
+  {
+   "fieldname": "activity_data",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Activity Data",
+   "reqd": 1
+  },
+  {
+   "fieldname": "unit_selection",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Unit Selection",
+   "options": "Tonnes\nkg",
+   "reqd": 1
+  },
+  {
+   "fieldname": "efco2",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "EFCO2",
+   "reqd": 1
+  },
+  {
+   "fieldname": "efch4",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "EFCH4",
+   "reqd": 1
+  },
+  {
+   "fieldname": "efn20",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "EFN20",
+   "reqd": 1
+  },
+  {
+   "fieldname": "eco2",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "ECO2",
+   "read_only": 1
+  },
+  {
+   "fieldname": "ech4",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "ECH4",
+   "read_only": 1
+  },
+  {
+   "fieldname": "en20",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "EN20",
+   "read_only": 1
+  },
+  {
+   "fieldname": "etco2eq",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "ETCO2eq",
+   "read_only": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-08-03 11:12:09.251354",
+ "modified_by": "Administrator",
+ "module": "Climoro Onboarding",
+ "name": "Stationary Emissions",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "All",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "quick_entry": 1,
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

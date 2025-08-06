@@ -1,0 +1,213 @@
+{
+ "actions": [],
+ "allow_copy": 1,
+ "allow_import": 1,
+ "allow_rename": 1,
+ "creation": "2025-08-03 15:38:17.673849",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "s_no",
+  "date",
+  "gas_type",
+  "unit_selection",
+  "approach_type",
+  "inventory_start",
+  "inventory_close",
+  "decreased_inventory",
+  "purchase",
+  "returned_user",
+  "returned_recycling",
+  "total_returned",
+  "charged_equipment",
+  "delivered_user",
+  "returned_producer",
+  "sent_offsite",
+  "sent_destruction",
+  "total_distributed",
+  "refrigerant_emission",
+  "x5_conversion",
+  "etco2eq"
+ ],
+ "fields": [
+  {
+   "fieldname": "s_no",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "S.No",
+   "reqd": 1
+  },
+  {
+   "fieldname": "date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "gas_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Type of Gas",
+   "options": "R134a\nR404A\nR410A\nR407C\nR22\nR507\nR717 (Ammonia)\nR744 (CO2)\nOther",
+   "reqd": 1
+  },
+  {
+   "fieldname": "unit_selection",
+   "fieldtype": "Select",
+   "in_standard_filter": 1,
+   "label": "Unit Selection",
+   "options": "Tonnes\nkg",
+   "reqd": 1
+  },
+  {
+   "default": "Scale Base Approach",
+   "fieldname": "approach_type",
+   "fieldtype": "Data",
+   "label": "Approach Type",
+   "read_only": 1
+  },
+  {
+   "description": "Auto populate (ONLY First time it will be manual)",
+   "fieldname": "inventory_start",
+   "fieldtype": "Float",
+   "in_standard_filter": 1,
+   "label": "Inventory storage at START (A)",
+   "reqd": 1
+  },
+  {
+   "fieldname": "inventory_close",
+   "fieldtype": "Float",
+   "in_standard_filter": 1,
+   "label": "Inventory storage at CLOSE (B)",
+   "reqd": 1
+  },
+  {
+   "description": "Auto Populate formula = (A-B)",
+   "fieldname": "decreased_inventory",
+   "fieldtype": "Float",
+   "label": "Decreased Inventory (A-B)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "purchase",
+   "fieldtype": "Float",
+   "label": "Refrigeration Purchase (C)"
+  },
+  {
+   "fieldname": "returned_user",
+   "fieldtype": "Float",
+   "label": "Refrigeration Returned by user (D)"
+  },
+  {
+   "fieldname": "returned_recycling",
+   "fieldtype": "Float",
+   "label": "Refrigeration Returned after off site recycling (E)"
+  },
+  {
+   "description": "Auto Populate formula = (C+D+E)",
+   "fieldname": "total_returned",
+   "fieldtype": "Float",
+   "label": "Total Refrigeration Returned (C+D+E)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "charged_equipment",
+   "fieldtype": "Float",
+   "label": "Refrigeration charged into equipment (F)"
+  },
+  {
+   "fieldname": "delivered_user",
+   "fieldtype": "Float",
+   "label": "Refrigeration Delivered to user (G)"
+  },
+  {
+   "fieldname": "returned_producer",
+   "fieldtype": "Float",
+   "label": "Refrigeration returned to producer/distributor (H)"
+  },
+  {
+   "fieldname": "sent_offsite",
+   "fieldtype": "Float",
+   "label": "Refrigeration sent off site for distribution (I)"
+  },
+  {
+   "fieldname": "sent_destruction",
+   "fieldtype": "Float",
+   "label": "Refrigeration Sent for Destruction (J)"
+  },
+  {
+   "description": "Auto Populate formula = (F+G+H+I+J)",
+   "fieldname": "total_distributed",
+   "fieldtype": "Float",
+   "label": "Total Refrigeration distributed / Disbursed (F+G+H+I+J)",
+   "read_only": 1
+  },
+  {
+   "description": "Auto Populate formula = (X1+X2-X3)",
+   "fieldname": "refrigerant_emission",
+   "fieldtype": "Float",
+   "label": "Refrigerant Emission = (X1+X2-X3)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "x5_conversion",
+   "fieldtype": "Float",
+   "label": "X5= kg to tonnes conversion",
+   "read_only": 1
+  },
+  {
+   "description": "X5*GWP (GWP Constant value to assume = 10)",
+   "fieldname": "etco2eq",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "ETCO2eq",
+   "read_only": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-08-03 15:38:17.673849",
+ "modified_by": "Administrator",
+ "module": "Climoro Onboarding",
+ "name": "Fugitive Scale Base",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "All",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "quick_entry": 1,
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

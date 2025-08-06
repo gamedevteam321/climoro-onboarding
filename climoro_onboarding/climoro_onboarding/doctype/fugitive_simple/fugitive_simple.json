@@ -1,0 +1,151 @@
+{
+ "actions": [],
+ "allow_copy": 1,
+ "allow_import": 1,
+ "allow_rename": 1,
+ "creation": "2025-08-03 15:38:17.989244",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "s_no",
+  "date",
+  "invoice_no",
+  "upload_invoice",
+  "type_refrigeration",
+  "approach_type",
+  "amount_purchased",
+  "no_of_units",
+  "unit_selection",
+  "gwp",
+  "etco2eq"
+ ],
+ "fields": [
+  {
+   "fieldname": "s_no",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "S.No",
+   "reqd": 1
+  },
+  {
+   "fieldname": "date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Date",
+   "reqd": 1
+  },
+  {
+   "description": "TEXT FIELD",
+   "fieldname": "invoice_no",
+   "fieldtype": "Data",
+   "in_standard_filter": 1,
+   "label": "Invoice No"
+  },
+  {
+   "description": "Upload docs",
+   "fieldname": "upload_invoice",
+   "fieldtype": "Attach",
+   "label": "Upload Invoice"
+  },
+  {
+   "description": "DATA to be provided (Drop DOWN)",
+   "fieldname": "type_refrigeration",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Type of Refrigeration",
+   "options": "R134a\nR404A\nR410A\nR407C\nR22\nR507\nR717 (Ammonia)\nR744 (CO2)\nOther",
+   "reqd": 1
+  },
+  {
+   "default": "Simple Method",
+   "fieldname": "approach_type",
+   "fieldtype": "Data",
+   "label": "Approach Type",
+   "read_only": 1
+  },
+  {
+   "fieldname": "amount_purchased",
+   "fieldtype": "Float",
+   "in_standard_filter": 1,
+   "label": "Amount Purchased (A)",
+   "reqd": 1
+  },
+  {
+   "fieldname": "no_of_units",
+   "fieldtype": "Float",
+   "in_standard_filter": 1,
+   "label": "No of Units (D)",
+   "reqd": 1
+  },
+  {
+   "fieldname": "unit_selection",
+   "fieldtype": "Select",
+   "in_standard_filter": 1,
+   "label": "Unit Selection",
+   "options": "Tonnes\nkg",
+   "reqd": 1
+  },
+  {
+   "default": "10",
+   "description": "Data to be provided (Constant Assume 10)",
+   "fieldname": "gwp",
+   "fieldtype": "Float",
+   "in_standard_filter": 1,
+   "label": "GWP (B)",
+   "reqd": 1
+  },
+  {
+   "description": "Formula = A*B / (Only applicable to convert in to unit type form kg to Tonnes)",
+   "fieldname": "etco2eq",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "ETCO2eq",
+   "read_only": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-08-03 15:38:17.989244",
+ "modified_by": "Administrator",
+ "module": "Climoro Onboarding",
+ "name": "Fugitive Simple",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "All",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "quick_entry": 1,
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

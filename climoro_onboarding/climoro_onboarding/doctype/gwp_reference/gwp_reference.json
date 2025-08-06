@@ -1,0 +1,145 @@
+{
+ "actions": [],
+ "allow_copy": 1,
+ "allow_import": 1,
+ "allow_rename": 1,
+ "creation": "2025-01-27 10:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "chemical_name",
+  "chemical_formula",
+  "gwp_ar4_100yr",
+  "gwp_ar5_100yr", 
+  "gwp_ar6_100yr",
+  "gwp_ar6_20yr",
+  "gwp_ar6_500yr",
+  "ipcc_source",
+  "notes",
+  "is_active"
+ ],
+ "fields": [
+  {
+   "fieldname": "chemical_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Chemical Name",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "chemical_formula",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Chemical Formula",
+   "reqd": 1
+  },
+  {
+   "fieldname": "gwp_ar4_100yr",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "GWP AR4 (100yr)",
+   "description": "IPCC AR4 100-year Global Warming Potential"
+  },
+  {
+   "fieldname": "gwp_ar5_100yr",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "GWP AR5 (100yr)",
+   "description": "IPCC AR5 100-year Global Warming Potential"
+  },
+  {
+   "fieldname": "gwp_ar6_100yr",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "GWP AR6 (100yr)",
+   "description": "IPCC AR6 100-year Global Warming Potential",
+   "reqd": 1
+  },
+  {
+   "fieldname": "gwp_ar6_20yr",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "GWP AR6 (20yr)",
+   "description": "IPCC AR6 20-year Global Warming Potential"
+  },
+  {
+   "fieldname": "gwp_ar6_500yr",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "GWP AR6 (500yr)",
+   "description": "IPCC AR6 500-year Global Warming Potential"
+  },
+  {
+   "fieldname": "ipcc_source",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "IPCC Source",
+   "description": "IPCC Assessment Report and Chapter reference"
+  },
+  {
+   "fieldname": "notes",
+   "fieldtype": "Text",
+   "label": "Notes",
+   "description": "Additional notes or special considerations"
+  },
+  {
+   "default": 1,
+   "fieldname": "is_active",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Is Active",
+   "description": "Whether this GWP value is currently active for use"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-01-27 10:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Climoro Onboarding",
+ "name": "GWP Reference",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "All",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "quick_entry": 1,
+ "row_format": "Dynamic",
+ "sort_field": "chemical_name",
+ "sort_order": "ASC",
+ "states": [],
+ "track_changes": 1
+} 

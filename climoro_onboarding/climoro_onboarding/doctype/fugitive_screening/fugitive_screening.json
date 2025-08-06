@@ -1,0 +1,155 @@
+{
+ "actions": [],
+ "allow_copy": 1,
+ "allow_import": 1,
+ "allow_rename": 1,
+ "creation": "2025-08-03 15:38:17.850425",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "s_no",
+  "date",
+  "equipment_selection",
+  "type_refrigeration",
+  "approach_type",
+  "gwp_refrigeration",
+  "no_of_units",
+  "unit_selection",
+  "original_charge",
+  "assembly_ef",
+  "etco2eq"
+ ],
+ "fields": [
+  {
+   "fieldname": "s_no",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "S.No",
+   "reqd": 1
+  },
+  {
+   "fieldname": "date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Date",
+   "reqd": 1
+  },
+  {
+   "description": "DATA to be provided (Multiselect)",
+   "fieldname": "equipment_selection",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Refrigeration Equipment Selection (A)",
+   "options": "Commercial Refrigeration\nIndustrial Refrigeration\nAir Conditioning Systems\nHeat Pumps\nTransport Refrigeration\nMarine Refrigeration\nOther",
+   "reqd": 1
+  },
+  {
+   "description": "DATA to be provided (Drop DOWN)",
+   "fieldname": "type_refrigeration",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Type of Refrigeration selection (B)",
+   "options": "R134a\nR404A\nR410A\nR407C\nR22\nR507\nR717 (Ammonia)\nR744 (CO2)\nOther",
+   "reqd": 1
+  },
+  {
+   "default": "Screening Method",
+   "fieldname": "approach_type",
+   "fieldtype": "Data",
+   "label": "Approach Type",
+   "read_only": 1
+  },
+  {
+   "default": "10",
+   "description": "Data to be provided (Constant Assume 10)",
+   "fieldname": "gwp_refrigeration",
+   "fieldtype": "Float",
+   "in_standard_filter": 1,
+   "label": "GWP Refrigeration (C)",
+   "reqd": 1
+  },
+  {
+   "fieldname": "no_of_units",
+   "fieldtype": "Float",
+   "in_standard_filter": 1,
+   "label": "No of Units (D)",
+   "reqd": 1
+  },
+  {
+   "fieldname": "unit_selection",
+   "fieldtype": "Select",
+   "in_standard_filter": 1,
+   "label": "Unit Selection",
+   "options": "Tonnes\nkg",
+   "reqd": 1
+  },
+  {
+   "fieldname": "original_charge",
+   "fieldtype": "Float",
+   "in_standard_filter": 1,
+   "label": "Original Refrigeration Charge (E)",
+   "reqd": 1
+  },
+  {
+   "fieldname": "assembly_ef",
+   "fieldtype": "Float",
+   "in_standard_filter": 1,
+   "label": "Assembly EF (F)",
+   "reqd": 1
+  },
+  {
+   "description": "Formula = C*D*E*F/ (Only applicable to convert in to unit type form kg to Tonnes)",
+   "fieldname": "etco2eq",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "ETCO2eq",
+   "read_only": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-08-03 15:38:17.850425",
+ "modified_by": "Administrator",
+ "module": "Climoro Onboarding",
+ "name": "Fugitive Screening",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "All",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "quick_entry": 1,
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

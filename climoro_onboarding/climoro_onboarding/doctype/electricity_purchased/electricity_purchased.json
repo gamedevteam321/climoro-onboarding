@@ -1,0 +1,143 @@
+{
+ "actions": [],
+ "allow_copy": 1,
+ "allow_import": 1,
+ "allow_rename": 1,
+ "creation": "2025-08-03 13:58:52.748843",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "s_no",
+  "date",
+  "invoice_no",
+  "upload_invoice",
+  "activity_types",
+  "activity_data",
+  "no_of_units",
+  "unit_selection",
+  "ef",
+  "etco2eq"
+ ],
+ "fields": [
+  {
+   "fieldname": "s_no",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "S.no",
+   "reqd": 1
+  },
+  {
+   "fieldname": "date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "invoice_no",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Invoice No",
+   "reqd": 1
+  },
+  {
+   "fieldname": "upload_invoice",
+   "fieldtype": "Attach",
+   "label": "Upload Invoice"
+  },
+  {
+   "fieldname": "activity_types",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Activity TYPES",
+   "options": "Office Buildings\nManufacturing Facilities\nWarehouses\nData Centers\nRetail Stores\nHealthcare Facilities\nEducational Institutions\nResidential Buildings\nOther",
+   "reqd": 1
+  },
+  {
+   "fieldname": "activity_data",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Activity Data (A)",
+   "reqd": 1
+  },
+  {
+   "fieldname": "no_of_units",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "No of Units",
+   "reqd": 1
+  },
+  {
+   "fieldname": "unit_selection",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Unit Selection",
+   "options": "Tonnes\nKg",
+   "reqd": 1
+  },
+  {
+   "fieldname": "ef",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "EF (B)",
+   "reqd": 1
+  },
+  {
+   "fieldname": "etco2eq",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "ETCO2eq",
+   "read_only": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-08-03 14:31:41.336282",
+ "modified_by": "Administrator",
+ "module": "Climoro Onboarding",
+ "name": "Electricity Purchased",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "All",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "quick_entry": 1,
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}
