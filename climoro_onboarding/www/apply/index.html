@@ -5,7 +5,7 @@
     <!-- Header with Logo -->
     <div class="onboarding-header">
         <div class="logo-container">
-            <img src="/assets/climoro_onboarding/images/climoro.png" alt="Climoro Logo" class="climoro-logo">
+            <img src="/files/Climoro.png"" alt="Climoro Logo" class="climoro-logo">
         </div>
         <h1>Climoro Onboarding Form</h1>
         <p>Complete your company onboarding in 6 simple steps</p>
@@ -4474,99 +4474,20 @@ class OnboardingForm {
     }
     
     populateFormWithSessionData(sessionData) {
-        console.log('🔄 populateFormWithSessionData called with:', sessionData);
         const data = sessionData.data;
-        console.log('📄 Session data to populate:', data);
         
-        // Populate Step 1 fields - INCLUDING last_name!
-        if (data.first_name) {
-            document.getElementById('first_name').value = data.first_name;
-            console.log('✅ Restored first_name:', data.first_name);
-        }
-        if (data.middle_name) {
-            document.getElementById('middle_name').value = data.middle_name;
-            console.log('✅ Restored middle_name:', data.middle_name);
-        }
-        if (data.last_name) {
-            document.getElementById('last_name').value = data.last_name;
-            console.log('✅ Restored last_name:', data.last_name);
-        }
-        if (data.phone_number) {
-            document.getElementById('phone_number').value = data.phone_number;
-            console.log('✅ Restored phone_number:', data.phone_number);
-        }
-        if (data.email) {
-            document.getElementById('email').value = data.email;
-            console.log('✅ Restored email:', data.email);
-        }
-        if (data.position) {
-            document.getElementById('position').value = data.position;
-            console.log('✅ Restored position:', data.position);
-        }
+        // Populate Step 1 fields
+        if (data.first_name) document.getElementById('first_name').value = data.first_name;
+        if (data.phone_number) document.getElementById('phone_number').value = data.phone_number;
+        if (data.email) document.getElementById('email').value = data.email;
+        if (data.position) document.getElementById('position').value = data.position;
         
         // Populate Step 2 fields if available
-        if (data.company_name) {
-            document.getElementById('company_name').value = data.company_name;
-            console.log('✅ Restored company_name:', data.company_name);
-        }
-        if (data.address) {
-            document.getElementById('address').value = data.address;
-            console.log('✅ Restored address:', data.address);
-        }
-        if (data.gps_coordinates) {
-            document.getElementById('gps_coordinates').value = data.gps_coordinates;
-            console.log('✅ Restored gps_coordinates:', data.gps_coordinates);
-        }
-        if (data.location_name) {
-            document.getElementById('location_name').value = data.location_name;
-            console.log('✅ Restored location_name:', data.location_name);
-        }
-        if (data.cin) {
-            document.getElementById('cin').value = data.cin;
-            console.log('✅ Restored cin:', data.cin);
-        }
-        if (data.gst_number) {
-            document.getElementById('gst_number').value = data.gst_number;
-            console.log('✅ Restored gst_number:', data.gst_number);
-        }
-        if (data.industry_type) {
-            document.getElementById('industry_type').value = data.industry_type;
-            console.log('✅ Restored industry_type:', data.industry_type);
-            // Trigger change event to update sub-industry options
-            setTimeout(() => {
-                if (typeof updateSubIndustryOptions === 'function') {
-                    updateSubIndustryOptions();
-                    // Set sub-industry after updating options
-                    if (data.sub_industry_type) {
-                        setTimeout(() => {
-                            document.getElementById('sub_industry_type').value = data.sub_industry_type;
-                            console.log('✅ Restored sub_industry_type:', data.sub_industry_type);
-                        }, 100);
-                    }
-                }
-            }, 100);
-        }
-        if (data.website) {
-            document.getElementById('website').value = data.website;
-            console.log('✅ Restored website:', data.website);
-        }
-        
-        // Add visual feedback for restored fields
-        const restoredFields = ['first_name', 'middle_name', 'last_name', 'phone_number', 'email', 'position', 
-                               'company_name', 'address', 'gps_coordinates', 'location_name', 'cin', 'gst_number', 
-                               'industry_type', 'sub_industry_type', 'website'];
-        
-        restoredFields.forEach(fieldName => {
-            if (data[fieldName]) {
-                const field = document.getElementById(fieldName);
-                if (field && field.value) {
-                    field.classList.add('success');
-                    field.classList.remove('error', 'warning');
-                }
-            }
-        });
-        
-        console.log('✅ populateFormWithSessionData completed successfully');
+        if (data.company_name) document.getElementById('company_name').value = data.company_name;
+        if (data.address) document.getElementById('address').value = data.address;
+        if (data.gps_coordinates) document.getElementById('gps_coordinates').value = data.gps_coordinates;
+        if (data.cin) document.getElementById('cin').value = data.cin;
+        if (data.gst_number) document.getElementById('gst_number').value = data.gst_number;
     }
     
     async saveStepData() {
