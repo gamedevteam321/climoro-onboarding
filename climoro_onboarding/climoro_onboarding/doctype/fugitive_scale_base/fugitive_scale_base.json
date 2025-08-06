@@ -49,11 +49,11 @@
   },
   {
    "fieldname": "gas_type",
-   "fieldtype": "Select",
+   "fieldtype": "Link",
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Type of Gas",
-   "options": "R134a\nR404A\nR410A\nR407C\nR22\nR507\nR717 (Ammonia)\nR744 (CO2)\nOther",
+   "options": "GWP Chemical",
    "reqd": 1
   },
   {
