@@ -26,9 +26,9 @@ app_license = "mit"
 
 # include js, css files in header of desk.html
 # app_include_css = "/assets/climoro_onboarding/css/climoro_onboarding.css"
-app_include_js = [
-	"/assets/climoro_onboarding/js/theme_logo.js",
-]
+# app_include_js = [
+# 	"/assets/climoro_onboarding/js/theme_logo.js",
+# ]
 
 # include js, css files in header of web template
 # web_include_css = "/assets/climoro_onboarding/css/climoro_onboarding.css"
@@ -142,13 +142,16 @@ doctype_js = {
 # ---------------
 # Hook on document methods and events
 
-# doc_events = {
-# 	"*": {
-# 		"on_update": "method",
-# 		"on_cancel": "method",
-# 		"on_trash": "method"
-# 	}
-# }
+doc_events = {
+    "User": {
+        # After insert: auto-assign roles based on company's onboarding selections
+        "after_insert": "climoro_onboarding.climoro_onboarding.ghg_workspace_access.assign_roles_to_new_user"
+    },
+    "Onboarding Form": {
+        # Keep scopes/workspaces in sync if the approved form is edited later
+        "on_update": "climoro_onboarding.climoro_onboarding.ghg_workspace_access.sync_onboarding_selection"
+    }
+}
 
 # Scheduled Tasks
 # ---------------

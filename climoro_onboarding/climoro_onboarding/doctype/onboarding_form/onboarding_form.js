@@ -44,8 +44,7 @@ frappe.ui.form.on('Onboarding Form', {
 
 		
 		// Initialize GHG Accounting dynamic behavior
-		// Temporarily disabled to fix approve/reject buttons
-		// updateStep5Visibility(frm);
+		updateStep5Visibility(frm);
 		
 		// Temporarily disable map functionality to avoid errors
 		// const gpsField = frm.get_field('gps_coordinates');
@@ -1128,97 +1127,66 @@ function updateStep5Visibility(frm) {
 	
 	console.log('🌱 Selected scopes:', selected_scopes);
 	
+	// Helper to safely toggle fields that may not exist in this site
+	function safeToggle(fieldname, should_show, clear_when_hide, is_section=false) {
+		const f = frm.get_field(fieldname);
+		if (!f) {
+			console.log('⚪ Skipping missing field:', fieldname);
+			return;
+		}
+		frm.set_df_property(fieldname, 'hidden', should_show ? 0 : 1);
+		if (!should_show && clear_when_hide && !is_section) {
+			try { frm.set_value(fieldname, ''); } catch (e) { /* ignore */ }
+		}
+		console.log(should_show ? '🌱 Showing field:' : '🌱 Hiding field:', fieldname);
+	}
+
 	// Scope 1 fields
 	const scope1Fields = [
-		'section_b_scope_1_targets',
-		'scope_1_target_type',
-		'scope_1_intensity_reduction',
-		'scope_1_reduction_percentage',
-		'scope_1_target_year',
-		'scope_1_mitigation_strategies'
+		{ n: 'section_b_scope_1_targets', section: true },
+		{ n: 'scope_1_target_type' },
+		{ n: 'scope_1_intensity_reduction' },
+		{ n: 'scope_1_reduction_percentage' },
+		{ n: 'scope_1_target_year' },
+		{ n: 'scope_1_mitigation_strategies' }
 	];
-	
-	scope1Fields.forEach(field => {
-		if (selected_scopes.includes('Scope 1')) {
-			frm.set_df_property(field, 'hidden', 0);
-			console.log('🌱 Showing field:', field);
-		} else {
-			frm.set_df_property(field, 'hidden', 1);
-			// Clear values when hidden
-			if (field !== 'section_b_scope_1_targets') {
-				frm.set_value(field, '');
-			}
-			console.log('🌱 Hiding field:', field);
-		}
-	});
+	const s1 = selected_scopes.includes('Scope 1');
+	scope1Fields.forEach(f => safeToggle(f.n, s1, true, !!f.section));
 	
 	// Scope 2 fields
 	const scope2Fields = [
-		'section_c_scope_2_targets',
-		'scope_2_target_type',
-		'scope_2_intensity_reduction',
-		'scope_2_reduction_percentage',
-		'scope_2_target_year',
-		'scope_2_mitigation_strategies'
+		{ n: 'section_c_scope_2_targets', section: true },
+		{ n: 'scope_2_target_type' },
+		{ n: 'scope_2_intensity_reduction' },
+		{ n: 'scope_2_reduction_percentage' },
+		{ n: 'scope_2_target_year' },
+		{ n: 'scope_2_mitigation_strategies' }
 	];
-	
-	scope2Fields.forEach(field => {
-		if (selected_scopes.includes('Scope 2')) {
-			frm.set_df_property(field, 'hidden', 0);
-			console.log('🌱 Showing field:', field);
-		} else {
-			frm.set_df_property(field, 'hidden', 1);
-			if (field !== 'section_c_scope_2_targets') {
-				frm.set_value(field, '');
-			}
-			console.log('🌱 Hiding field:', field);
-		}
-	});
+	const s2 = selected_scopes.includes('Scope 2');
+	scope2Fields.forEach(f => safeToggle(f.n, s2, true, !!f.section));
 	
 	// Scope 3 fields
 	const scope3Fields = [
-		'section_d_scope_3_targets',
-		'scope_3_categories_included',
-		'scope_3_target_type',
-		'scope_3_intensity_reduction',
-		'scope_3_reduction_percentage',
-		'scope_3_target_year',
-		'scope_3_mitigation_strategies'
+		{ n: 'section_d_scope_3_targets', section: true },
+		{ n: 'scope_3_categories_included' },
+		{ n: 'scope_3_target_type' },
+		{ n: 'scope_3_intensity_reduction' },
+		{ n: 'scope_3_reduction_percentage' },
+		{ n: 'scope_3_target_year' },
+		{ n: 'scope_3_mitigation_strategies' }
 	];
-	
-	scope3Fields.forEach(field => {
-		if (selected_scopes.includes('Scope 3')) {
-			frm.set_df_property(field, 'hidden', 0);
-			console.log('🌱 Showing field:', field);
-		} else {
-			frm.set_df_property(field, 'hidden', 1);
-			if (field !== 'section_d_scope_3_targets') {
-				frm.set_value(field, '');
-			}
-			console.log('🌱 Hiding field:', field);
-		}
-	});
+	const s3 = selected_scopes.includes('Scope 3');
+	scope3Fields.forEach(f => safeToggle(f.n, s3, true, !!f.section));
 	
 	// Reductions fields
 	const reductionFields = [
-		'section_e_reductions',
-		'reduction_target_type',
-		'land_sector_removals',
-		'residual_emissions_strategy'
+		{ n: 'section_e_reductions', section: true },
+		{ n: 'reduction_target_type' },
+		{ n: 'land_sector_removals' },
+		{ n: 'residual_emissions_strategy' }
 	];
-	
-	reductionFields.forEach(field => {
-		if (selected_scopes.includes('Reductions')) {
-			frm.set_df_property(field, 'hidden', 0);
-			console.log('🌱 Showing field:', field);
-		} else {
-			frm.set_df_property(field, 'hidden', 1);
-			if (field !== 'section_e_reductions') {
-				frm.set_value(field, '');
-			}
-			console.log('🌱 Hiding field:', field);
-		}
-	});
+	const sr = selected_scopes.includes('Reductions');
+	reductionFields.forEach(f => safeToggle(f.n, sr, true, !!f.section));
 	
 	console.log('🌱 Step 5 visibility updated based on scopes:', selected_scopes);
 }

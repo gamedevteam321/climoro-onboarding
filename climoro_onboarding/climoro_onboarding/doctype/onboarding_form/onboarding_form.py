@@ -132,6 +132,12 @@ class OnboardingForm(Document):
         self.approved_at = datetime.now()
         self.approved_by = approver or frappe.session.user
         self.create_company_and_users()
+        # Assign GHG workspace roles to all company users based on selections
+        try:
+            from climoro_onboarding.climoro_onboarding.ghg_workspace_access import assign_roles_for_company_based_on_onboarding
+            assign_roles_for_company_based_on_onboarding(self.company_name)
+        except Exception as e:
+            frappe.log_error(f"Error assigning GHG workspace roles: {str(e)}")
         self.send_approval_email()
         self.save()
         frappe.db.commit()

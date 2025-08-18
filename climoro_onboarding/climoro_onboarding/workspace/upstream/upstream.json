@@ -13,7 +13,7 @@
  "is_hidden": 0,
  "label": "Upstream",
  "links": [],
- "modified": "2025-08-13 16:23:21.008168",
+ "modified": "2025-08-18 14:48:09.365117",
  "modified_by": "Administrator",
  "module": "climoro onboarding",
  "name": "Upstream",
@@ -22,7 +22,20 @@
  "parent_page": "Scope 3",
  "public": 1,
  "quick_lists": [],
- "roles": [],
+ "roles": [
+  {
+   "role": "Scope 3 Upstream Access"
+  },
+  {
+   "role": "Administrator"
+  },
+  {
+   "role": "Super Admin"
+  },
+  {
+   "role": "System Manager"
+  }
+ ],
  "sequence_id": 33.0,
  "shortcuts": [],
  "title": "Upstream"
