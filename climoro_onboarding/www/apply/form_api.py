@@ -310,7 +310,7 @@ def update_step_fields(doc, step_data, step_number):
             "scope_1_options_process", "scope_1_options_stationary", "scope_1_options_mobile", "scope_1_options_fugitive",
             
             # Scope 2 Options
-            "scope_2_options_electricity", "scope_2_options_heating", "scope_2_options_cooling",
+            "scope_2_options_electricity",
             
             # Scope 3 Options
             "scope_3_options_upstream", "scope_3_options_downstream",

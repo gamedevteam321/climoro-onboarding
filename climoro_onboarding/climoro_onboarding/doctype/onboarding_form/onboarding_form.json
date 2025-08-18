@@ -58,8 +58,6 @@
   "scope_1_options_fugitive",
   "section_break_scope2_options",
   "scope_2_options_electricity",
-  "scope_2_options_heating",
-  "scope_2_options_cooling",
   "section_break_scope3_options",
   "scope_3_options_upstream",
   "scope_3_options_downstream",
@@ -484,16 +482,7 @@
    "label": "Electricity",
    "fieldtype": "Check"
   },
-  {
-   "fieldname": "scope_2_options_heating",
-   "label": "Heating",
-   "fieldtype": "Check"
-  },
-  {
-   "fieldname": "scope_2_options_cooling",
-   "label": "Cooling",
-   "fieldtype": "Check"
-  },
+  
   {
    "fieldname": "section_break_scope3_options",
    "fieldtype": "Section Break",
