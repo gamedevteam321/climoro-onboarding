@@ -58,4 +58,4 @@ frappe.ui.form.on('Assigned User', {
             frappe.throw(__('First name must be at least 2 characters long'));
         }
     }
-}); 
+});

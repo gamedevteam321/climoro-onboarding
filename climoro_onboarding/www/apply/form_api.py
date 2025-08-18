@@ -253,7 +253,7 @@ def update_form_fields(doc, form_data):
         if field in form_data:
             setattr(doc, field, form_data[field])
     
-    # GHG Accounting Fields (Step 4)
+    # GHG Accounting Fields (now Step 3)
     ghg_fields = [
         "purpose_of_reporting", "gases_to_report_co2", "gases_to_report_ch4",
         "gases_to_report_n2o", "gases_to_report_hfcs", "gases_to_report_pfcs",
@@ -265,7 +265,7 @@ def update_form_fields(doc, form_data):
         if field in form_data:
             setattr(doc, field, form_data[field])
     
-    # Step 5 fields
+    # Reduction fields (now Step 4)
     step5_fields = [
         "base_year", "base_year_reason", "target_type", "monitoring_frequency",
         "assurance_validation", "method_of_calculation_option_a", "method_of_calculation_option_b",
@@ -298,14 +298,7 @@ def update_step_fields(doc, step_data, step_number):
         doc.current_step = 2
         
     elif step_number == 3:
-        # Step 3: Units & Users
-        doc.units = []
-        doc.assigned_users = []
-        add_units_and_users(doc, step_data)
-        doc.current_step = 3
-        
-    elif step_number == 4:
-        # Step 4: GHG Accounting
+        # Step 3: GHG Accounting
         ghg_fields = [
             # Basic GHG fields
             "purpose_of_reporting", "gases_to_report_co2", "gases_to_report_ch4",
@@ -329,10 +322,10 @@ def update_step_fields(doc, step_data, step_number):
         for field in ghg_fields:
             if field in step_data:
                 setattr(doc, field, step_data[field])
-        doc.current_step = 4
+        doc.current_step = 3
         
-    elif step_number == 5:
-        # Step 5: Reduction Form - Section A: Emissions Inventory Setup
+    elif step_number == 4:
+        # Step 4: Reduction Form - Section A: Emissions Inventory Setup
         step5_fields = [
             # Section A: Emissions Inventory Setup
             "base_year", "base_year_reason", 
@@ -386,10 +379,10 @@ def update_step_fields(doc, step_data, step_number):
         for field in step5_fields:
             if field in step_data:
                 setattr(doc, field, step_data[field])
-        doc.current_step = 5
+        doc.current_step = 4
         
-    elif step_number == 6:
-        # Step 6: Method of Calculation
+    elif step_number == 5:
+        # Step 5: Method of Calculation
         calc_fields = [
             "method_of_calculation_option_a", "method_of_calculation_option_b",
             "method_of_calculation_option_c", "method_of_calculation_option_d",
@@ -399,6 +392,13 @@ def update_step_fields(doc, step_data, step_number):
         for field in calc_fields:
             if field in step_data:
                 setattr(doc, field, step_data[field])
+        doc.current_step = 5
+
+    elif step_number == 6:
+        # Step 6: Units & Users
+        doc.units = []
+        doc.assigned_users = []
+        add_units_and_users(doc, step_data)
         doc.current_step = 6
 
 

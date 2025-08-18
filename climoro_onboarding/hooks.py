@@ -26,7 +26,9 @@ app_license = "mit"
 
 # include js, css files in header of desk.html
 # app_include_css = "/assets/climoro_onboarding/css/climoro_onboarding.css"
-# app_include_js = "/assets/climoro_onboarding/js/climoro_onboarding.js"
+app_include_js = [
+	"/assets/climoro_onboarding/js/theme_logo.js",
+]
 
 # include js, css files in header of web template
 # web_include_css = "/assets/climoro_onboarding/css/climoro_onboarding.css"

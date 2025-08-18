@@ -882,6 +882,30 @@ function addCustomCSS() {
 					color: #6c757d;
 					margin-right: 4px;
 				}
+				/* Desk form text visibility fixes (scoped) */
+				.form-layout select,
+				.form-layout .control-input,
+				.form-layout .control-value,
+				.form-layout .awesomplete input {
+					color: inherit !important;
+					opacity: 1 !important;
+				}
+				.form-layout select option { color: initial !important; }
+				/* Dark theme-friendly text color fallback */
+				[data-theme="dark"] .form-layout select,
+				[data-theme="dark"] .form-layout .control-input,
+				[data-theme="dark"] .form-layout .awesomplete input {
+					color: #e5e7eb !important; /* tailwind zinc-200 */
+				}
+				/* Desk-only: neutralize any stray checkbox pseudo from other pages */
+				.form-layout input[type="checkbox"]::after { content: none !important; }
+				.form-layout input[type="checkbox"] {
+					appearance: auto !important;
+					-webkit-appearance: checkbox !important;
+					-moz-appearance: checkbox !important;
+					background-image: none !important;
+					box-shadow: none !important;
+				}
 			</style>
 		`;
 		document.head.insertAdjacentHTML('beforeend', css);

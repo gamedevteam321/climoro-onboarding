@@ -26,22 +26,22 @@
             <div class="onboarding-progress-line"></div>
             <div class="onboarding-progress-step" data-step="3">
                 <div class="onboarding-step-number">3</div>
-                <div class="onboarding-step-label">Units & Users</div>
+                <div class="onboarding-step-label">GHG Accounting</div>
             </div>
             <div class="onboarding-progress-line"></div>
             <div class="onboarding-progress-step" data-step="4">
                 <div class="onboarding-step-number">4</div>
-                <div class="onboarding-step-label">GHG Accounting</div>
+                <div class="onboarding-step-label">Reduction Form</div>
             </div>
             <div class="onboarding-progress-line"></div>
             <div class="onboarding-progress-step" data-step="5">
                 <div class="onboarding-step-number">5</div>
-                <div class="onboarding-step-label">Reduction Form</div>
+                <div class="onboarding-step-label">Method of Calculation</div>
             </div>
             <div class="onboarding-progress-line"></div>
             <div class="onboarding-progress-step" data-step="6">
                 <div class="onboarding-step-number">6</div>
-                <div class="onboarding-step-label">Method of Calculation</div>
+                <div class="onboarding-step-label">Units & Users</div>
             </div>
         </div>
     </div>
@@ -169,8 +169,8 @@
                 </div>
             </div>
 
-            <!-- Step 3: Units & Users -->
-            <div class="form-step" id="step-3">
+            <!-- Step 6: Units & Users -->
+            <div class="form-step" id="step-6">
                 <h2>Units & Users</h2>
                 
                 <!-- Units Section -->
@@ -183,8 +183,8 @@
                 </div>
             </div>
 
-            <!-- Step 4: GHG Accounting -->
-            <div class="form-step" id="step-4">
+            <!-- Step 3: GHG Accounting -->
+            <div class="form-step" id="step-3">
                 <h2>GHG Accounting</h2>
                 
                 <div class="form-group">
@@ -314,9 +314,9 @@
                 </div>
             </div>
 
-            <!-- Step 5: Reduction Form -->
-            <div class="form-step" id="step-5">
-                <h2>Reduction Form (Step 5)</h2>
+            <!-- Step 4: Reduction Form -->
+            <div class="form-step" id="step-4">
+                <h2>Reduction Form (Step 4)</h2>
                 
                 <!-- Section A: Emissions Inventory Setup -->
                 <div class="section-container">
@@ -825,8 +825,8 @@
                 </div>
             </div>
 
-            <!-- Step 6: Method of Calculation -->
-            <div class="form-step" id="step-6">
+            <!-- Step 5: Method of Calculation -->
+            <div class="form-step" id="step-5">
                 <h2>Method of Calculation</h2>
                 
                 <div class="form-group">
@@ -1021,8 +1021,8 @@ body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 
-/* Global checkbox reset to prevent any default styling */
-* input[type="checkbox"] {
+/* Scoped checkbox styling to avoid leaking into Desk */
+.onboarding-container input[type="checkbox"] {
     -webkit-appearance: none !important;
     -moz-appearance: none !important;
     -ms-appearance: none !important;
@@ -1064,7 +1064,7 @@ body {
 }
 
 /* Checked state - consistent purple color */
-* input[type="checkbox"]:checked {
+.onboarding-container input[type="checkbox"]:checked {
     background-color: var(--primary-color) !important;
     border-color: var(--primary-color) !important;
     background-image: none !important;
@@ -1084,7 +1084,7 @@ body {
 }
 
 /* Custom checkmark - centered and consistent */
-* input[type="checkbox"]:checked::after {
+.onboarding-container input[type="checkbox"]:checked::after {
     content: '✓' !important;
     position: absolute !important;
     top: 50% !important;
@@ -1110,12 +1110,12 @@ body {
 }
 
 /* Hover state */
-* input[type="checkbox"]:hover {
+.onboarding-container input[type="checkbox"]:hover {
     border-color: var(--primary-color) !important;
 }
 
 /* Focus state */
-* input[type="checkbox"]:focus {
+.onboarding-container input[type="checkbox"]:focus {
     outline: none !important;
     box-shadow: 0 0 0 3px rgba(94, 100, 255, 0.1) !important;
 }
@@ -1878,9 +1878,8 @@ body {
 }
 
 /* Override any Frappe default checkbox styles */
-.onboarding-form input[type="checkbox"],
-.form-container input[type="checkbox"],
-.checkbox-group input[type="checkbox"] {
+.onboarding-container .onboarding-form input[type="checkbox"],
+.onboarding-container .checkbox-group input[type="checkbox"] {
     appearance: none !important;
     -webkit-appearance: none !important;
     -moz-appearance: none !important;
@@ -1914,9 +1913,8 @@ body {
     content: none !important;
 }
 
-.onboarding-form input[type="checkbox"]:checked,
-.form-container input[type="checkbox"]:checked,
-.checkbox-group input[type="checkbox"]:checked {
+.onboarding-container .onboarding-form input[type="checkbox"]:checked,
+.onboarding-container .checkbox-group input[type="checkbox"]:checked {
     background-color: var(--primary-color) !important;
     border-color: var(--primary-color) !important;
     position: relative !important;
@@ -1933,9 +1931,8 @@ body {
     box-shadow: none !important;
 }
 
-.onboarding-form input[type="checkbox"]:checked::after,
-.form-container input[type="checkbox"]:checked::after,
-.checkbox-group input[type="checkbox"]:checked::after {
+.onboarding-container .onboarding-form input[type="checkbox"]:checked::after,
+.onboarding-container .checkbox-group input[type="checkbox"]:checked::after {
     content: '✓' !important;
     position: absolute !important;
     top: 50% !important;
@@ -1982,7 +1979,7 @@ body {
     background-color: rgba(94, 100, 255, 0.05);
 }
 
-.checkbox-label input[type="checkbox"] {
+.onboarding-container .checkbox-label input[type="checkbox"] {
     width: 18px !important;
     height: 18px !important;
     margin: 0 !important;
@@ -2003,13 +2000,13 @@ body {
     vertical-align: middle !important;
 }
 
-.checkbox-label input[type="checkbox"]:checked {
+.onboarding-container .checkbox-label input[type="checkbox"]:checked {
     background-color: var(--primary-color) !important;
     border-color: var(--primary-color) !important;
     position: relative !important;
 }
 
-.checkbox-label input[type="checkbox"]:checked::after {
+.onboarding-container .checkbox-label input[type="checkbox"]:checked::after {
     content: '✓' !important;
     position: absolute !important;
     top: 50% !important;
@@ -2028,18 +2025,18 @@ body {
     padding: 0 !important;
 }
 
-.checkbox-label input[type="checkbox"]:focus {
+.onboarding-container .checkbox-label input[type="checkbox"]:focus {
     outline: none;
     box-shadow: 0 0 0 3px rgba(94, 100, 255, 0.1);
 }
 
-.checkbox-label input[type="checkbox"]:hover {
+.onboarding-container .checkbox-label input[type="checkbox"]:hover {
     border-color: var(--primary-color);
 }
 
 /* Section headings for checkbox groups */
-.checkbox-group h4,
-.checkbox-group h5 {
+.onboarding-container .checkbox-group h4,
+.onboarding-container .checkbox-group h5 {
     margin: 0 0 15px 0;
     color: var(--dark-color);
     font-weight: 600;
@@ -2048,7 +2045,7 @@ body {
     padding-bottom: 8px;
 }
 
-.checkbox-group h5 {
+.onboarding-container .checkbox-group h5 {
     font-size: 14px;
     margin-bottom: 12px;
 }
@@ -2073,20 +2070,20 @@ body {
     margin-bottom: 0;
 }
 
-.checkbox-group:last-child {
+.onboarding-container .checkbox-group:last-child {
     margin-bottom: 0;
 }
 
 /* Ensure proper alignment of checkbox text */
-.checkbox-label span,
-.checkbox-label {
+.onboarding-container .checkbox-label span,
+.onboarding-container .checkbox-label {
     vertical-align: middle !important;
     display: inline-flex !important;
     align-items: center !important;
 }
 
 /* Fix any potential alignment issues */
-.checkbox-label input[type="checkbox"] {
+.onboarding-container .checkbox-label input[type="checkbox"] {
     margin-right: 0 !important;
     margin-left: 0 !important;
 }
@@ -3179,7 +3176,7 @@ class OnboardingForm {
                     if (fileField) fileField.setAttribute('data-file-url', savedData.letter_of_authorisation);
                 }
                 
-                // Load GHG Accounting fields (Step 4)
+                // Load GHG Accounting fields (Step 3)
                 if (savedData.purpose_of_reporting) {
                     const purposeField = document.getElementById('purpose_of_reporting');
                     if (purposeField) purposeField.value = savedData.purpose_of_reporting;
@@ -3313,7 +3310,7 @@ class OnboardingForm {
                     if (otherField) otherField.checked = true;
                 }
                 
-                        // Load Step 6: Method of Calculation data
+                        // Load Step 5: Method of Calculation data
         if (savedData.method_of_calculation_option_a) {
             const optionAField = document.querySelector('input[name="method_of_calculation_option_a"]');
             if (optionAField) optionAField.checked = true;
@@ -4676,46 +4673,8 @@ class OnboardingForm {
             stepData.website = document.getElementById('website').value;
             stepData.letter_of_authorisation = document.getElementById('letter_of_authorisation').getAttribute('data-file-url') || '';
         } else if (targetStep === 3) {
-            // Step 3: Units & Users
-            stepData.units = [];
-            stepData.assigned_users = [];
-            
-            // Collect units data
-            const units = this.unitsContainer.querySelectorAll('.unit-container');
-            units.forEach(unit => {
-                const unitData = {
-                    type_of_unit: unit.querySelector('.unit-type').value,
-                    name_of_unit: unit.querySelector('.unit-name').value,
-                    size_of_unit: parseFloat(unit.querySelector('.unit-size').value),
-                    address: unit.querySelector('.unit-address').value,
-                    gps_coordinates: unit.querySelector('.unit-gps-coordinates').value,
-                    location_name: unit.querySelector('.unit-location-name').value,
-                    gst: unit.querySelector('.unit-gst').value,
-                    phone_number: unit.querySelector('.unit-phone').value,
-                    position: unit.querySelector('.unit-position').value
-                };
-                
-                stepData.units.push(unitData);
-            });
-            
-            // Collect users data from within units
-            units.forEach(unit => {
-                const unitName = unit.querySelector('.unit-name').value;
-                const usersInUnit = unit.querySelectorAll('.user-container');
-                usersInUnit.forEach(user => {
-                    const userData = {
-                        assigned_unit: unitName, // Use unit name as reference
-                        email: user.querySelector('.user-email').value,
-                        first_name: user.querySelector('.user-first-name').value,
-                        user_role: user.querySelector('.user-role').value
-                    };
-                    stepData.assigned_users.push(userData);
-                });
-            });
-        } else if (targetStep === 4) {
-            // Step 4: GHG Accounting
+            // Step 3: GHG Accounting
             stepData.purpose_of_reporting = this.getMultiSelectValue('purpose_of_reporting');
-            
             // Individual gas checkboxes
             stepData.gases_to_report_co2 = this.getCheckboxValue('gases_to_report_co2');
             stepData.gases_to_report_ch4 = this.getCheckboxValue('gases_to_report_ch4');
@@ -4724,37 +4683,30 @@ class OnboardingForm {
             stepData.gases_to_report_pfcs = this.getCheckboxValue('gases_to_report_pfcs');
             stepData.gases_to_report_sf6 = this.getCheckboxValue('gases_to_report_sf6');
             stepData.gases_to_report_nf3 = this.getCheckboxValue('gases_to_report_nf3');
-            
             // Individual scope checkboxes
             stepData.scopes_to_report_scope1 = this.getCheckboxValue('scopes_to_report_scope1');
             stepData.scopes_to_report_scope2 = this.getCheckboxValue('scopes_to_report_scope2');
             stepData.scopes_to_report_scope3 = this.getCheckboxValue('scopes_to_report_scope3');
             stepData.scopes_to_report_reductions = this.getCheckboxValue('scopes_to_report_reductions');
-            
-            // Individual scope 1 options
+            // Scope options
             stepData.scope_1_options_process = this.getCheckboxValue('scope_1_options_process');
             stepData.scope_1_options_stationary = this.getCheckboxValue('scope_1_options_stationary');
             stepData.scope_1_options_mobile = this.getCheckboxValue('scope_1_options_mobile');
             stepData.scope_1_options_fugitive = this.getCheckboxValue('scope_1_options_fugitive');
-            
-            // Individual scope 2 options
             stepData.scope_2_options_electricity = this.getCheckboxValue('scope_2_options_electricity');
             stepData.scope_2_options_heating = this.getCheckboxValue('scope_2_options_heating');
             stepData.scope_2_options_cooling = this.getCheckboxValue('scope_2_options_cooling');
-            
-            // Individual scope 3 options
             stepData.scope_3_options_upstream = this.getCheckboxValue('scope_3_options_upstream');
             stepData.scope_3_options_downstream = this.getCheckboxValue('scope_3_options_downstream');
-            
-            // Individual reduction options
+            // Reduction options
             stepData.reduction_options_energy_efficiency = this.getCheckboxValue('reduction_options_energy_efficiency');
             stepData.reduction_options_renewable_energy = this.getCheckboxValue('reduction_options_renewable_energy');
             stepData.reduction_options_process_optimization = this.getCheckboxValue('reduction_options_process_optimization');
             stepData.reduction_options_waste_management = this.getCheckboxValue('reduction_options_waste_management');
             stepData.reduction_options_transportation = this.getCheckboxValue('reduction_options_transportation');
             stepData.reduction_options_other = this.getCheckboxValue('reduction_options_other');
-        } else if (targetStep === 5) {
-            // Step 5: Reduction Form - Section A: Emissions Inventory Setup
+        } else if (targetStep === 4) {
+            // Step 4: Reduction Form - Section A: Emissions Inventory Setup
             console.log('🔍 Collecting Step 5 data...');
             console.log('🔍 base_year element:', document.getElementById('base_year'));
             console.log('🔍 base_year value:', document.getElementById('base_year')?.value);
@@ -4872,8 +4824,8 @@ class OnboardingForm {
             console.log('  progress_communication_sustainability_report:', stepData.progress_communication_sustainability_report);
             console.log('  progress_communication_cdp_disclosure:', stepData.progress_communication_cdp_disclosure);
             console.log('  progress_communication_sbti_registry:', stepData.progress_communication_sbti_registry);
-        } else if (targetStep === 6) {
-            // Step 6: Method of Calculation
+        } else if (targetStep === 5) {
+            // Step 5: Method of Calculation
             stepData.method_of_calculation_option_a = this.getCheckboxValue('method_of_calculation_option_a');
             stepData.method_of_calculation_option_b = this.getCheckboxValue('method_of_calculation_option_b');
             stepData.method_of_calculation_option_c = this.getCheckboxValue('method_of_calculation_option_c');
@@ -4881,6 +4833,43 @@ class OnboardingForm {
             stepData.method_of_calculation_option_e = this.getCheckboxValue('method_of_calculation_option_e');
             stepData.method_of_calculation_option_f = this.getCheckboxValue('method_of_calculation_option_f');
             stepData.method_of_calculation_option_g = this.getCheckboxValue('method_of_calculation_option_g');
+        } else if (targetStep === 6) {
+            // Step 6: Units & Users
+            stepData.units = [];
+            stepData.assigned_users = [];
+            
+            // Collect units data
+            const units = this.unitsContainer.querySelectorAll('.unit-container');
+            units.forEach(unit => {
+                const unitData = {
+                    type_of_unit: unit.querySelector('.unit-type').value,
+                    name_of_unit: unit.querySelector('.unit-name').value,
+                    size_of_unit: parseFloat(unit.querySelector('.unit-size').value),
+                    address: unit.querySelector('.unit-address').value,
+                    gps_coordinates: unit.querySelector('.unit-gps-coordinates').value,
+                    location_name: unit.querySelector('.unit-location-name').value,
+                    gst: unit.querySelector('.unit-gst').value,
+                    phone_number: unit.querySelector('.unit-phone').value,
+                    position: unit.querySelector('.unit-position').value
+                };
+                
+                stepData.units.push(unitData);
+            });
+            
+            // Collect users data from within units
+            units.forEach(unit => {
+                const unitName = unit.querySelector('.unit-name').value;
+                const usersInUnit = unit.querySelectorAll('.user-container');
+                usersInUnit.forEach(user => {
+                    const userData = {
+                        assigned_unit: unitName, // Use unit name as reference
+                        email: user.querySelector('.user-email').value,
+                        first_name: user.querySelector('.user-first-name').value,
+                        user_role: user.querySelector('.user-role').value
+                    };
+                    stepData.assigned_users.push(userData);
+                });
+            });
         }
         
         stepData.step_number = targetStep;
@@ -5161,7 +5150,7 @@ class OnboardingForm {
             progress_communication_cdp_disclosure: this.getCheckboxValue('progress_communication_cdp_disclosure'),
             progress_communication_sbti_registry: this.getCheckboxValue('progress_communication_sbti_registry'),
             
-                    // Step 6: Method of Calculation
+                    // Step 5: Method of Calculation
         method_of_calculation_option_a: this.getCheckboxValue('method_of_calculation_option_a'),
         method_of_calculation_option_b: this.getCheckboxValue('method_of_calculation_option_b'),
         method_of_calculation_option_c: this.getCheckboxValue('method_of_calculation_option_c'),
@@ -5689,7 +5678,7 @@ class OnboardingForm {
         }
         
         // Also check special validation for method of calculation - at least one option must be selected
-        if (this.currentStep === 6) {
+        if (this.currentStep === 5) {
             const methodOptions = [
                 'method_of_calculation_option_a',
                 'method_of_calculation_option_b', 
