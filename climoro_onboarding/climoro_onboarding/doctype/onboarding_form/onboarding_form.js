@@ -46,6 +46,9 @@ frappe.ui.form.on('Onboarding Form', {
 		// Initialize GHG Accounting dynamic behavior
 		updateStep5Visibility(frm);
 		
+		// Initialize industry-specific field visibility
+		updateIndustrySpecificFields(frm);
+		
 		// Temporarily disable map functionality to avoid errors
 		// const gpsField = frm.get_field('gps_coordinates');
 		// if (gpsField && gpsField.$wrapper) {
@@ -211,6 +214,9 @@ frappe.ui.form.on('Onboarding Form', {
 	sub_industry_type: function(frm) {
 		console.log('🏭 Sub-industry type changed to:', frm.doc.sub_industry_type);
 		console.log('🏭 Sub-industry type doc value:', frm.doc.sub_industry_type);
+		
+		// Update field visibility based on sub-industry type
+		updateIndustrySpecificFields(frm);
 	},
 	
 	units_add: function(frm, cdt, cdn) {
@@ -1189,4 +1195,68 @@ function updateStep5Visibility(frm) {
 	reductionFields.forEach(f => safeToggle(f.n, sr, true, !!f.section));
 	
 	console.log('🌱 Step 5 visibility updated based on scopes:', selected_scopes);
+}
+
+// Function to update industry-specific field visibility
+function updateIndustrySpecificFields(frm) {
+	console.log('🏭 updateIndustrySpecificFields called');
+	
+	const subIndustryType = frm.doc.sub_industry_type;
+	console.log('🏭 Current sub-industry type:', subIndustryType);
+	
+	// Define industry types that should show Process option in Scope 1
+	// Based on actual sub-industry options from the system
+	const processIndustries = [
+		'Cement & Lime Production',
+		'Iron & Steel', 
+		'Aluminum',
+		'Chemicals & Fertilizers',  // Covers HFCs, PFCs, adipic acid, nitric acid, ammonia
+		'Paper & Pulp',
+		'Electronics & Electrical Equipment'  // Covers semiconductor
+	];
+	
+	// Helper function to safely toggle field visibility
+	function safeToggle(fieldname, should_show, clear_when_hide = false) {
+		const field = frm.get_field(fieldname);
+		if (!field) {
+			console.log('⚪ Skipping missing field:', fieldname);
+			return;
+		}
+		frm.set_df_property(fieldname, 'hidden', should_show ? 0 : 1);
+		if (!should_show && clear_when_hide) {
+			try { 
+				frm.set_value(fieldname, 0); 
+			} catch (e) { 
+				console.log('Error clearing field:', fieldname, e);
+			}
+		}
+		console.log(should_show ? '🌱 Showing field:' : '🌱 Hiding field:', fieldname);
+	}
+	
+	// Check if current sub-industry should show Process option
+	const shouldShowProcess = subIndustryType && 
+		processIndustries.includes(subIndustryType);
+	
+	console.log('🏭 Should show process option:', shouldShowProcess);
+	
+	// Show/hide Process option in Scope 1
+	safeToggle('scope_1_options_process', shouldShowProcess, true);
+	
+	// Show/hide NF3 gas option - only for Electronics & Electrical Equipment (semiconductor)
+	// Note: In real implementation, you might want to add a more specific sub-category
+	// for semiconductor vs general electronics
+	const shouldShowNF3 = subIndustryType === 'Electronics & Electrical Equipment';
+	
+	console.log('🏭 Should show NF3:', shouldShowNF3);
+	safeToggle('gases_to_report_nf3', shouldShowNF3, true);
+	
+	// If process option is hidden and was selected, clear it
+	if (!shouldShowProcess && frm.doc.scope_1_options_process) {
+		frm.set_value('scope_1_options_process', 0);
+	}
+	
+	// If NF3 is hidden and was selected, clear it
+	if (!shouldShowNF3 && frm.doc.gases_to_report_nf3) {
+		frm.set_value('gases_to_report_nf3', 0);
+	}
 }

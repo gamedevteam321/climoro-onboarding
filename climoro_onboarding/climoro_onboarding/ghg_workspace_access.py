@@ -447,7 +447,9 @@ def assign_roles_for_company_based_on_onboarding(company_name: str) -> None:
 	)
 	for u in users:
 		user_doc = frappe.get_doc("User", u["name"])
-		_sync_user_scope_roles(user_doc, selected_roles)
+		# Apply unit-based role filtering for non-Super Admin users
+		user_selected_roles = _filter_roles_by_unit_assignment(user_doc, selected_roles, onboarding)
+		_sync_user_scope_roles(user_doc, user_selected_roles)
 		_unblock_modules_for_user(user_doc, modules_to_unblock)
 
 	# Normalize global workspace visibility; rely on role gating
@@ -562,6 +564,54 @@ def _hide_home_workspace_for_all():
 	doc.is_hidden = 1
 	doc.set("roles", [])
 	doc.save(ignore_permissions=True)
+
+
+def _filter_roles_by_unit_assignment(user_doc, selected_roles: Set[str], onboarding_doc) -> Set[str]:
+	"""Filter roles based on user's unit assignment and unit type.
+	Super Admins get all selected roles, others get filtered based on their unit type."""
+	
+	# Check if user is Super Admin - they get everything
+	user_roles = {row.role for row in (user_doc.roles or [])}
+	if "Super Admin" in user_roles:
+		return selected_roles
+	
+	# For non-Super Admin users, filter based on unit assignment
+	user_email = user_doc.email
+	user_unit_type = None
+	
+	# Find the user's unit assignment in the onboarding form
+	if hasattr(onboarding_doc, 'assigned_users') and onboarding_doc.assigned_users:
+		for assigned_user in onboarding_doc.assigned_users:
+			if assigned_user.email == user_email:
+				# Find the corresponding unit to get the unit type
+				unit_name = assigned_user.assigned_unit
+				if hasattr(onboarding_doc, 'units') and onboarding_doc.units:
+					for unit in onboarding_doc.units:
+						if unit.name_of_unit == unit_name:
+							user_unit_type = getattr(unit, 'unit_type', None)
+							break
+				break
+	
+	if not user_unit_type:
+		# If no unit assignment found, return basic roles (no scope-specific restrictions)
+		return {role for role in selected_roles if not role.startswith('Scope 1')}
+	
+	# Define unit-type specific role filtering
+	filtered_roles = set(selected_roles)
+	
+	# Process-specific filtering: Only Factory units can access Process scope
+	if user_unit_type.lower() != 'factory':
+		# Remove Scope 1 Process Access for non-factory units
+		filtered_roles.discard("Scope 1 Process Access")
+		frappe.logger().info(f"Filtered out Scope 1 Process Access for {user_email} (unit type: {user_unit_type})")
+	
+	# Future: Add more unit-type specific filtering here
+	# Example:
+	# if user_unit_type.lower() == 'office':
+	#     # Office units might not need certain industrial scopes
+	#     filtered_roles.discard("Scope 1 Stationary Access")
+	
+	return filtered_roles
 
 
 def sync_onboarding_selection(doc, method=None):

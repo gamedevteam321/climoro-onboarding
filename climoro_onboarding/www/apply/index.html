@@ -2466,6 +2466,16 @@ body {
         display: none;
     }
 }
+
+/* Force hide industry-specific fields */
+.force-hidden {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    height: 0 !important;
+    overflow: hidden !important;
+    pointer-events: none !important;
+}
 </style>
 {% endblock %}
 
@@ -6482,6 +6492,11 @@ function updateSubIndustryOptions() {
         subIndustrySelect.disabled = false;
         console.log(`✅ Updated sub-industry options for: ${selectedIndustry}`);
         console.log('Available sub-industry options:', industrySubTypes[selectedIndustry]);
+        
+        // Update industry-specific field visibility after updating options
+        setTimeout(() => {
+            updateIndustrySpecificFields();
+        }, 100);
     } else {
         // Disable the sub-industry select if no industry is selected
         subIndustrySelect.disabled = true;
@@ -6490,13 +6505,131 @@ function updateSubIndustryOptions() {
     }
 }
 
+// Function to update industry-specific field visibility
+function updateIndustrySpecificFields() {
+    console.log('🏭 ============ updateIndustrySpecificFields called ============');
+    
+    const subIndustrySelect = document.getElementById('sub_industry_type');
+    const subIndustryType = subIndustrySelect ? subIndustrySelect.value : '';
+    
+    console.log('🏭 Sub-industry select element:', subIndustrySelect);
+    console.log('🏭 Current sub-industry type:', `"${subIndustryType}"`);
+    
+    // Define exact sub-industry types that should show Process option in Scope 1
+    // Based on your requirements: cement, iron & steel, aluminium, hfcs and pfcs, 
+    // semiconductor, paper and pulp, adipic acid, nitric acid, ammonia, wood, lime
+    const processIndustries = [
+        'Cement & Lime Production',  // covers cement + lime
+        'Iron & Steel',              // covers iron & steel
+        'Aluminum',                  // covers aluminium  
+        'Chemicals & Fertilizers',   // covers HFCs, PFCs, adipic acid, nitric acid, ammonia
+        'Paper & Pulp',              // covers paper and pulp
+        'Electronics & Electrical Equipment'  // covers semiconductor
+    ];
+    
+    // For semiconductor industries that should show NF3
+    const nf3Industries = [
+        'Electronics & Electrical Equipment'  // covers semiconductor
+    ];
+    
+    // Helper function to safely toggle field visibility
+    function safeToggle(fieldName, shouldShow, clearWhenHide = false) {
+        let fieldContainer = null;
+        let field = null;
+        
+        console.log(`🔧 safeToggle called for "${fieldName}", shouldShow: ${shouldShow}`);
+        
+        // Handle specific field targeting
+        if (fieldName === 'gases_to_report_nf3') {
+            // NF3 field has a specific ID
+            fieldContainer = document.getElementById('nf3-checkbox');
+            field = document.querySelector('input[name="gases_to_report_nf3"]');
+            console.log('🔧 NF3 field container:', fieldContainer);
+            console.log('🔧 NF3 input field:', field);
+        } else if (fieldName === 'scope_1_options_process') {
+            // Process field - find by name and get its label container
+            field = document.querySelector('input[name="scope_1_options_process"]');
+            fieldContainer = field ? field.closest('label') : null;
+            console.log('🔧 Process input field:', field);
+            console.log('🔧 Process field container:', fieldContainer);
+        }
+        
+        if (!fieldContainer) {
+            console.error('❌ Field container not found for:', fieldName);
+            return;
+        }
+        
+        console.log(`🔧 Before toggle - Container display: "${fieldContainer.style.display}"`);
+        
+        if (shouldShow) {
+            fieldContainer.style.setProperty('display', '', '');
+            fieldContainer.style.setProperty('visibility', '', '');
+            fieldContainer.classList.remove('force-hidden');
+            console.log('✅ Field shown:', fieldName);
+        } else {
+            fieldContainer.style.setProperty('display', 'none', 'important');
+            fieldContainer.style.setProperty('visibility', 'hidden', 'important');
+            fieldContainer.classList.add('force-hidden');
+            console.log('❌ Field hidden:', fieldName);
+            if (clearWhenHide && field && field.type === 'checkbox') {
+                field.checked = false;
+                console.log('🔄 Field cleared:', fieldName);
+            }
+        }
+        
+        console.log(`🔧 After toggle - Container display: "${fieldContainer.style.display}"`);
+    }
+    
+    // Simple check: does the selected sub-industry match our specific list?
+    const shouldShowProcess = subIndustryType && processIndustries.includes(subIndustryType);
+    const shouldShowNF3 = subIndustryType && nf3Industries.includes(subIndustryType);
+    
+    console.log('🏭 Selected sub-industry:', subIndustryType);
+    console.log('🏭 Should show process option:', shouldShowProcess);
+    console.log('🏭 Should show NF3:', shouldShowNF3);
+    
+    // Show/hide fields based on exact matches
+    safeToggle('scope_1_options_process', shouldShowProcess, true);
+    safeToggle('gases_to_report_nf3', shouldShowNF3, true);
+}
+
 // Initialize sub-industry select as disabled on page load
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('🔧 DOM Content Loaded - setting up industry field logic');
+    
     const subIndustrySelect = document.getElementById('sub_industry_type');
     if (subIndustrySelect) {
         subIndustrySelect.disabled = true;
+        
+        // Add event listener for sub-industry changes
+        subIndustrySelect.addEventListener('change', function() {
+            console.log('🏭 Sub-industry changed to:', this.value);
+            setTimeout(() => {
+                updateIndustrySpecificFields();
+            }, 100);
+        });
+    }
+    
+    // Call immediately and also with delays to catch different loading states
+    updateIndustrySpecificFields();
+    setTimeout(updateIndustrySpecificFields, 500);
+    setTimeout(updateIndustrySpecificFields, 1000);
+    setTimeout(updateIndustrySpecificFields, 2000);
+});
+
+// Also try to run when the form steps change
+document.addEventListener('click', function(e) {
+    // If someone clicks Next/Previous buttons, rerun the field visibility
+    if (e.target.matches('.btn-next, .btn-previous, .nav-btn')) {
+        setTimeout(updateIndustrySpecificFields, 200);
     }
 });
+
+// Force run the function manually for debugging
+window.forceUpdateFields = function() {
+    console.log('🔧 Manually forcing field update');
+    updateIndustrySpecificFields();
+};
 
     // Add acknowledgment page HTML
     document.addEventListener('DOMContentLoaded', function() {
