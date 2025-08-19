@@ -26,9 +26,9 @@ app_license = "mit"
 
 # include js, css files in header of desk.html
 # app_include_css = "/assets/climoro_onboarding/css/climoro_onboarding.css"
-# app_include_js = [
-# 	"/assets/climoro_onboarding/js/theme_logo.js",
-# ]
+app_include_js = [
+    "/assets/climoro_onboarding/js/workspace_filter.js",
+]
 
 # include js, css files in header of web template
 # web_include_css = "/assets/climoro_onboarding/css/climoro_onboarding.css"
@@ -145,11 +145,17 @@ doctype_js = {
 doc_events = {
     "User": {
         # After insert: auto-assign roles based on company's onboarding selections
-        "after_insert": "climoro_onboarding.climoro_onboarding.ghg_workspace_access.assign_roles_to_new_user"
+        "after_insert": [
+            "climoro_onboarding.climoro_onboarding.ghg_workspace_access.assign_roles_to_new_user",
+            "climoro_onboarding.climoro_onboarding.enhanced_workspace_access.assign_roles_to_new_user"
+        ]
     },
     "Onboarding Form": {
         # Keep scopes/workspaces in sync if the approved form is edited later
-        "on_update": "climoro_onboarding.climoro_onboarding.ghg_workspace_access.sync_onboarding_selection"
+        "on_update": [
+            "climoro_onboarding.climoro_onboarding.ghg_workspace_access.sync_onboarding_selection",
+            "climoro_onboarding.climoro_onboarding.enhanced_workspace_access.sync_onboarding_selection"
+        ]
     }
 }
 
@@ -192,7 +198,24 @@ whitelisted_methods = [
     "climoro_onboarding.www.apply.api.send_verification_email",
     "climoro_onboarding.www.apply.api.verify_email",
     "climoro_onboarding.www.apply.api.get_session_data",
-    "climoro_onboarding.www.apply.api.test_email_verification_flow"
+    "climoro_onboarding.www.apply.api.test_email_verification_flow",
+    # Enhanced workspace access methods
+    "climoro_onboarding.climoro_onboarding.enhanced_workspace_access.add_new_role",
+    "climoro_onboarding.climoro_onboarding.enhanced_workspace_access.add_scope_mapping",
+    "climoro_onboarding.climoro_onboarding.enhanced_workspace_access.get_available_roles",
+    "climoro_onboarding.climoro_onboarding.enhanced_workspace_access.get_role_mappings",
+    # Role management utility methods
+    "climoro_onboarding.climoro_onboarding.role_management_utils.add_custom_role",
+    "climoro_onboarding.climoro_onboarding.role_management_utils.add_workspace_scope",
+    "climoro_onboarding.climoro_onboarding.role_management_utils.update_assigned_user_roles",
+    "climoro_onboarding.climoro_onboarding.role_management_utils.get_role_hierarchy",
+    "climoro_onboarding.climoro_onboarding.role_management_utils.get_scope_mappings",
+    "climoro_onboarding.climoro_onboarding.role_management_utils.validate_role_configuration",
+    # Example role setup methods
+    "climoro_onboarding.climoro_onboarding.role_management_utils.add_quality_manager_role",
+    "climoro_onboarding.climoro_onboarding.role_management_utils.add_scope_4_access",
+    "climoro_onboarding.climoro_onboarding.role_management_utils.add_compliance_officer_role",
+    "climoro_onboarding.climoro_onboarding.role_management_utils.setup_extended_roles"
 ]
 
 # Overriding Methods

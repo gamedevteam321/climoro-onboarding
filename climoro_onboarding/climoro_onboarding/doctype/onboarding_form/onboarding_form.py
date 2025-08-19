@@ -5,6 +5,16 @@ from frappe.model.document import Document
 from datetime import datetime
 
 class OnboardingForm(Document):
+    def on_update(self):
+        """Whenever the form is updated, if it's Approved, resync roles/visibility
+        for users of this company so changes to scopes/sub-options take effect.
+        """
+        try:
+            if getattr(self, "status", "") == "Approved" and getattr(self, "company_name", None):
+                from climoro_onboarding.climoro_onboarding.ghg_workspace_access import assign_roles_for_company_based_on_onboarding
+                assign_roles_for_company_based_on_onboarding(self.company_name)
+        except Exception as e:
+            frappe.log_error(f"Error syncing onboarding selection on update for {self.name}: {str(e)}")
     def before_insert(self):
         """Set creation timestamp"""
         self.created_at = datetime.now()
