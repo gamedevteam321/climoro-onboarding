@@ -464,8 +464,8 @@ class GHGReport(Document):
 
             toc_css = (
                 ".toc-table{width:100%;border-collapse:collapse;}"
-                ".toc-table td{border-bottom:1px solid #e6e6e6;padding:8px 0;}"
-                ".toc-title{text-align:left;padding-left:10px;}"
+                ".toc-table td{border-bottom:1px solid #e6e6e6;padding:8px;}"
+                ".toc-title{text-align:left;padding-left:20px;}"
                 ".toc-page{text-align:center;width:3em;}"
             )
 

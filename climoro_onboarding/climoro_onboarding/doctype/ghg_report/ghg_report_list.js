@@ -14,6 +14,17 @@ function addAutoBtn(listview) {
         .addClass('btn-auto-download-ghg btn-primary');
 }
 
+function showLoading(message){
+    const msg = message || __('Generating report...');
+    if (!window.__ghg_loading_dialog) {
+        window.__ghg_loading_dialog = new frappe.ui.Dialog({ title: __('Please wait'), fields: [{ fieldtype: 'HTML', fieldname: 'content' }] });
+    }
+    window.__ghg_loading_dialog.set_value('content', `<div style="display:flex;gap:12px;align-items:center;"><span class="spinner-border" role="status" aria-hidden="true"></span><div>${frappe.utils.escape_html(msg)}</div></div>`);
+    window.__ghg_loading_dialog.show();
+}
+
+function hideLoading(){ if (window.__ghg_loading_dialog) window.__ghg_loading_dialog.hide(); }
+
 function openAutoDownloadDialog(listview){
     const d = new frappe.ui.Dialog({
         title: __('Generate GHG Report PDF'),
@@ -24,10 +35,12 @@ function openAutoDownloadDialog(listview){
         primary_action_label: __('Generate'),
         primary_action: (values) => {
             d.hide();
+            showLoading(__('Generating report...'));
             frappe.call({
                 method: 'climoro_onboarding.climoro_onboarding.doctype.ghg_report.ghg_report.auto_create_and_generate_pdf',
                 args: values || {},
                 callback: function(r) {
+                    hideLoading();
                     if (r.message && r.message.success && r.message.file_url) {
                         const url = r.message.file_url;
                         const link = document.createElement('a');
@@ -40,6 +53,7 @@ function openAutoDownloadDialog(listview){
                     }
                 },
                 error: function(err){
+                    hideLoading();
                     console.error(err);
                     frappe.msgprint(__('Error generating PDF'));
                 }

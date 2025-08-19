@@ -49,11 +49,11 @@
             width: 100%;
             border-collapse: collapse;
             font-size: 12pt;
-            border: 3px solid #000;
+            border: 1px solid #000;
         }
         .meta-table th,
         .meta-table td {
-            border: 3px solid #000;
+            border: 1px solid #000;
             padding: 14px 16px;
             vertical-align: middle;
         }
@@ -608,19 +608,11 @@
                     {% endif %}
                 </div>
 
-                <!-- Appendix B: Verification Statement -->
-                <div id="appendix-b" class="field-group">
-                    <div class="field-label">Appendix B: Verification Statement</div>
-                    {% if doc.appendix_verification %}
-                    <div class="field-value">{{ doc.appendix_verification }}</div>
-                    {% else %}
-                    <div class="field-value">Third-party verification statement and auditor credentials will be included in this appendix.</div>
-                    {% endif %}
-                </div>
+                
 
                 <!-- Appendix C: Glossary -->
                 <div id="appendix-c" class="field-group">
-                    <div class="field-label">Appendix C: Glossary</div>
+                    <div class="field-label">Appendix B: Glossary</div>
                     {% if doc.appendix_glossary %}
                     <div class="field-value">{{ doc.appendix_glossary }}</div>
                     {% else %}
@@ -630,7 +622,7 @@
 
                 <!-- Appendix D: References -->
                 <div id="appendix-d" class="field-group">
-                    <div class="field-label">Appendix D: References</div>
+                    <div class="field-label">Appendix C: References</div>
                     {% if doc.appendix_references %}
                     <div class="field-value">{{ doc.appendix_references }}</div>
                     {% else %}

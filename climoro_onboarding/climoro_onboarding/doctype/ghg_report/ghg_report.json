@@ -60,7 +60,6 @@
   "quality_assurance",
   "appendices",
   "appendix_calculations",
-  "appendix_verification",
   "appendix_glossary",
   "appendix_references"
  ],
@@ -368,11 +367,6 @@
    "fieldname": "appendix_calculations",
    "fieldtype": "Attach",
    "label": "Appendix - Calculations"
-  },
-  {
-   "fieldname": "appendix_verification",
-   "fieldtype": "Attach",
-   "label": "Appendix - Verification"
   },
   {
    "fieldname": "appendix_glossary",
