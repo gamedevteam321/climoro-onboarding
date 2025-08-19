@@ -1,0 +1,330 @@
+{% extends "templates/web.html" %}
+
+{% block page_content %}
+<div class="emissions-dashboard">
+    <!-- Header Section -->
+    <div class="dashboard-header">
+        <div class="header-content">
+            <div class="welcome-section">
+                <h1>Welcome, {{ frappe.session.user_fullname or frappe.session.user }}</h1>
+                <p>Track your emissions and reductions with us.</p>
+            </div>
+            <div class="header-charts">
+                <div class="mini-chart">
+                    <div class="chart-container" id="header-progress"></div>
+                    <span class="progress-text">62%</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Number Cards Section -->
+    <div class="number-cards-section">
+        <div class="row">
+            {% for card in dashboard_config.number_cards %}
+            <div class="col-md-4">
+                <div class="number-card">
+                    <div class="card-content">
+                        <h3>{{ card.label }}</h3>
+                        <div class="number-value" data-card="{{ card.name }}">Loading...</div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Charts Section -->
+    <div class="charts-section">
+        <div class="row">
+            <!-- Emissions by Unit Type -->
+            <div class="col-md-6">
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3>Emissions by Unit Type</h3>
+                        <span class="year-label">Year: 2024</span>
+                    </div>
+                    <div class="chart-container" id="unit-type-chart"></div>
+                </div>
+            </div>
+            
+            <!-- Scope 2 Emission -->
+            <div class="col-md-6">
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3>Scope 2 Emission</h3>
+                        <span class="year-label">Year: 2024</span>
+                        <button class="filter-btn">Filters</button>
+                    </div>
+                    <div class="chart-container" id="scope2-chart"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <!-- Scope 3 Emission -->
+            <div class="col-md-6">
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3>Scope 3 Emission</h3>
+                        <span class="year-label">Year: 2024</span>
+                        <button class="filter-btn">Filters</button>
+                    </div>
+                    <div class="chart-container" id="scope3-chart"></div>
+                </div>
+            </div>
+            
+            <!-- Division of Emissions -->
+            <div class="col-md-6">
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3>Division of Emissions</h3>
+                        <span class="year-label">Year: 2024</span>
+                        <button class="year-btn">Year</button>
+                    </div>
+                    <div class="chart-container" id="division-chart"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <!-- Production Capacity -->
+            <div class="col-md-12">
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3>Production Capacity</h3>
+                        <span class="year-label">Year: 2024</span>
+                    </div>
+                    <div class="chart-container" id="production-chart"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block style %}
+<style>
+.emissions-dashboard {
+    padding: 20px;
+    background: #f8f9fa;
+    min-height: 100vh;
+}
+
+.dashboard-header {
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.welcome-section h1 {
+    color: #2c3e50;
+    margin-bottom: 5px;
+    font-size: 1.5rem;
+}
+
+.welcome-section p {
+    color: #7f8c8d;
+    margin: 0;
+}
+
+.number-cards-section {
+    margin-bottom: 20px;
+}
+
+.number-card {
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
+
+.number-card h3 {
+    color: #7f8c8d;
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+}
+
+.number-value {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+.chart-card {
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.chart-header h3 {
+    color: #2c3e50;
+    margin: 0;
+    font-size: 1.1rem;
+}
+
+.year-label {
+    color: #7f8c8d;
+    font-size: 0.9rem;
+}
+
+.filter-btn, .year-btn {
+    background: #3498db;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    cursor: pointer;
+}
+
+.chart-container {
+    height: 300px;
+    width: 100%;
+}
+</style>
+{% endblock %}
+
+{% block script %}
+<script>
+// Initialize charts when page loads
+frappe.ready(function() {
+    initializeDashboard();
+});
+
+function initializeDashboard() {
+    // Load number cards
+    loadNumberCards();
+    
+    // Initialize charts
+    initializeCharts();
+}
+
+function loadNumberCards() {
+    // Load data for number cards
+    frappe.call({
+        method: 'frappe.desk.doctype.number_card.number_card.get',
+        args: {},
+        callback: function(r) {
+            if (r.message) {
+                updateNumberCards(r.message);
+            }
+        }
+    });
+}
+
+function initializeCharts() {
+    // Initialize each chart
+    initializeUnitTypeChart();
+    initializeScope2Chart();
+    initializeScope3Chart();
+    initializeDivisionChart();
+    initializeProductionChart();
+}
+
+function initializeUnitTypeChart() {
+    // Donut chart for emissions by unit type
+    const chart = new frappe.Chart("#unit-type-chart", {
+        data: {
+            labels: ["Factory/Manufacturing Plant", "Warehouse", "Offices", "Franchise", "Others"],
+            datasets: [{
+                name: "Emissions by Unit Type",
+                values: [50, 24, 19, 3, 4]
+            }]
+        },
+        type: 'donut',
+        height: 300,
+        colors: ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd']
+    });
+}
+
+function initializeScope2Chart() {
+    // Bar chart for Scope 2 emissions
+    const chart = new frappe.Chart("#scope2-chart", {
+        data: {
+            labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+            datasets: [{
+                name: "Scope 2 Emission",
+                values: [35, 42, 28, 31, 18, 25, 38, 45, 48, 52, 41, 39]
+            }]
+        },
+        type: 'bar',
+        height: 300,
+        colors: ['#1f77b4']
+    });
+}
+
+function initializeScope3Chart() {
+    // Bar chart for Scope 3 emissions
+    const chart = new frappe.Chart("#scope3-chart", {
+        data: {
+            labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+            datasets: [{
+                name: "Scope 3 Emission",
+                values: [15, 18, 22, 25, 28, 32, 35, 38, 42, 45, 48, 44]
+            }]
+        },
+        type: 'bar',
+        height: 300,
+        colors: ['#8b0000']
+    });
+}
+
+function initializeDivisionChart() {
+    // Donut chart for division of emissions
+    const chart = new frappe.Chart("#division-chart", {
+        data: {
+            labels: ["Upstream Emission", "Downstream Emission"],
+            datasets: [{
+                name: "Division of Emissions",
+                values: [70, 30]
+            }]
+        },
+        type: 'donut',
+        height: 300,
+        colors: ['#8b0000', '#ff6b6b']
+    });
+}
+
+function initializeProductionChart() {
+    // Line chart for production capacity
+    const chart = new frappe.Chart("#production-chart", {
+        data: {
+            labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+            datasets: [
+                {
+                    name: "Production Capacity",
+                    values: [85, 88, 92, 87, 90, 94, 89, 93, 96, 91, 95, 98]
+                },
+                {
+                    name: "Emissions",
+                    values: [35, 42, 28, 31, 18, 25, 38, 45, 48, 52, 41, 39]
+                }
+            ]
+        },
+        type: 'line',
+        height: 300,
+        colors: ['#1f77b4', '#d62728']
+    });
+}
+</script>
+{% endblock %} 

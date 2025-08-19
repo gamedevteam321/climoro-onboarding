@@ -1,0 +1,35 @@
+[
+  {
+    "doctype": "Number Card",
+    "name": "Total Emissions 2024",
+    "label": "Total Emissions (tCO2e)",
+    "function": "Sum",
+    "aggregate_function_based_on": "etco2eq",
+    "document_type": "Stationary Emissions",
+    "filters_json": "[[\"Stationary Emissions\", \"date\", \">=\", \"2024-01-01\"], [\"Stationary Emissions\", \"date\", \"<=\", \"2024-12-31\"]]",
+    "is_public": 1,
+    "color": "#1f77b4"
+  },
+  {
+    "doctype": "Number Card",
+    "name": "Scope 2 Total",
+    "label": "Scope 2 Emissions (tCO2e)",
+    "function": "Sum",
+    "aggregate_function_based_on": "etco2eq",
+    "document_type": "Electricity Purchased",
+    "filters_json": "[[\"Electricity Purchased\", \"date\", \">=\", \"2024-01-01\"], [\"Electricity Purchased\", \"date\", \"<=\", \"2024-12-31\"]]",
+    "is_public": 1,
+    "color": "#ff7f0e"
+  },
+  {
+    "doctype": "Number Card",
+    "name": "Scope 3 Total",
+    "label": "Scope 3 Emissions (tCO2e)",
+    "function": "Sum",
+    "aggregate_function_based_on": "etco2eq",
+    "document_type": "Downstream Transportation Method",
+    "filters_json": "[[\"Downstream Transportation Method\", \"date\", \">=\", \"2024-01-01\"], [\"Downstream Transportation Method\", \"date\", \"<=\", \"2024-12-31\"]]",
+    "is_public": 1,
+    "color": "#8b0000"
+  }
+] 
