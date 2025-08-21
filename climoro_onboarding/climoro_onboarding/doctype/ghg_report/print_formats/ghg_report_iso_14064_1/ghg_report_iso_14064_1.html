@@ -487,21 +487,25 @@
                     <table>
                         <thead>
                             <tr>
+                                <th>Category (ISO 14064-1)</th>
                                 <th>Scope</th>
-                                <th>Category</th>
-                                <th>Base Year Emissions (tCO2e)</th>
-                                <th>Current Year Emissions (tCO2e)</th>
+                                <th>Direct/Indirect</th>
+                                <th>GHG Type</th>
+                                <th>Emissions (tCO2e) - Current Year</th>
+                                <th>Emissions (tCO2e) - Base Year</th>
                                 <th>Change (%)</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for line in doc.ghg_inventory_line %}
                             <tr>
+                                <td>{{ line.iso_category or "" }}</td>
                                 <td>{{ line.scope or "" }}</td>
-                                <td>{{ line.category or "" }}</td>
-                                <td>{{ line.emissions_base or "0" }}</td>
-                                <td>{{ line.emissions_current or "0" }}</td>
-                                <td>{{ line.change_pct or "0" }}%</td>
+                                <td>{{ line.direct_or_indirect or "" }}</td>
+                                <td>{{ line.ghg_type or "" }}</td>
+                                <td>{{ line.emissions_current or 0 }}</td>
+                                <td>{{ line.emissions_base or 0 }}</td>
+                                <td>{{ (line.change_pct or 0) }}%</td>
                             </tr>
                             {% endfor %}
                         </tbody>
@@ -518,19 +522,17 @@
                     <table>
                         <thead>
                             <tr>
-                                <th>Location</th>
-                                <th>Market-based (tCO2e)</th>
-                                <th>Location-based (tCO2e)</th>
-                                <th>Difference (%)</th>
+                                <th>Method</th>
+                                <th>Category 2 Emissions (tCO2e)</th>
+                                <th>Total Gross Emissions (tCO2e)</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for line in doc.ghg_scope2_dual_line %}
                             <tr>
-                                <td>{{ line.location or "" }}</td>
-                                <td>{{ line.market_based or "0" }}</td>
-                                <td>{{ line.location_based or "0" }}</td>
-                                <td>{{ line.difference or "0" }}%</td>
+                                <td>{{ line.method or "" }}</td>
+                                <td>{{ line.category2_emissions or 0 }}</td>
+                                <td>{{ line.total_gross_emissions or 0 }}</td>
                             </tr>
                             {% endfor %}
                         </tbody>

@@ -541,6 +541,289 @@ def generate_ghg_report_pdf(doctype, name):
         frappe.logger().error(error_msg)
         return {"success": False, "message": str(e)}
 
+# -------------------- helpers to auto-fill tables from other doctypes --------------------
+def _is_admin() -> bool:
+    """Return True if current user is System Manager (admin-like)."""
+    try:
+        return "System Manager" in frappe.get_roles(frappe.session.user)
+    except Exception:
+        return False
+
+
+def _year_window(year: int):
+    start = frappe.utils.getdate(f"{year}-01-01")
+    end = frappe.utils.getdate(f"{year}-12-31")
+    return start, end
+
+
+# --- GHG Reductions and Removals Enhancements ---
+# Change this to your actual source doctype that users fill for reductions
+REDUCTION_SRC_DOCTYPE = "GHG Reduction Entry"
+
+
+def _fetch_reduction_entries(company: str, year: int):
+    start, end = _year_window(year)
+    filters = {"company": company, "date": ["between", [start, end]]}
+    if not _is_admin():
+        filters["owner"] = frappe.session.user
+
+    if not frappe.db.exists("DocType", REDUCTION_SRC_DOCTYPE):
+        return []
+
+    return frappe.get_all(
+        REDUCTION_SRC_DOCTYPE,
+        filters=filters,
+        fields=[
+            "project_name",
+            "reduction_type",
+            "amount_tco2e",
+            "date",
+            "status",
+            "description",
+            "scope_category_impacted",
+        ],
+        order_by="date asc",
+    )
+
+
+def _append_reductions(doc, company: str, year: int) -> None:
+    """Append rows to `ghg_reduction_line` from the reduction source doctype.
+
+    Uses current child schema: initiative, description, reduction_achieved, scope_category_impacted.
+    """
+    entries = _fetch_reduction_entries(company, year)
+    if not entries:
+        return
+
+    # Optional: clear existing rows so auto-generate is idempotent
+    if getattr(doc, "ghg_reduction_line", None):
+        doc.set("ghg_reduction_line", [])
+
+    for r in entries:
+        doc.append(
+            "ghg_reduction_line",
+            {
+                "initiative": r.get("project_name") or r.get("description"),
+                "description": r.get("description"),
+                "reduction_achieved": r.get("amount_tco2e") or 0,
+                "scope_category_impacted": r.get("scope_category_impacted") or r.get("reduction_type"),
+            },
+        )
+
+
+# --- Organizational Boundaries ---
+# Primary source; set to a doctype that lists business units/sites for each company
+BOUNDARY_SRC_DOCTYPE = "Company Unit"
+
+
+def _fetch_boundaries(company: str):
+    """Fetch organizational boundary rows from Onboarding Form Units (Company Unit child).
+
+    We use the latest Onboarding Form for the given company (prefer submitted),
+    then read its child table `units` (doctype: Company Unit) and map to boundary rows.
+    """
+    # Find latest submitted onboarding form for this company_name; fallback to latest any
+    ob = frappe.get_all(
+        "Onboarding Form",
+        filters={"company_name": company, "docstatus": 1},
+        fields=["name"],
+        order_by="modified desc",
+        limit=1,
+    )
+    if not ob:
+        ob = frappe.get_all(
+            "Onboarding Form",
+            filters={"company_name": company},
+            fields=["name"],
+            order_by="modified desc",
+            limit=1,
+        )
+    if not ob:
+        return []
+
+    units = frappe.get_all(
+        "Company Unit",
+        filters={"parenttype": "Onboarding Form", "parent": ob[0].name},
+        fields=["name_of_unit", "location_name", "address", "type_of_unit"],
+        order_by="idx asc",
+    )
+
+    rows = []
+    for u in units:
+        rows.append({
+            "business_unit": u.get("name_of_unit"),
+            "location": u.get("location_name") or u.get("address"),
+            "purpose": u.get("type_of_unit"),
+            "included": 1,
+            "reason_exclusion": "",
+        })
+    return rows
+
+
+def _append_boundaries(doc, company: str) -> None:
+    rows = _fetch_boundaries(company)
+    if not rows:
+        return
+
+    # Optional: clear existing boundary rows before appending
+    if getattr(doc, "ghg_boundary_line", None):
+        doc.set("ghg_boundary_line", [])
+
+    for b in rows:
+        doc.append(
+            "ghg_boundary_line",
+            {
+                "business_unit": b.get("business_unit"),
+                "location": b.get("location"),
+                "purpose": b.get("purpose"),
+                "included": 1 if b.get("included") in (1, True, "Yes") else 0,
+                "reason_exclusion": b.get("reason_exclusion"),
+            },
+        )
+
+# --- Emissions and Removals Summary (GHG Inventory Line) ---
+def _safe_sum(values):
+	total = 0.0
+	for v in values:
+		try:
+			total += float(v or 0)
+		except Exception:
+			continue
+	return total
+
+
+def _sum_records(doctype: str, company: str, start, end, gas_fields, total_field: str | None = None):
+	"""Sum rows for a source doctype within date window and optional company filter.
+
+	- gas_fields: per-gas numeric fieldnames to sum (e.g., ["eco2","ech4","en20"]).
+	- total_field: overall tCO2e field to sum when per-gas is not available.
+	"""
+	if not frappe.db.exists("DocType", doctype):
+		return {"per_gas": {}, "total": 0.0}
+
+	meta = frappe.get_meta(doctype)
+	filters = {"date": ["between", [start, end]]}
+	# Apply company filter only if field exists
+	if meta.has_field("company") and company:
+		filters["company"] = company
+	# Apply owner filter for non-admin users if there is no company field
+	if not _is_admin() and not meta.has_field("company"):
+		filters["owner"] = frappe.session.user
+
+	# Select only present fields
+	selected_fields = ["name", "date"]
+	present_gas = [f for f in gas_fields if meta.has_field(f)]
+	selected_fields.extend(present_gas)
+	if total_field and meta.has_field(total_field):
+		selected_fields.append(total_field)
+
+	rows = frappe.get_all(doctype, filters=filters, fields=selected_fields, order_by="date asc")
+
+	per_gas_sum = {f: 0.0 for f in present_gas}
+	total_sum = 0.0
+	for r in rows:
+		for f in present_gas:
+			per_gas_sum[f] += float(r.get(f) or 0)
+		if total_field and total_field in r:
+			total_sum += float(r.get(total_field) or 0)
+
+	return {"per_gas": per_gas_sum, "total": total_sum}
+
+
+def _append_inventory_lines(doc, company: str, year: int) -> None:
+	"""Populate `ghg_inventory_line` by aggregating Scope 1/2 sources.
+
+	Sources detected:
+	  - Stationary Emissions → Scope 1, Category 1, Direct (CO₂/CH₄/N₂O if available)
+	  - Fugitive Simple → Scope 1, Category 1, Direct (Aggregate)
+	  - Electricity Purchased → Scope 2, Category 2, Indirect (Aggregate)
+
+	Base-year window: uses doc.base_year if set, else (year - 1).
+	"""
+	start_current, end_current = _year_window(year)
+	base_year = int(doc.base_year) if getattr(doc, "base_year", None) else (year - 1)
+	start_base, end_base = _year_window(base_year)
+
+	# Clear old rows for idempotency
+	if getattr(doc, "ghg_inventory_line", None):
+		doc.set("ghg_inventory_line", [])
+
+	# Scope 1 - Category 1: Stationary Emissions (per gas if available)
+	st_cur = _sum_records("Stationary Emissions", company, start_current, end_current, ["eco2", "ech4", "en20"], total_field="etco2eq")
+	st_base = _sum_records("Stationary Emissions", company, start_base, end_base, ["eco2", "ech4", "en20"], total_field="etco2eq")
+
+	gas_map = {
+		"eco2": "CO₂",
+		"ech4": "CH₄",
+		"en20": "N₂O",
+	}
+	# If per-gas values exist, append lines per gas
+	if any(v > 0 for v in st_cur["per_gas"].values()) or any(v > 0 for v in st_base["per_gas"].values()):
+		for fieldname, gas in gas_map.items():
+			cur_v = float(st_cur["per_gas"].get(fieldname) or 0)
+			base_v = float(st_base["per_gas"].get(fieldname) or 0)
+			if cur_v == 0 and base_v == 0:
+				continue
+			doc.append(
+				"ghg_inventory_line",
+				{
+					"iso_category": "Category 1",
+					"scope": "1",
+					"direct_or_indirect": "Direct",
+					"ghg_type": gas,
+					"emissions_current": cur_v,
+					"emissions_base": base_v,
+				},
+			)
+	else:
+		# Fallback to aggregate if no per-gas breakdown
+		if st_cur["total"] > 0 or st_base["total"] > 0:
+			doc.append(
+				"ghg_inventory_line",
+				{
+					"iso_category": "Category 1",
+					"scope": "1",
+					"direct_or_indirect": "Direct",
+					"ghg_type": "Aggregate",
+					"emissions_current": float(st_cur["total"]),
+					"emissions_base": float(st_base["total"]),
+				},
+			)
+
+	# Scope 1 - Category 1: Fugitive Simple (aggregate)
+	fg_cur = _sum_records("Fugitive Simple", company, start_current, end_current, [], total_field="etco2eq")
+	fg_base = _sum_records("Fugitive Simple", company, start_base, end_base, [], total_field="etco2eq")
+	if fg_cur["total"] > 0 or fg_base["total"] > 0:
+		doc.append(
+			"ghg_inventory_line",
+			{
+				"iso_category": "Category 1",
+				"scope": "1",
+				"direct_or_indirect": "Direct",
+				"ghg_type": "Aggregate",
+				"emissions_current": float(fg_cur["total"]),
+				"emissions_base": float(fg_base["total"]),
+			},
+		)
+
+	# Scope 2 - Category 2: Electricity Purchased (aggregate)
+	el_cur = _sum_records("Electricity Purchased", company, start_current, end_current, [], total_field="etco2eq")
+	el_base = _sum_records("Electricity Purchased", company, start_base, end_base, [], total_field="etco2eq")
+	if el_cur["total"] > 0 or el_base["total"] > 0:
+		doc.append(
+			"ghg_inventory_line",
+			{
+				"iso_category": "Category 2",
+				"scope": "2",
+				"direct_or_indirect": "Indirect",
+				"ghg_type": "Aggregate",
+				"emissions_current": float(el_cur["total"]),
+				"emissions_base": float(el_base["total"]),
+			},
+		)
+
+	# Future: Scope 3 mappings → append under Category 3..6 as Aggregate
+
 @frappe.whitelist()
 def auto_create_and_generate_pdf(organization_name: str | None = None, year: int | None = None):
     """Create a GHG Report with sensible defaults, generate PDF, and return file_url.
@@ -571,6 +854,16 @@ def auto_create_and_generate_pdf(organization_name: str | None = None, year: int
             "report_type": "Annual GHG emissions and reductions report"
         })
         doc.insert(ignore_permissions=True)
+        # Auto-load organizational boundaries and reduction initiatives
+        try:
+            if organization_name:
+                _append_boundaries(doc, company=organization_name)
+            if organization_name and year:
+                _append_reductions(doc, company=organization_name, year=year)
+                _append_inventory_lines(doc, company=organization_name, year=year)
+            doc.save(ignore_permissions=True)
+        except Exception as _e:
+            frappe.log_error(f"auto_create_and_generate_pdf: population error: {_e}")
         # Always use the HTML/CSS template layout with TOC
         result = doc.generate_pdf_with_toc()
         result["name"] = doc.name
