@@ -57,15 +57,9 @@
             padding: 14px 16px;
             vertical-align: middle;
         }
-        .meta-table th {
-            width: 40%;
-            background: #fff;
-            text-align: left;
-            font-weight: 700;
-            color: #111;
-        }
+       
         .meta-table td { 
-            width: 60%; 
+            width: 40%; 
             background: #fff; 
         }
         
@@ -100,117 +94,191 @@
         .toc-item a {
             color: #333;
             text-decoration: none;
-            display: block;
-            padding: 8px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
-        .toc-item.level-1 {
-            font-weight: bold;
-            font-size: 14pt;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 8px;
+        .toc-item a:hover {
+            color: #007bff;
         }
-        .toc-item.level-2 {
-            margin-left: 30px;
-            font-weight: normal;
-            font-size: 12pt;
-            color: #555;
+        .toc-title {
+            flex: 1;
+        }
+        .toc-page {
+            margin-left: 20px;
+            color: #666;
+        }
+        .toc-dots {
+            flex: 1;
+            border-bottom: 1px dotted #ccc;
+            margin: 0 10px;
         }
         
-        /* Section Styling */
+        /* Section Headers */
         .section {
-            margin-bottom: 30px;
+            margin-bottom: 40px;
             page-break-inside: avoid;
         }
         .section-header {
-            font-size: 16pt;
+            font-size: 18pt;
             font-weight: bold;
+            margin-bottom: 20px;
             color: #333;
             border-bottom: 2px solid #333;
             padding-bottom: 10px;
-            margin-bottom: 20px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
         }
         .section-content {
-            margin-left: 0;
-            padding: 0;
-            font-size: 11pt;
+            margin-left: 20px;
         }
         
-        /* Field Styling */
+        /* Field Groups */
         .field-group {
-            margin-bottom: 15px;
-            padding: 0;
+            margin-bottom: 25px;
         }
         .field-label {
             font-weight: bold;
+            font-size: 12pt;
+            margin-bottom: 8px;
             color: #333;
-            margin-bottom: 5px;
-            font-size: 11pt;
         }
         .field-value {
-            margin-bottom: 10px;
-            font-size: 11pt;
-            line-height: 1.5;
+            margin-left: 20px;
+            margin-bottom: 15px;
+            line-height: 1.6;
         }
         
-        /* Tables */
+        /* Enhanced Table Styling for Better Visibility */
         table {
             width: 100%;
             border-collapse: collapse;
             margin: 15px 0;
             font-size: 10pt;
+            page-break-inside: avoid;
+            table-layout: fixed;
         }
-        th, td {
+        
+        table th,
+        table td {
             border: 1px solid #ddd;
-            padding: 8px 12px;
+            padding: 8px 6px;
             text-align: left;
             vertical-align: top;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
-        th {
-            background-color: #f5f5f5;
+        
+        table th {
+            background-color: #f8f9fa;
             font-weight: bold;
+            color: #333;
+            font-size: 9pt;
+            text-align: center;
+        }
+        
+        table td {
+            background-color: #fff;
+            font-size: 9pt;
+        }
+        
+        /* Specific styling for Emissions and Removals Summary table */
+        #emissions-and-removals-summary table {
+            font-size: 8pt;
+            margin: 20px 0;
+        }
+        
+        #emissions-and-removals-summary table th,
+        #emissions-and-removals-summary table td {
+            padding: 6px 4px;
+            font-size: 8pt;
+            line-height: 1.2;
+        }
+        
+        /* Column widths for better fit */
+        #emissions-and-removals-summary table th:nth-child(1),
+        #emissions-and-removals-summary table td:nth-child(1) {
+            width: 12%; /* Category */
+        }
+        
+        #emissions-and-removals-summary table th:nth-child(2),
+        #emissions-and-removals-summary table td:nth-child(2) {
+            width: 8%; /* Scope */
+        }
+        
+        #emissions-and-removals-summary table th:nth-child(3),
+        #emissions-and-removals-summary table td:nth-child(3) {
+            width: 12%; /* Direct/Indirect - increased width for two lines */
+            white-space: pre-line; /* Allow line breaks */
+            text-align: center;
+        }
+        
+        #emissions-and-removals-summary table th:nth-child(4),
+        #emissions-and-removals-summary table td:nth-child(4) {
+            width: 10%; /* GHG Type */
+        }
+        
+        #emissions-and-removals-summary table th:nth-child(5),
+        #emissions-and-removals-summary table td:nth-child(5) {
+            width: 18%; /* Current Year */
+        }
+        
+        #emissions-and-removals-summary table th:nth-child(6),
+        #emissions-and-removals-summary table td:nth-child(6) {
+            width: 18%; /* Base Year */
+        }
+        
+        #emissions-and-removals-summary table th:nth-child(7),
+        #emissions-and-removals-summary table td:nth-child(7) {
+            width: 22%; /* Change % - increased width */
+            text-align: center;
+        }
+        
+        /* Responsive table for small screens */
+        @media print {
+            table {
+                font-size: 8pt;
+            }
+            
+            table th,
+            table td {
+                padding: 4px 3px;
+                font-size: 8pt;
+            }
+            
+            #emissions-and-removals-summary table {
+                font-size: 7pt;
+            }
+            
+            #emissions-and-removals-summary table th,
+            #emissions-and-removals-summary table td {
+                padding: 3px 2px;
+                font-size: 7pt;
+            }
         }
         
         /* Page breaks */
-        .page-break { 
-            page-break-before: always; 
-        }
-        @media print { 
-            #title-page { 
-                page-break-after: always; 
-            }
-            .toc-container {
-                page-break-after: always;
-            }
+        .page-break {
+            page-break-before: always;
         }
         
-        /* Executive Summary Box */
-        .summary-box {
-            border: 2px solid #333;
-            padding: 20px;
-            margin: 30px 0;
-            background-color: #f9f9f9;
+        /* Footer watermark */
+        .footer-watermark {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            opacity: 0.3;
         }
-        .summary-title {
-            font-size: 14pt;
-            font-weight: bold;
-            margin-bottom: 15px;
-            text-align: center;
+        .footer-watermark img {
+            width: 100px;
+            height: auto;
         }
-        .summary-content p {
-            margin: 8px 0;
-            font-size: 11pt;
-        }
-        
-        /* Footer */
-        .footer {
-            margin-top: 40px;
-            padding-top: 20px;
-            border-top: 1px solid #ccc;
-            text-align: center;
+        .page-number {
+            position: fixed;
+            bottom: 20px;
+            right: 140px;
             font-size: 10pt;
             color: #666;
+            z-index: 1000;
         }
     </style>
 </head>
@@ -218,20 +286,19 @@
     <div class="document-container">
         <!-- Title Page -->
         <div id="title-page">
-            <div class="title-main">GHG Emissions and Reductions Report</div>
+            <h1 class="title-main">{{ doc.report_title or "GHG Emissions and Reductions Report" }}</h1>
             <div class="meta-wrap">
                 <table class="meta-table">
-                    <thead>
+                    <thead></thead>
+                    <tbody>
                         <tr>
-                            <th>Reporting Period</th>
+                            <td>Reporting Period</td>
                             <td>
                                 {% set pf = frappe.utils.formatdate(doc.period_from, "MMMM d, yyyy") if doc.period_from else "" %}
                                 {% set pt = frappe.utils.formatdate(doc.period_to, "MMMM d, yyyy") if doc.period_to else "" %}
                                 {{ pf }}{% if pf or pt %} – {% endif %}{{ pt }}
                             </td>
                         </tr>
-                    </thead>
-                    <tbody>
                         <tr>
                             <th>Organization Name</th>
                             <td>{{ doc.organization_name or '' }}</td>
@@ -253,25 +320,66 @@
             </div>
         </div>
 
-        <!-- Table of Contents - Full Page -->
+        <!-- Table of Contents -->
         <div class="toc-container">
-            <h1>Table of Content</h1>
+            <h2>Table of Contents</h2>
             <ul class="toc-list">
-                <li class="toc-item level-1"><a href="#disclaimer">Disclaimer</a></li>
-                <li class="toc-item level-1"><a href="#acknowledgements">Acknowledgements</a></li>
-                <li class="toc-item level-1"><a href="#citation-information">Citation Information</a></li>
-                <li class="toc-item level-1"><a href="#copyright-notice">Copyright Notice</a></li>
-                <li class="toc-item level-1"><a href="#purpose-of-this-report">Purpose of This Report</a></li>
-                <li class="toc-item level-1"><a href="#introduction">Introduction</a></li>
-                <li class="toc-item level-2"><a href="#organization-description">Organization Description</a></li>
-                <li class="toc-item level-2"><a href="#organizational-boundaries">Organizational Boundaries</a></li>
-                <li class="toc-item level-2"><a href="#reporting-boundaries">Reporting Boundaries</a></li>
-                <li class="toc-item level-1"><a href="#ghg-inventory-results">GHG Inventory Results</a></li>
-                <li class="toc-item level-2"><a href="#emissions-and-removals-summary">Emissions and Removals Summary</a></li>
-                <li class="toc-item level-2"><a href="#dual-reporting-scope2">Dual Reporting for Scope 2 (if applicable)</a></li>
-                <li class="toc-item level-1"><a href="#ghg-reductions-and-removals-enhancements">GHG Reductions and Removals Enhancements</a></li>
-                <li class="toc-item level-1"><a href="#data-management-and-quality">Data Management and Quality</a></li>
-                <li class="toc-item level-1"><a href="#appendices">Appendices</a></li>
+                <li class="toc-item">
+                    <a href="#disclaimer">
+                        <span class="toc-title">Disclaimer</span>
+                        <span class="toc-dots"></span>
+                        <span class="toc-page">1</span>
+                    </a>
+                </li>
+                <li class="toc-item">
+                    <a href="#organization-description">
+                        <span class="toc-title">Organization Description</span>
+                        <span class="toc-dots"></span>
+                        <span class="toc-page">2</span>
+                    </a>
+                </li>
+                <li class="toc-item">
+                    <a href="#organizational-boundaries">
+                        <span class="toc-title">Organizational Boundaries</span>
+                        <span class="toc-dots"></span>
+                        <span class="toc-page">3</span>
+                    </a>
+                </li>
+                <li class="toc-item">
+                    <a href="#reporting-boundaries">
+                        <span class="toc-title">Reporting Boundaries</span>
+                        <span class="toc-dots"></span>
+                        <span class="toc-page">4</span>
+                    </a>
+                </li>
+                <li class="toc-item">
+                    <a href="#ghg-inventory-results">
+                        <span class="toc-title">GHG Inventory Results</span>
+                        <span class="toc-dots"></span>
+                        <span class="toc-page">5</span>
+                    </a>
+                </li>
+                <li class="toc-item">
+                    <a href="#ghg-reductions-and-removals-enhancements">
+                        <span class="toc-title">GHG Reductions and Removals Enhancements</span>
+                        <span class="toc-dots"></span>
+                        <span class="toc-page">6</span>
+                    </a>
+                </li>
+                <li class="toc-item">
+                    <a href="#data-management-and-quality">
+                        <span class="toc-title">Data Management and Quality</span>
+                        <span class="toc-dots"></span>
+                        <span class="toc-page">7</span>
+                    </a>
+                </li>
+                <li class="toc-item">
+                    <a href="#appendices">
+                        <span class="toc-title">Appendices</span>
+                        <span class="toc-dots"></span>
+                        <span class="toc-page">8</span>
+                    </a>
+                </li>
             </ul>
         </div>
 
@@ -279,109 +387,11 @@
         <div id="disclaimer" class="section">
             <h1 class="section-header">Disclaimer</h1>
             <div class="section-content">
-                {% if doc.disclaimer_text %}
-                <div class="field-value">{{ doc.disclaimer_text }}</div>
-                {% else %}
-                <div class="field-value">This report contains forward-looking statements and estimates based on current information and assumptions. Actual results may differ materially from those projected.</div>
-                {% endif %}
-            </div>
-        </div>
-
-        <!-- Acknowledgements -->
-        <div id="acknowledgements" class="section">
-            <h1 class="section-header">Acknowledgements</h1>
-            <div class="section-content">
-                {% if doc.acknowledgements_text %}
-                <div class="field-value">{{ doc.acknowledgements_text }}</div>
-                {% else %}
-                <div class="field-value">We would like to acknowledge the contributions of all stakeholders, team members, and external consultants who have contributed to the preparation of this report.</div>
-                {% endif %}
-            </div>
-        </div>
-
-        <!-- Citation Information -->
-        <div id="citation-information" class="section">
-            <h1 class="section-header">Citation Information</h1>
-            <div class="section-content">
-                {% if doc.citation_text %}
-                <div class="field-value">{{ doc.citation_text }}</div>
-                {% else %}
-                <div class="field-value">This report should be cited as: [Organization Name]. (2024). GHG Emissions and Reductions Report. [City, State]: [Organization Name].</div>
-                {% endif %}
-            </div>
-        </div>
-
-        <!-- Copyright Notice -->
-        <div id="copyright-notice" class="section">
-            <h1 class="section-header">Copyright Notice</h1>
-            <div class="section-content">
-                {% if doc.copyright_notice_text %}
-                <div class="field-value">{{ doc.copyright_notice_text }}</div>
-                {% else %}
-                <div class="field-value">© 2024 [Organization Name]. All rights reserved. This document may not be reproduced or distributed without prior written permission.</div>
-                {% endif %}
-            </div>
-        </div>
-
-        <!-- Purpose of This Report -->
-        <div id="purpose-of-this-report" class="section">
-            <h1 class="section-header">Purpose of This Report</h1>
-            <div class="section-content">
-                {% if doc.purpose_objectives %}
                 <div class="field-group">
-                    <div class="field-label">Purpose and Objectives</div>
-                    <div class="field-value">{{ doc.purpose_objectives }}</div>
+                    <div class="field-value">
+                        This report has been prepared in accordance with ISO 14064-1:2018 standards for greenhouse gas quantification and reporting. The information contained herein is based on data collected and analyzed by {{ doc.organization_name or "the organization" }}. While every effort has been made to ensure accuracy, {{ doc.organization_name or "the organization" }} does not guarantee the completeness or accuracy of the information provided.
+                    </div>
                 </div>
-                {% endif %}
-                {% if doc.intended_use_users %}
-                <div class="field-group">
-                    <div class="field-label">Intended Use and Users</div>
-                    <div class="field-value">{{ doc.intended_use_users }}</div>
-                </div>
-                {% endif %}
-                {% if doc.responsibilities %}
-                <div class="field-group">
-                    <div class="field-label">Responsibilities</div>
-                    <div class="field-value">{{ doc.responsibilities }}</div>
-                </div>
-                {% endif %}
-                {% if doc.frequency %}
-                <div class="field-group">
-                    <div class="field-label">Frequency</div>
-                    <div class="field-value">{{ doc.frequency }}</div>
-                </div>
-                {% endif %}
-            </div>
-        </div>
-
-        <!-- Introduction -->
-        <div id="introduction" class="section">
-            <h1 class="section-header">Introduction</h1>
-            <div class="section-content">
-                {% if doc.report_type %}
-                <div class="field-group">
-                    <div class="field-label">Report Type</div>
-                    <div class="field-value">{{ doc.report_type }}</div>
-                </div>
-                {% endif %}
-                {% if doc.compliance_statement %}
-                <div class="field-group">
-                    <div class="field-label">Compliance Statement</div>
-                    <div class="field-value">{{ doc.compliance_statement }}</div>
-                </div>
-                {% endif %}
-                {% if doc.verification_status %}
-                <div class="field-group">
-                    <div class="field-label">Verification Status</div>
-                    <div class="field-value">{{ doc.verification_status }}</div>
-                </div>
-                {% endif %}
-                {% if doc.gwp_values %}
-                <div class="field-group">
-                    <div class="field-label">GWP Values</div>
-                    <div class="field-value">{{ doc.gwp_values }}</div>
-                </div>
-                {% endif %}
             </div>
         </div>
 
@@ -389,10 +399,22 @@
         <div id="organization-description" class="section">
             <h1 class="section-header">Organization Description</h1>
             <div class="section-content">
-                {% if doc.org_overview %}
+                {% if doc.organization_name %}
                 <div class="field-group">
-                    <div class="field-label">Organization Overview</div>
-                    <div class="field-value">{{ doc.org_overview }}</div>
+                    <div class="field-label">Organization Name</div>
+                    <div class="field-value">{{ doc.organization_name }}</div>
+                </div>
+                {% endif %}
+                {% if doc.organization_description %}
+                <div class="field-group">
+                    <div class="field-label">Organization Description</div>
+                    <div class="field-value">{{ doc.organization_description }}</div>
+                </div>
+                {% endif %}
+                {% if doc.primary_activities %}
+                <div class="field-group">
+                    <div class="field-label">Primary Activities</div>
+                    <div class="field-value">{{ doc.primary_activities }}</div>
                 </div>
                 {% endif %}
                 {% if doc.ghg_policies_strategies %}
@@ -489,7 +511,7 @@
                             <tr>
                                 <th>Category (ISO 14064-1)</th>
                                 <th>Scope</th>
-                                <th>Direct/Indirect</th>
+                                <th>Direct/<br>Indirect</th>
                                 <th>GHG Type</th>
                                 <th>Emissions (tCO2e) - Current Year</th>
                                 <th>Emissions (tCO2e) - Base Year</th>
@@ -503,9 +525,9 @@
                                 <td>{{ line.scope or "" }}</td>
                                 <td>{{ line.direct_or_indirect or "" }}</td>
                                 <td>{{ line.ghg_type or "" }}</td>
-                                <td>{{ line.emissions_current or 0 }}</td>
-                                <td>{{ line.emissions_base or 0 }}</td>
-                                <td>{{ (line.change_pct or 0) }}%</td>
+                                <td>{{ "%.2f"|format(line.emissions_current or 0) }}</td>
+                                <td>{{ "%.2f"|format(line.emissions_base or 0) }}</td>
+                                <td>{{ "%.2f"|format(line.change_pct or 0) }}%</td>
                             </tr>
                             {% endfor %}
                         </tbody>
@@ -531,9 +553,9 @@
                             {% for line in doc.ghg_scope2_dual_line %}
                             <tr>
                                 <td>{{ line.method or "" }}</td>
-                                <td>{{ line.category2_emissions or 0 }}</td>
-                                <td>{{ line.total_gross_emissions or 0 }}</td>
-                            </tr>
+                                <td>{{ "%.2f"|format(line.category2_emissions or 0) }}</td>
+                                <td>{{ "%.2f"|format(line.total_gross_emissions or 0) }}</td>
+                                </tr>
                             {% endfor %}
                         </tbody>
                     </table>
@@ -564,7 +586,7 @@
                         <tr>
                             <td>{{ line.project_name or "" }}</td>
                             <td>{{ line.reduction_type or "" }}</td>
-                            <td>{{ line.reduction_amount or "0" }}</td>
+                            <td>{{ "%.2f"|format(line.reduction_amount or 0) }}</td>
                             <td>{{ line.implementation_date or "" }}</td>
                             <td>{{ line.status or "" }}</td>
                         </tr>
@@ -600,57 +622,41 @@
         <div id="appendices" class="section">
             <h1 class="section-header">Appendices</h1>
             <div class="section-content">
-                <!-- Appendix A: Detailed Calculations -->
-                <div id="appendix-a" class="field-group">
-                    <div class="field-label">Appendix A: Detailed Calculations</div>
-                    {% if doc.appendix_calculations %}
-                    <div class="field-value">{{ doc.appendix_calculations }}</div>
-                    {% else %}
-                    <div class="field-value">Detailed calculation methodologies and supporting data will be included in this appendix.</div>
-                    {% endif %}
-                </div>
-
-                
-
-                <!-- Appendix C: Glossary -->
-                <div id="appendix-c" class="field-group">
-                    <div class="field-label">Appendix B: Glossary</div>
-                    {% if doc.appendix_glossary %}
-                    <div class="field-value">{{ doc.appendix_glossary }}</div>
-                    {% else %}
-                    <div class="field-value">Definitions of technical terms and abbreviations used throughout this report.</div>
-                    {% endif %}
-                </div>
-
-                <!-- Appendix D: References -->
-                <div id="appendix-d" class="field-group">
-                    <div class="field-label">Appendix C: References</div>
-                    {% if doc.appendix_references %}
-                    <div class="field-value">{{ doc.appendix_references }}</div>
-                    {% else %}
-                    <div class="field-value">List of sources, standards, and references used in the preparation of this report.</div>
-                    {% endif %}
+                <div class="field-group">
+                    <div class="field-label">Appendix A: Methodology and Calculations</div>
+                    <div class="field-value">
+                        Detailed methodology and calculation procedures used for quantifying GHG emissions and removals are documented in accordance with ISO 14064-1:2018 requirements.
+                    </div>
                 </div>
             </div>
-        </div>
-
-        <!-- Executive Summary Box -->
-        <div class="summary-box">
-            <div class="summary-title">Executive Summary</div>
-            <div class="summary-content">
-                <p><strong>Organization:</strong> {{ doc.organization_name or "Not specified" }}</p>
-                <p><strong>Reporting Period:</strong> {{ doc.period_from or "Start date" }} to {{ doc.period_to or "End date" }}</p>
-                <p><strong>Base Year:</strong> {{ doc.base_year or "Not specified" }}</p>
-                <p><strong>Compliance:</strong> {{ doc.compliance_statement or "Not specified" }}</p>
-                <p><strong>GWP Values:</strong> {{ doc.gwp_values or "Not specified" }}</p>
-            </div>
-        </div>
-
-        <!-- Footer -->
-        <div class="footer">
-            <p>This report was generated on {{ frappe.utils.nowdate() }} using the Climoro Onboarding system.</p>
-            <p>For questions or clarifications, please contact the report preparer.</p>
         </div>
     </div>
+
+    <!-- Footer Watermark and Page Number -->
+    <div class="footer-watermark">
+        <img src="/files/Climoro.png" alt="Climoro Logo">
+    </div>
+    <div class="page-number">
+        Page <span id="current-page"></span>
+    </div>
+
+    <script>
+        // Page numbering script
+        window.onload = function() {
+            // Simple page number display
+            const pageElements = document.querySelectorAll('.section, .toc-container, #title-page');
+            let currentPage = 1;
+            
+            pageElements.forEach((element, index) => {
+                if (index > 0) { // Skip title page
+                    currentPage++;
+                }
+                element.setAttribute('data-page', currentPage);
+            });
+            
+            // Display current page number
+            document.getElementById('current-page').textContent = currentPage;
+        };
+    </script>
 </body>
 </html>
