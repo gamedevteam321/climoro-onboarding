@@ -1,0 +1,116 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-01-01 00:00:00.000000",
+ "doctype": "Print Format",
+ "engine": "InnoDB",
+ "field_order": [
+  "doc_type",
+  "print_format_type",
+  "html",
+  "css",
+  "raw_printing",
+  "margin_top",
+  "margin_bottom",
+  "margin_left",
+  "margin_right",
+  "orientation",
+  "page_size"
+ ],
+ "doc_type": "GHG Report",
+ "fields": [
+  {
+   "fieldname": "doc_type",
+   "fieldtype": "Link",
+   "label": "Document Type",
+   "options": "DocType",
+   "reqd": 1
+  },
+  {
+   "fieldname": "print_format_type",
+   "fieldtype": "Select",
+   "label": "Print Format Type",
+   "options": "Jinja\nJS",
+   "reqd": 1
+  },
+  {
+   "fieldname": "html",
+   "fieldtype": "HTML Editor",
+   "label": "HTML"
+  },
+  {
+   "fieldname": "css",
+   "fieldtype": "CSS",
+   "label": "CSS"
+  },
+  {
+   "fieldname": "raw_printing",
+   "fieldtype": "Check",
+   "label": "Raw Printing"
+  },
+  {
+   "fieldname": "margin_top",
+   "fieldtype": "Float",
+   "label": "Margin Top (in mm)",
+   "default": 15.0
+  },
+  {
+   "fieldname": "margin_bottom",
+   "fieldtype": "Float",
+   "label": "Margin Bottom (in mm)",
+   "default": 15.0
+  },
+  {
+   "fieldname": "margin_left",
+   "fieldtype": "Float",
+   "label": "Margin Left (in mm)",
+   "default": 15.0
+  },
+  {
+   "fieldname": "margin_right",
+   "fieldtype": "Float",
+   "label": "Margin Right (in mm)",
+   "default": 15.0
+  },
+  {
+   "fieldname": "orientation",
+   "fieldtype": "Select",
+   "label": "Orientation",
+   "options": "Portrait\nLandscape",
+   "default": "Portrait"
+  },
+  {
+   "fieldname": "page_size",
+   "fieldtype": "Select",
+   "label": "Page Size",
+   "options": "A4\nA5\nLetter\nLegal",
+   "default": "A4"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2024-01-01 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Climoro Onboarding",
+ "name": "GHG Report (ISO 14064-1)",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "print_format_type": "Jinja",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1,
+ "track_views": 1
+}

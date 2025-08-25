@@ -48,6 +48,10 @@ app_include_js = [
 doctype_js = {
     "Onboarding Form": "climoro_onboarding/doctype/onboarding_form/onboarding_form.js"
 }
+# add list view js for buttons/actions
+doctype_list_js = {
+    "GHG Report": "climoro_onboarding/doctype/ghg_report/ghg_report_list.js"
+}
 
 # Svg Icons
 # ------------------
@@ -287,5 +291,12 @@ whitelisted_methods = [
 
 # Fixtures
 # --------
-fixtures = ["Onboarding Form"]
+fixtures = ["Onboarding Form", "Dashboard Chart", "Number Card"]
+
+# Dashboard overrides
+override_doctype_dashboards = {
+    "Stationary Emissions": "climoro_onboarding.dashboard.get_stationary_emissions_dashboard",
+    "Electricity Purchased": "climoro_onboarding.dashboard.get_electricity_dashboard",
+    "Downstream Transportation Method": "climoro_onboarding.dashboard.get_transportation_dashboard"
+}
 
