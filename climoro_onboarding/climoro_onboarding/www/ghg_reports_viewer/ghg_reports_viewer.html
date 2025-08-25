@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GHG Reports Viewer</title>
+    <link rel="stylesheet" href="ghg_reports_viewer.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1><i class="fas fa-chart-line"></i> GHG Reports Viewer</h1>
+                <div class="user-info">
+                    <span id="user-name"></span>
+                    <span id="user-company"></span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Filters Section -->
+        <div class="filters-section">
+            <div class="filter-group">
+                <label for="company-filter">Company:</label>
+                <select id="company-filter" class="filter-select">
+                    <option value="">All Companies</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="date-from">From Date:</label>
+                <input type="date" id="date-from" class="filter-input">
+            </div>
+            <div class="filter-group">
+                <label for="date-to">To Date:</label>
+                <input type="date" id="date-to" class="filter-input">
+            </div>
+            <div class="filter-group">
+                <button id="apply-filters" class="btn btn-primary">
+                    <i class="fas fa-filter"></i> Apply Filters
+                </button>
+                <button id="clear-filters" class="btn btn-secondary">
+                    <i class="fas fa-times"></i> Clear
+                </button>
+            </div>
+        </div>
+
+        <!-- Reports Table -->
+        <div class="reports-section">
+            <div class="section-header">
+                <h2>GHG Reports</h2>
+                <div class="section-actions">
+                    <button id="refresh-reports" class="btn btn-outline">
+                        <i class="fas fa-sync-alt"></i> Refresh
+                    </button>
+                    <button id="generate-new-report" class="btn btn-success">
+                        <i class="fas fa-plus"></i> Generate New Report
+                    </button>
+                </div>
+            </div>
+            
+            <div class="table-container">
+                <table id="reports-table" class="reports-table">
+                    <thead>
+                        <tr>
+                            <th>Report Title</th>
+                            <th>Company</th>
+                            <th>Period From</th>
+                            <th>Period To</th>
+                            <th>Status</th>
+                            <th>Created</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="reports-tbody">
+                        <!-- Reports will be populated here -->
+                    </tbody>
+                </table>
+                <div id="loading" class="loading hidden">
+                    <div class="spinner"></div>
+                    <span>Loading reports...</span>
+                </div>
+                <div id="no-reports" class="no-reports hidden">
+                    <i class="fas fa-inbox"></i>
+                    <p>No reports found matching your criteria</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Generate Report Modal -->
+    <div id="generate-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-file-pdf"></i> Generate New GHG Report</h3>
+                <button class="modal-close" id="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="generate-form">
+                    <div class="form-group">
+                        <label for="modal-company">Company *</label>
+                        <select id="modal-company" class="form-input" required>
+                            <option value="">Select Company</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="modal-period-from">Period From *</label>
+                        <input type="date" id="modal-period-from" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="modal-period-to">Period To *</label>
+                        <input type="date" id="modal-period-to" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="modal-report-title">Report Title *</label>
+                        <input type="text" id="modal-report-title" class="form-input" placeholder="Enter report title" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="cancel-generate">Cancel</button>
+                <button type="submit" class="btn btn-success" id="submit-generate">
+                    <i class="fas fa-file-pdf"></i> Generate PDF
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay hidden">
+        <div class="loading-content">
+            <div class="spinner large"></div>
+            <h3>Generating PDF Report...</h3>
+            <p>This may take a few moments. Please wait.</p>
+        </div>
+    </div>
+
+    <!-- Success/Error Messages -->
+    <div id="message-container" class="message-container"></div>
+
+    <script src="ghg_reports_viewer.js"></script>
+</body>
+</html>

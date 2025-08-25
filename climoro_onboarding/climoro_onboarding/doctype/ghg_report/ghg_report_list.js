@@ -29,16 +29,63 @@ function openAutoDownloadDialog(listview){
     const d = new frappe.ui.Dialog({
         title: __('Generate GHG Report PDF'),
         fields: [
-            { fieldtype: 'Link', fieldname: 'organization_name', label: __('Organization Name'), options: 'Company', reqd: 0 },
-            { fieldtype: 'Int', fieldname: 'year', label: __('Year'), reqd: 0, default: (new Date()).getFullYear() }
+            { 
+                fieldtype: 'Link', 
+                fieldname: 'organization_name', 
+                label: __('Organization Name'), 
+                options: 'Company', 
+                reqd: 0,
+                description: __('Leave empty to use your default company (non-admin users)')
+            },
+            { 
+                fieldtype: 'Int', 
+                fieldname: 'year', 
+                label: __('Year'), 
+                reqd: 0, 
+                default: (new Date()).getFullYear(),
+                description: __('Used if start/end dates are not specified')
+            },
+            { 
+                fieldtype: 'Date', 
+                fieldname: 'start_date', 
+                label: __('Start Date'), 
+                reqd: 0,
+                description: __('Leave empty to use full year from Year field')
+            },
+            { 
+                fieldtype: 'Date', 
+                fieldname: 'end_date', 
+                label: __('End Date'), 
+                reqd: 0,
+                description: __('Leave empty to use full year from Year field')
+            }
         ],
         primary_action_label: __('Generate'),
         primary_action: (values) => {
+            // Validate date inputs
+            if (values.start_date && values.end_date) {
+                const start = new Date(values.start_date);
+                const end = new Date(values.end_date);
+                if (start > end) {
+                    frappe.msgprint(__('Start Date must be before End Date'));
+                    return;
+                }
+            }
+            
             d.hide();
             showLoading(__('Generating report...'));
+            
+            // Prepare arguments for the backend function
+            const args = {
+                organization_name: values.organization_name || null,
+                year: values.year || null,
+                start_date: values.start_date || null,
+                end_date: values.end_date || null
+            };
+            
             frappe.call({
                 method: 'climoro_onboarding.climoro_onboarding.doctype.ghg_report.ghg_report.auto_create_and_generate_pdf',
-                args: values || {},
+                args: args,
                 callback: function(r) {
                     hideLoading();
                     if (r.message && r.message.success && r.message.file_url) {

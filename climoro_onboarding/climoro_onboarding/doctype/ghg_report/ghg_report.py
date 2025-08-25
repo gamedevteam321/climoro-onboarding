@@ -170,6 +170,27 @@ class GHGReport(Document):
             if not self.report_title:
                 return {"success": False, "message": "Report Title is required to generate PDF."}
 
+            # Re-populate derived sections using the selected company (if provided)
+            try:
+                selected_company = getattr(self, "organization_name", None) or getattr(self, "company", None)
+                if selected_company:
+                    if getattr(self, "period_to", None):
+                        reporting_year = frappe.utils.getdate(self.period_to).year
+                    else:
+                        reporting_year = frappe.utils.now_datetime().year
+                    
+                    # Get custom dates if available
+                    start_date = getattr(self, "period_from", None)
+                    end_date = getattr(self, "period_to", None)
+                    
+                    _append_boundaries(self, company=selected_company)
+                    _append_reductions(self, company=selected_company, year=reporting_year, start_date=start_date, end_date=end_date)
+                    _append_inventory_lines(self, company=selected_company, year=reporting_year, start_date=start_date, end_date=end_date)
+                    _append_scope2_dual_lines(self, company=selected_company, year=reporting_year, start_date=start_date, end_date=end_date)
+                    self.save(ignore_permissions=True)
+            except Exception as _e:
+                frappe.log_error(f"generate_pdf: population error: {_e}")
+
             # Render HTML without letterhead (prevents default header/footer)
             html = frappe.get_print(
                 doctype=self.doctype,
@@ -244,6 +265,27 @@ class GHGReport(Document):
         This guarantees the custom layout is used even if DB print formats are stale.
         """
         try:
+            # Re-populate derived sections using the selected company (if provided)
+            try:
+                selected_company = getattr(self, "organization_name", None) or getattr(self, "company", None)
+                if selected_company:
+                    if getattr(self, "period_to", None):
+                        reporting_year = frappe.utils.getdate(self.period_to).year
+                    else:
+                        reporting_year = frappe.utils.now_datetime().year
+                    
+                    # Get custom dates if available
+                    start_date = getattr(self, "period_from", None)
+                    end_date = getattr(self, "period_to", None)
+                    
+                    _append_boundaries(self, company=selected_company)
+                    _append_reductions(self, company=selected_company, year=reporting_year, start_date=start_date, end_date=end_date)
+                    _append_inventory_lines(self, company=selected_company, year=reporting_year, start_date=start_date, end_date=end_date)
+                    _append_scope2_dual_lines(self, company=selected_company, year=reporting_year, start_date=start_date, end_date=end_date)
+                    self.save(ignore_permissions=True)
+            except Exception as _e:
+                frappe.log_error(f"generate_pdf_using_template: population error: {_e}")
+
             app = "climoro_onboarding"
             base_dir = os.path.join(
                 frappe.get_app_path(app),
@@ -370,6 +412,27 @@ class GHGReport(Document):
         - Merge: title → TOC → sections, attach file
         """
         try:
+            # Re-populate derived sections using the selected company (if provided)
+            try:
+                selected_company = getattr(self, "organization_name", None) or getattr(self, "company", None)
+                if selected_company:
+                    if getattr(self, "period_to", None):
+                        reporting_year = frappe.utils.getdate(self.period_to).year
+                    else:
+                        reporting_year = frappe.utils.now_datetime().year
+                    
+                    # Get custom dates if available
+                    start_date = getattr(self, "period_from", None)
+                    end_date = getattr(self, "period_to", None)
+                    
+                    _append_boundaries(self, company=selected_company)
+                    _append_reductions(self, company=selected_company, year=reporting_year, start_date=start_date, end_date=end_date)
+                    _append_inventory_lines(self, company=selected_company, year=reporting_year, start_date=start_date, end_date=end_date)
+                    _append_scope2_dual_lines(self, company=selected_company, year=reporting_year, start_date=start_date, end_date=end_date)
+                    self.save(ignore_permissions=True)
+            except Exception as _e:
+                frappe.log_error(f"generate_pdf_with_toc: population error: {_e}")
+
             app = "climoro_onboarding"
             base_dir = os.path.join(
                 frappe.get_app_path(app),
@@ -530,6 +593,27 @@ def generate_ghg_report_pdf(doctype, name):
             return {"success": False, "message": f"Document {doctype} {name} not found"}
         
         doc = frappe.get_doc(doctype, name)
+        # Re-populate derived sections using the company selected on the document (if any)
+        try:
+            selected_company = getattr(doc, "organization_name", None) or getattr(doc, "company", None)
+            if selected_company:
+                # Choose reporting year from period_to if present, else fallback to current year
+                if getattr(doc, "period_to", None):
+                    reporting_year = frappe.utils.getdate(doc.period_to).year
+                else:
+                    reporting_year = frappe.utils.now_datetime().year
+                
+                # Get custom dates if available
+                start_date = getattr(doc, "period_from", None)
+                end_date = getattr(doc, "period_to", None)
+                
+                _append_boundaries(doc, company=selected_company)
+                _append_reductions(doc, company=selected_company, year=reporting_year, start_date=start_date, end_date=end_date)
+                _append_inventory_lines(doc, company=selected_company, year=reporting_year, start_date=start_date, end_date=end_date)
+                _append_scope2_dual_lines(doc, company=selected_company, year=reporting_year, start_date=start_date, end_date=end_date)
+                doc.save(ignore_permissions=True)
+        except Exception as _e:
+            frappe.log_error(f"generate_ghg_report_pdf: population error: {_e}")
         result = doc.generate_pdf_with_toc()
         
         frappe.logger().info(f"PDF generation result: {result}")
@@ -561,37 +645,51 @@ def _year_window(year: int):
 REDUCTION_SRC_DOCTYPE = "GHG Reduction Entry"
 
 
-def _fetch_reduction_entries(company: str, year: int):
-    start, end = _year_window(year)
-    filters = {"company": company, "date": ["between", [start, end]]}
-    if not _is_admin():
-        filters["owner"] = frappe.session.user
+def _fetch_reduction_entries(company: str, start_date, end_date):
+	start = frappe.utils.getdate(start_date)
+	end = frappe.utils.getdate(end_date)
+	filters = {"company": company, "date": ["between", [start, end]]}
+	if not _is_admin():
+		filters["owner"] = frappe.session.user
 
-    if not frappe.db.exists("DocType", REDUCTION_SRC_DOCTYPE):
-        return []
+	if not frappe.db.exists("DocType", REDUCTION_SRC_DOCTYPE):
+		return []
 
-    return frappe.get_all(
-        REDUCTION_SRC_DOCTYPE,
-        filters=filters,
-        fields=[
-            "project_name",
-            "reduction_type",
-            "amount_tco2e",
-            "date",
-            "status",
-            "description",
-            "scope_category_impacted",
-        ],
-        order_by="date asc",
-    )
+	return frappe.get_all(
+		REDUCTION_SRC_DOCTYPE,
+		filters=filters,
+		fields=[
+			"project_name",
+			"reduction_type",
+			"amount_tco2e",
+			"date",
+			"status",
+			"description",
+			"scope_category_impacted",
+		],
+		order_by="date asc",
+	)
 
 
-def _append_reductions(doc, company: str, year: int) -> None:
+def _append_reductions(doc, company: str, year: int, start_date=None, end_date=None) -> None:
     """Append rows to `ghg_reduction_line` from the reduction source doctype.
 
     Uses current child schema: initiative, description, reduction_achieved, scope_category_impacted.
+    
+    Args:
+        company: Company name to filter by
+        year: Reporting year (used for base year calculation)
+        start_date: Custom start date for current period (if None, uses full year)
+        end_date: Custom end date for current period (if None, uses full year)
     """
-    entries = _fetch_reduction_entries(company, year)
+    # Use custom dates if provided, otherwise fall back to full year
+    if start_date and end_date:
+        start = frappe.utils.getdate(start_date)
+        end = frappe.utils.getdate(end_date)
+    else:
+        start, end = _year_window(year)
+        
+    entries = _fetch_reduction_entries(company, start, end)
     if not entries:
         return
 
@@ -730,7 +828,7 @@ def _sum_records(doctype: str, company: str, start, end, gas_fields, total_field
 	return {"per_gas": per_gas_sum, "total": total_sum}
 
 
-def _append_inventory_lines(doc, company: str, year: int) -> None:
+def _append_inventory_lines(doc, company: str, year: int, start_date=None, end_date=None) -> None:
 	"""Populate `ghg_inventory_line` by aggregating Scope 1/2 sources.
 
 	Sources detected:
@@ -738,9 +836,19 @@ def _append_inventory_lines(doc, company: str, year: int) -> None:
 	  - Fugitive Simple → Scope 1, Category 1, Direct (Aggregate)
 	  - Electricity Purchased → Scope 2, Category 2, Indirect (Aggregate)
 
-	Base-year window: uses doc.base_year if set, else (year - 1).
+	Args:
+		company: Company name to filter by
+		year: Reporting year (used for base year calculation)
+		start_date: Custom start date for current period (if None, uses full year)
+		end_date: Custom end date for current period (if None, uses full year)
 	"""
-	start_current, end_current = _year_window(year)
+	# Use custom dates if provided, otherwise fall back to full year
+	if start_date and end_date:
+		start_current = frappe.utils.getdate(start_date)
+		end_current = frappe.utils.getdate(end_date)
+	else:
+		start_current, end_current = _year_window(year)
+	
 	base_year = int(doc.base_year) if getattr(doc, "base_year", None) else (year - 1)
 	start_base, end_base = _year_window(base_year)
 
@@ -824,20 +932,144 @@ def _append_inventory_lines(doc, company: str, year: int) -> None:
 
 	# Future: Scope 3 mappings → append under Category 3..6 as Aggregate
 
+def _sum_scope2_dual(company: str, start, end):
+	"""Sum Scope 2 dual metrics from Electricity Purchased if fields are available.
+
+	Returns: { "lb": float, "mb": float }
+	"""
+	if not frappe.db.exists("DocType", "Electricity Purchased"):
+		return {"lb": 0.0, "mb": 0.0}
+
+	meta = frappe.get_meta("Electricity Purchased")
+	# Candidate fieldnames for location- and market-based totals
+	cand_lb = [
+		"location_based_etco2eq",
+		"etco2eq_location",
+		"lb_etco2eq",
+		"location_based_total",
+	]
+	cand_mb = [
+		"market_based_etco2eq",
+		"etco2eq_market",
+		"mb_etco2eq",
+		"market_based_total",
+	]
+
+	field_lb = next((f for f in cand_lb if meta.has_field(f)), None)
+	field_mb = next((f for f in cand_mb if meta.has_field(f)), None)
+	fallback_total = meta.has_field("etco2eq")
+
+	filters = {"date": ["between", [start, end]]}
+	if meta.has_field("company") and company:
+		filters["company"] = company
+	if not _is_admin() and not meta.has_field("company"):
+		filters["owner"] = frappe.session.user
+
+	selected = ["name", "date"]
+	if field_lb:
+		selected.append(field_lb)
+	if field_mb:
+		selected.append(field_mb)
+	if fallback_total:
+		selected.append("etco2eq")
+
+	rows = frappe.get_all("Electricity Purchased", filters=filters, fields=selected, order_by="date asc")
+
+	lb_sum = 0.0
+	mb_sum = 0.0
+	for r in rows:
+		if field_lb and field_lb in r:
+			lb_sum += float(r.get(field_lb) or 0)
+		if field_mb and field_mb in r:
+			mb_sum += float(r.get(field_mb) or 0)
+		# If specific fields not present, fall back to total for both (best-effort)
+		if not field_lb and fallback_total and "etco2eq" in r:
+			lb_sum += float(r.get("etco2eq") or 0)
+		if not field_mb and fallback_total and "etco2eq" in r:
+			mb_sum += float(r.get("etco2eq") or 0)
+
+	return {"lb": lb_sum, "mb": mb_sum}
+
+
+def _append_scope2_dual_lines(doc, company: str, year: int, start_date=None, end_date=None) -> None:
+	"""Populate `ghg_scope2_dual_line` child table for Scope 2 dual reporting.
+
+	Rows schema expected: method, category2_emissions, total_gross_emissions
+	
+	Args:
+		company: Company name to filter by
+		year: Reporting year (used for base year calculation)
+		start_date: Custom start date for current period (if None, uses full year)
+		end_date: Custom end date for current period (if None, uses full year)
+	"""
+	# Use custom dates if provided, otherwise fall back to full year
+	if start_date and end_date:
+		start = frappe.utils.getdate(start_date)
+		end = frappe.utils.getdate(end_date)
+	else:
+		start, end = _year_window(year)
+		
+	if getattr(doc, "ghg_scope2_dual_line", None):
+		doc.set("ghg_scope2_dual_line", [])
+
+	totals = _sum_scope2_dual(company, start, end)
+	if totals["lb"] > 0:
+		doc.append(
+			"ghg_scope2_dual_line",
+			{
+				"method": "Location-Based",
+				"category2_emissions": float(totals["lb"]),
+				"total_gross_emissions": float(totals["lb"]),
+			},
+		)
+	if totals["mb"] > 0:
+		doc.append(
+			"ghg_scope2_dual_line",
+			{
+				"method": "Market-Based",
+				"category2_emissions": float(totals["mb"]),
+				"total_gross_emissions": float(totals["mb"]),
+			},
+		)
+
 @frappe.whitelist()
-def auto_create_and_generate_pdf(organization_name: str | None = None, year: int | None = None):
+def auto_create_and_generate_pdf(organization_name: str | None = None, year: int | None = None, start_date: str | None = None, end_date: str | None = None):
     """Create a GHG Report with sensible defaults, generate PDF, and return file_url.
     Used by the listview primary action (Download Report).
+    
+    Args:
+        organization_name: Company name (admin users can specify, non-admin users will use their default company)
+        year: Reporting year (if not provided, will use start_date year or current year)
+        start_date: Start date for reporting period (YYYY-MM-DD format)
+        end_date: End date for reporting period (YYYY-MM-DD format)
     """
     try:
         # Defaults
         today = frappe.utils.getdate()
-        if not year:
+        
+        # Handle date parameters
+        if start_date and end_date:
+            start = frappe.utils.getdate(start_date)
+            end = frappe.utils.getdate(end_date)
+            year = end.year  # Use end date year for reporting
+        elif year:
+            start = frappe.utils.getdate(f"{year}-01-01")
+            end = frappe.utils.getdate(f"{year}-12-31")
+        else:
             year = today.year
-        start = frappe.utils.getdate(f"{year}-01-01")
-        end = frappe.utils.getdate(f"{year}-12-31")
-        if not organization_name:
+            start = frappe.utils.getdate(f"{year}-01-01")
+            end = frappe.utils.getdate(f"{year}-12-31")
+        
+        # Handle company selection based on user role
+        if _is_admin():
+            # Admin users can specify any company or use default
+            if not organization_name:
+                organization_name = frappe.defaults.get_user_default("company") or ""
+        else:
+            # Non-admin users always use their default company
             organization_name = frappe.defaults.get_user_default("company") or ""
+            if not organization_name:
+                return {"success": False, "message": "No company found for current user. Please set a default company."}
 
         title = f"Annual GHG Emissions and Reductions Report for {organization_name or 'Organization'}"
 
@@ -859,8 +1091,9 @@ def auto_create_and_generate_pdf(organization_name: str | None = None, year: int
             if organization_name:
                 _append_boundaries(doc, company=organization_name)
             if organization_name and year:
-                _append_reductions(doc, company=organization_name, year=year)
-                _append_inventory_lines(doc, company=organization_name, year=year)
+                _append_reductions(doc, company=organization_name, year=year, start_date=start, end_date=end)
+                _append_inventory_lines(doc, company=organization_name, year=year, start_date=start, end_date=end)
+                _append_scope2_dual_lines(doc, company=organization_name, year=year, start_date=start, end_date=end)
             doc.save(ignore_permissions=True)
         except Exception as _e:
             frappe.log_error(f"auto_create_and_generate_pdf: population error: {_e}")

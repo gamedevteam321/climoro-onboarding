@@ -11,5 +11,7 @@ whitelisted_methods = [
     "climoro_onboarding.climoro_onboarding.climoro_onboarding.test_module_blocking.test_module_blocking_workflow",
     "climoro_onboarding.climoro_onboarding.climoro_onboarding.test_module_blocking.verify_existing_users_module_blocking",
     "climoro_onboarding.climoro_onboarding.climoro_onboarding.test_loading_popup.test_loading_popup_functionality",
-    "climoro_onboarding.climoro_onboarding.climoro_onboarding.test_loading_popup.test_reject_loading_popup"
+    "climoro_onboarding.climoro_onboarding.climoro_onboarding.test_loading_popup.test_reject_loading_popup",
+    "climoro_onboarding.climoro_onboarding.climoro_onboarding.www.ghg_reports_viewer.ghg_reports_viewer.get_reports_for_viewer",
+    "climoro_onboarding.climoro_onboarding.climoro_onboarding.www.ghg_reports_viewer.ghg_reports_viewer.create_and_generate_ghg_report"
 ] 
