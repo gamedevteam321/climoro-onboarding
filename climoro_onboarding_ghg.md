@@ -1,4 +1,4 @@
-# Report: Climoro Onboarding + GHG Accounting Forms (Corrected Roles + Doctypes)
+# Report: Climoro Onboarding + GHG Accounting Forms 
 
 Dear [Senior’s Name],
 
