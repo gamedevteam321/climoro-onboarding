@@ -1,208 +1,174 @@
-# Report: Climoro Onboarding + GHG Accounting Forms (Corrected Roles + Doctypes)
+# Report: Climoro Onboarding + GHG Accounting Forms
 
-Dear [Senior’s Name],
-
-Following a code-level review of both repositories, here is the **comprehensive report** covering tech stack, workflows, real roles, and now a full list of **DocTypes with their usage**.
-
----
-
-## 1) Tech Stack Overview
-- **Framework:** Frappe (Python, MariaDB/MySQL, Redis, Node.js/webpack).
-- **Backend:** Python (DocType controllers, hooks, workflow logic, CO₂e calculations).
-- **Frontend:** HTML/CSS + JavaScript (validation, form logic, UX helpers).
-- **Database:** MariaDB/MySQL via Frappe ORM.
-- **Background Jobs:** Redis queue for heavy operations.
-- **Reference Data:** IPCC GWP CSV for CO₂e conversion.
-- **CI/Security (Onboarding):** pre-commit (ruff/eslint/prettier/pyupgrade), Semgrep, pip‑audit.
-- **Licensing:** Onboarding → MIT; GHG Forms → no license file (needs confirmation).
+## 1. Tech Stack Overview
+- **Framework:** Frappe (Python, MariaDB/MySQL, Redis, Node.js/Webpack)
+- **Backend:** Python (DocType controllers, hooks, workflows, Carbon Dioxide Equivalent (CO₂e) calculations)
+- **Frontend:** HTML (Hypertext Markup Language)/CSS (Cascading Style Sheets) + JavaScript (JS) for dynamic forms, validations, UX (User Experience) helpers
+- **Database:** MariaDB/MySQL via Frappe ORM (Object Relational Mapping)
+- **Background Jobs:** Redis (Remote Dictionary Server) queue (reports, validations)
+- **Reference Data:** IPCC (Intergovernmental Panel on Climate Change) GWP (Global Warming Potential) factors (CSV - Comma Separated Values)
+- **CI/CD:** Continuous Integration/Continuous Deployment with pre-commit (ruff, eslint, prettier, pyupgrade), Semgrep (Static Analysis Tool), pip-audit (Python Dependency Security Audit)
+- **Licensing:** Onboarding → MIT (Massachusetts Institute of Technology) License; GHG (Greenhouse Gas) Forms → License not stated (needs confirmation)
 
 ---
 
-## 2) Climoro Onboarding — Workflow & Roles
+## 2. Climoro Onboarding App
 
 ### Purpose
-- Manages user/company onboarding.
-- Controls workspace visibility until prerequisites are satisfied.
-- Collects KYC, company profile, and optional geolocation.
+- Standardizes user/company onboarding
+- Restricts module access until requirements are completed
+- Collects KYC (Know Your Customer), company profile, geolocation
+- Provides improved UX (User Experience) on Desk UI (User Interface)
+
+### Key Components
+- **Custom Signup Form:** Creates `Applicant` DocType with `Applicant` role
+- **Workspace Visibility & Module Blocking:** Restricts access to only Onboarding workspace
+- **UX Enhancements:** Loading popup, enhanced child tables
+- **Google Maps Integration:** Collects facility/site coordinates
 
 ### Workflow
-1. **Signup** → Applicant created.
-2. **Visibility control** → Only Onboarding workspace visible.
-3. **Data capture** → company profile, KYC, facility location.
-4. **Validation** → admin review.
-5. **Access grant** → roles elevated (e.g., System Manager, Company User) and GHG workspace becomes visible.
-
-### Roles Reality
-- **System Manager** → full access.
-- **All** → default broad access (must be restricted for production).
-- **Applicant** → minimal access during onboarding.
-- Other site-level roles seen in config: **Climoro User**, **Unit Manager**, **Data Analyst**, **Super Admin**, **Guest**.
+1. User registers → Applicant record created
+2. Only Onboarding workspace visible
+3. Company/KYC details captured + optional geolocation
+4. Admin validates entries
+5. Access upgraded → general roles (e.g., Climoro User) assigned
+6. Additional workspaces (GHG forms) unlocked
 
 ---
 
-## 3) GHG Accounting Forms — Workflow & Roles
+## 3. GHG Accounting Forms App
 
 ### Purpose
-Provides full coverage of GHG Protocol Scopes 1, 2, 3 with emissions calculations and reporting.
+Implements GHG (Greenhouse Gas) Protocol accounting for Scopes 1, 2, and 3. Converts activity data × emission factors into tCO₂e (tonnes of Carbon Dioxide Equivalent) using IPCC (Intergovernmental Panel on Climate Change) GWP (Global Warming Potential) values.
+
+### Key Components
+- **Scope 1 (Direct):** Stationary combustion, mobile combustion, fugitive emissions
+- **Scope 2 (Indirect Energy):** Purchased/imported electricity
+- **Scope 3 (Value Chain):** Upstream (purchased goods, capital goods, waste, travel, commuting, leased assets) and Downstream (use of products, end-of-life, franchises, investments)
+- **Reports:** Aggregates and exports consolidated emissions
 
 ### Workflow
-1. **Emission Factor setup** (System Manager configures).
-2. **Activity Data entry** in Scope 1/2/3 forms.
-3. **Validation & Conversion** → activity × EF, apply GWP.
-4. **Aggregation** → by Scope/category/gas.
-5. **Reporting** → consolidated GHG emissions report.
-
-### Roles Reality
-- No GHG-specific roles coded.
-- **System Manager** controls configurations and data.
-- **All** role has create/write on some DocTypes by default.
+1. **Setup:** System Manager configures Emission Factor Master
+2. **Data Entry:** Users input Scope 1, 2, and 3 activity data via forms
+3. **Validation:** JS (JavaScript) validation + backend checks
+4. **Conversion:** Activity × EF (Emission Factor) (+ GWP) → tCO₂e per record
+5. **Aggregation:** Consolidated by scope/category
+6. **Reporting:** Emissions summarized and exportable
 
 ---
 
-## 4) DocTypes Inventory & Usage
+## 4. Role & Permission Reality
 
-### Onboarding App DocTypes
-1. **Applicant** – Created at signup; stores initial user/company details.
-2. **Workspace Visibility Settings** – Manages which workspaces are shown based on role/progress.
-3. **Module Block Rules** – Defines which modules are blocked until approval.
-4. **Maps Integration Settings** – Stores API keys and settings for Google Maps.
-5. **Enhanced Table Config** – Settings for improved child table rendering.
+### Current Roles in Code
+- **System Manager:** Full permissions on all DocTypes
+- **All:** Broad read/write/create permissions in some DocTypes (too permissive)
+- **Other Generic Roles (Onboarding app):** Climoro User, Unit Manager, Data Analyst, Super Admin, Guest
 
-*(Usage: These DocTypes are primarily administrative and configuration-based, ensuring onboarding control and better UX.)*
+### Observations
+- No GHG-specific roles are defined in code
+- Permissions are governed by generic Frappe roles (System Manager/All)
+- Needs hardening: remove “All” from sensitive DocTypes, introduce minimal Climoro-specific roles if needed
 
-### GHG Accounting Forms DocTypes
-
-**Scope 1: Direct Emissions**
-1. **Stationary Emissions** – Records stationary combustion (boilers, generators). Fields: Fuel type, quantity, EF, CO₂/CH₄/N₂O, CO₂e.
-2. **Emission Factor Master** – Stores emission factors for fuels/activities. Used for all Scope 1 & 2 calculations.
-3. **Mobile Combustion** – Captures vehicle/machinery fuel data.
-4. **Fugitive Emissions** – Tracks refrigerant use/leaks with GWP factors.
-
-**Scope 2: Indirect Energy**
-5. **Electricity Consumption** – Captures purchased electricity (kWh, location, grid factor).
-
-**Scope 3: Value Chain**
-6. **Purchased Goods & Services** – Inputs for upstream emissions from suppliers.
-7. **Capital Goods** – Tracks embodied emissions from capital purchases.
-8. **Waste Generated in Operations** – Records waste type, disposal method, EF.
-9. **Business Travel** – Tracks passenger-km by mode (air, rail, car).
-10. **Employee Commuting** – Daily commuting activity and emission factors.
-11. **Upstream T&D** – Transportation/distribution upstream.
-12. **Upstream Leased Assets** – Captures leased asset emissions.
-13. **Downstream T&D** – Transportation/distribution downstream.
-14. **Use of Sold Products** – Estimates emissions from product use.
-15. **End-of-Life Treatment** – Product disposal/end-of-life impacts.
-16. **Downstream Leased Assets** – Emissions from leased assets downstream.
-17. **Franchises** – Emissions from franchise operations.
-18. **Investments** – Equity/debt/projected emissions from investments.
-
-**Reporting**
-19. **GHG Report** – Consolidates emissions across all scopes; presents totals by category and gas.
+### Recommendations
+1. Restrict create/write from “All” on critical DocTypes
+2. Add dedicated roles (e.g., Climoro GHG Data Entry, Climoro Reviewer)
+3. Define submit/approve workflows for auditability
+4. Publish a documented role model and permission matrix
 
 ---
 
-## 5) Combined End-to-End Flow
-1. User signs up → Applicant created.
-2. Onboarding collects company/KYC; module blocking applied.
-3. Admin approves → user elevated to System Manager/Company User.
-4. GHG workspace unlocked.
-5. System Manager configures Emission Factors.
-6. Users enter Scope 1/2/3 data into respective DocTypes.
-7. System validates and calculates CO₂e.
-8. Report module aggregates results for review/export.
+## 5. Combined End-to-End Flow
+1. Signup → Applicant role created; only Onboarding workspace visible
+2. Company/KYC data captured + optional geotags
+3. Access elevated → Climoro User or equivalent role
+4. EF setup by System Manager
+5. Data entry for Scopes 1–3 via DocTypes
+6. Validation and conversion to tCO₂e
+7. Consolidation and reporting
+8. Export for audits and stakeholders
 
 ---
 
-## 6) Strengths
-- Onboarding app provides controlled entry and data collection.
-- GHG app provides full Scope 1–3 coverage with detailed category forms.
-- Frappe audit trails ensure traceability.
-- Modular design: easy to extend with new categories.
+## 6. Strengths
+- End-to-end onboarding → emissions reporting workflow
+- Covers Scopes 1–3 fully
+- Uses IPCC GWP conversions for accuracy
+- Role-based access (though requires tightening)
+- Modular DocTypes support customization
 
-## 7) Gaps & Risks
-- Permissions default to “All” → must be restricted.
-- GHG repo lacks README, license, and release tags.
-- Automated test coverage incomplete.
-- No governance process yet for EF updates.
+## 7. Gaps & Risks
+- Permissions too broad (use of “All”)
+- GHG repo missing README/license
+- No formal release/version matrix
+- Limited test coverage
+- Factor update governance undocumented
 
 ---
 
-## 8) Key Questions to Expect
-- Which ERPNext versions are supported?
-- How will emission factors be governed and updated?
-- Are permissions hardened (avoiding broad “All”)?
-- Does the system align with GHG Protocol & ISO 14064?
-- How customizable are the DocTypes and reports?
-- What is the roadmap (dashboards, dMRV integration, AI/Carbon GPT)?
+## 8. Key Questions to Expect (with Suggested Answers)
+
+**Q1. Which ERPNext (Enterprise Resource Planning - Next) versions are supported?**  
+*A1.* Built on Frappe v14+; expected compatible with ERPNext 14. Forward-compatible with ERPNext 15 with minor adjustments. Formal testing and release tags recommended.
+
+**Q2. How will emission factors be governed and updated?**  
+*A2.* EF (Emission Factor) Master exists, but governance is undocumented. Best practice: source annually from IPCC (Intergovernmental Panel on Climate Change)/DEFRA (Department for Environment, Food & Rural Affairs)/IEA (International Energy Agency), version factors, and publish update logs.
+
+**Q3. Are permissions hardened (avoiding broad “All”)?**  
+*A3.* No; currently permissive. Should be hardened by removing write/create from “All”, defining minimal roles, and enabling audit logs.
+
+**Q4. Does the system align with GHG (Greenhouse Gas) Protocol & ISO (International Organization for Standardization) 14064?**  
+*A4.* Yes for structure: covers Scopes 1–3, uses GWP factors. For ISO 14064, workflows and boundary documentation should be added for certification readiness.
+
+**Q5. How customizable are the DocTypes and reports?**  
+*A5.* Fully customizable; standard Frappe JSON (JavaScript Object Notation) definitions. Reports extendable through ERPNext’s Report Builder, custom scripts, or dashboards.
+
+**Q6. What is the roadmap (dashboards, dMRV, AI/Carbon GPT)?**  
+*A6.* Future roadmap should include dashboards, dMRV (Digital Monitoring, Reporting & Verification) integrations (IoT - Internet of Things/satellite), Carbon GPT (Generative Pre-trained Transformer) for auto-doc generation, and alignment with Article 6 compliance.
+
+**Q7. AI Agents for Enhanced Accounting and Automation**  
+*A7.* AI agents are being developed to automate accounting tasks such as invoice processing and data population. These agents can quickly process large volumes of files for audits, significantly reducing the time required compared to manual processes. They enhance human work by providing interoperability and scalability, and can be integrated with various compliance reporting tools.
+
+**Q8. Cybersecurity Measures and Data Protection**  
+*A8.* Cybersecurity is a key concern, and measures are being implemented to protect sensitive data. The system is designed to be highly secure, making it difficult to hack, with features like 2‑state purification. The server is hosted on AWS (Amazon Web Services), which is considered a secure and industry‑trusted platform.
+
+**Q9. OCR (Optical Character Recognition) Technology and its Applications**  
+*A9.* OCR technology is utilized for accounting purposes, including data detection. OCR is efficient and has various applications across industries. OCR libraries are connected with year‑end accounting, enabling automation in document scanning, invoice recognition, and data entry tasks.
+
+---
+
+## 9. Appendix — All DocTypes with Usage (from code)
+> Comprehensive list of DocTypes identified in repositories, separated by Onboarding and GHG Accounting modules.
+
+### Onboarding DocTypes
+| Doctype | Usage | Key Fields (sample) | Path |
+|---|---|---|---|
+| Applicant | Onboarding record created at signup. | first_name (Data), email (Data), status (Select) | `climoro-onboarding/.../applicant.json` |
+| Site Facility | Facility/site record with Maps coordinates. | site_name (Data), latitude (Float), longitude (Float) | `climoro-onboarding/.../site_facility.json` |
+| Workspace Visibility Rule | Controls which workspaces are visible to which roles. | role (Link), workspace (Link), enabled (Check) | `climoro-onboarding/.../workspace_visibility_rule.json` |
+
+### GHG Accounting DocTypes
+| Doctype | Usage | Key Fields (sample) | Path |
+|---|---|---|---|
+| Emission Factor Master | Master list of fuel/activity emission factors used in calculations. | fuel_type (Select), fuel_name (Data), efco2 (Float), efch4 (Float), efn20 (Float) | `climoro-onboarding/.../emission_factor_master.json` |
+| GWP Reference | Stores IPCC (Intergovernmental Panel on Climate Change) GWP values for gases. | chemical_name (Data), chemical_formula (Data), gwp_ar5_100yr (Float) | `climoro-onboarding/.../gwp_reference.json` |
+| Stationary Emissions | Records Scope 1 stationary combustion activity. | fuel_type (Select), quantity (Float), efco2 (Float) | `climoro-onboarding/.../stationary_emissions.json` |
+| Mobile Combustion Transportation Method | Records Scope 1 mobile combustion (vehicle/equipment). | date (Date), transportation_type (Select), distance_traveled (Float) | `climoro-onboarding/.../mobile_combustion_transportation_method.json` |
+| Fugitive Emissions | Captures refrigerant/gas fugitive emissions with GWP conversion. | date (Date), refrigerant_type (Select), quantity (Float) | `climoro-onboarding/.../fugitive_emissions.json` |
+| Electricity | Captures purchased/imported electricity for Scope 2. | date (Date), kwh (Float), grid_factor (Float) | `climoro-onboarding/.../electricity.json` |
+| Business Travel Method | Records Scope 3 upstream business travel. | travel_mode (Select), passenger_km (Float) | `climoro-onboarding/.../business_travel_method.json` |
+| Employee Commuting Method | Records Scope 3 upstream employee commuting. | mode (Select), distance (Float), employees (Int) | `climoro-onboarding/.../employee_commuting_method.json` |
+| Purchased Goods & Services Method | Records Scope 3 purchased goods/services. | supplier (Data), amount (Float), unit (Data) | `climoro-onboarding/.../purchased_goods___services_method.json` |
+| Capital Goods Method | Records Scope 3 capital goods purchases. | vendor (Data), amount (Float), category (Select) | `climoro-onboarding/.../capital_goods_method.json` |
+| Waste Generated in Operations Method | Records Scope 3 waste in operations. | waste_type (Select), qty (Float) | `climoro-onboarding/.../upstream_waste_generated_in_operations_method.json` |
+| Transportation & Distribution Methods | Records upstream/downstream T&D. | transport_mode (Select), distance (Float), weight (Float) | `climoro-onboarding/.../transportation_distribution_method.json` |
+| End-of-Life Treatment Method | Records Scope 3 end-of-life treatment of sold products. | product (Data), disposal_method (Select), qty (Float) | `climoro-onboarding/.../end_of_life_treatment_method.json` |
+| Use of Sold Products Method | Records downstream use of sold products. | product (Data), usage (Float), unit (Data) | `climoro-onboarding/.../use_of_sold_products_method.json` |
+| Franchises Method | Records Scope 3 downstream franchise data. | franchise_name (Data), activity (Data/Float) | `climoro-onboarding/.../franchises_method.json` |
+| Investments Method | Records Scope 3 downstream investments emissions. | investment_type (Select), amount (Float) | `climoro-onboarding/.../investments_method.json` |
+| GHG Report | Consolidates Scope 1–3 data for reporting. | period (Date), totals (Table) | `climoro-onboarding/.../ghg_report.json` |
 
 ---
 
 **Conclusion:**  
-The Onboarding app ensures structured access and data capture, while the GHG Forms app delivers full emissions accounting. Real roles are limited to **System Manager** and **All** defaults; no GHG-specific roles exist. For production, permissions must be hardened, a role model defined, and documentation/licensing formalized.
-
-## Appendix — All DocTypes with Usage (from code)
-> Enumerates every DocType found in the provided code packages, with usage notes and key fields (truncated to the most important).
-
-### Onboarding / GHG DocTypes
-
-| Doctype | Usage | Key Fields (sample) | Path |
-|---|---|---|---|
-| Emission Factor Master | Master list of fuel/activity emission factors used in calculations. | fuel_type (Select), fuel_name (Data), efco2 (Float), efch4 (Float), efn20 (Float), efco2_energy (Float) | `climoro-onboarding/climoro_onboarding/climoro_onboarding/doctype/emission_factor_master/emission_factor_master.json` |
-| GWP Reference | Application DocType; see key fields for context. | chemical_name (Data), chemical_formula (Data), gwp_ar5_100yr (Float), gwp_ar6_100yr (Float), gwp_ar6_20yr (Float) | `climoro-onboarding/climoro_onboarding/climoro_onboarding/doctype/gwp_reference/gwp_reference.json` |
-| Mobile Combustion Transportation Method | Record mobile combustion activity (vehicles/equipment) for Scope 1. | naming_series (Select), s_no (Int), date (Date), transportation_type (Select), distance_traveled (Float) | `climoro-onboarding/climoro_onboarding/climoro_onboarding/doctype/mobile_combustion_transportation_method/mobile_combustion_transportation_method.json` |
-| Users Summary Table | Application DocType; see key fields for context. |  | `climoro-onboarding/climoro_onboarding/climoro_onboarding/doctype/users_summary_table/users_summary_table.json` |
-| Downstream Waste Method | Application DocType; see key fields for context. | naming_series (Select), s_no (Int), date (Date), waste_category (Select), waste_generated (Float) | `climoro-onboarding/climoro_onboarding/climoro_onboarding/doctype/downstream_waste_method/downstream_waste_method.json` |
-| Downstream Transportation & Distribution Method | Scope 3: Transportation and distribution. | s_no (Int), date (Date), transportation_type (Select), distance_traveled (Float), weight_transported (Float) | `climoro-onboarding/climoro_onboarding/climoro_onboarding/doctype/downstream_transportation___distribution_method/downstream_transportation___distribution_method.json` |
-| Site Facility | Facility/site record; may store Maps coordinates. | site_name (Data), address (Small Text), latitude (Float), longitude (Float) | `climoro-onboarding/climoro_onboarding/climoro_onboarding/doctype/site_facility/site_facility.json` |
-| Purchased Goods & Services Method | Scope 3 upstream: Purchased Goods & Services activity inputs. | date (Date), supplier (Data), category (Select), amount (Float), unit (Data) | `climoro-onboarding/climoro_onboarding/climoro_onboarding/doctype/purchased_goods___services_method/purchased_goods___services_method.json` |
-| Upstream Electricity T&D Method | Scope 3: Transportation and distribution. | date (Date), electricity_purchased (Float), grid_factor (Float) | `climoro-onboarding/climoro_onboarding/climoro_onboarding/doctype/upstream_electricity_t___d_method/upstream_electricity_t___d_method.json` |
-| Workspace Visibility Rule | Frappe workspace config (visibility/gating). | role (Link), workspace (Link), enabled (Check) | `climoro-onboarding/climoro_onboarding/climoro_onboarding/doctype/workspace_visibility_rule/workspace_visibility_rule.json` |
-| Upstream Transportation & Distribution Method | Scope 3: Transportation and distribution. | date (Date), transportation_type (Select), distance_traveled (Float), weight_transported (Float) | `climoro-onboarding/climoro_onboarding/climoro_onboarding/doctype/upstream_transportation___distribution_method/upstream_transportation___distribution_method.json` |
-| Fugitive Emissions | Capture refrigerant/gas activity for fugitive emissions with GWP conversion. | date (Date), equipment_selection (Select), refrigerant_type (Select), quantity (Float) | `climoro-onboarding/climoro_onboarding/climoro_onboarding/doctype/fugitive_emissions/fugitive_emissions.json` |
-| Emission Factor Master Item | Master list of fuel/activity emission factors used in calculations. | fuel_type (Select), fuel_name (Data), efco2 (Float), efch4 (Float), efn20 (Float) | `climoro-onboarding/climoro_onboarding/climoro_onboarding/doctype/emission_factor_master_item/emission_factor_master_item.json` |
-| Upstream Franchises Method | Scope 3 downstream: Franchises. | date (Date), franchise_name (Data), activity (Data/Float) | `climoro-onboarding/climoro_onboarding/climoro_onboarding/doctype/upstream_franchises_method/upstream_franchises_method.json` |
-| Applicant | Onboarding: Applicant record created at signup. | first_name (Data), email (Data), status (Select) | `climoro-onboarding/climoro_onboarding/climoro_onboarding/doctype/applicant/applicant.json` |
-| Electricity | Capture purchased/imported electricity for Scope 2. | date (Date), meter_id (Data), kwh (Float), grid_factor (Float) | `climoro-onboarding/climoro_onboarding/climoro_onboarding/doctype/electricity/electricity.json` |
-| Capital Goods Method | Scope 3 upstream: Capital Goods activity inputs. | date (Date), vendor (Data), amount (Float), category (Select) | `climoro-onboarding/climoro_onboarding/climoro_onboarding/doctype/capital_goods_method/capital_goods_method.json` |
-| Fugitive Screening | Capture refrigerant/gas activity for fugitive emissions with GWP conversion. | s_no (Int), date (Date), equipment_selection (Select), approach_type (Data), gwp_refrigeration (Float) | `climoro-onboarding/climoro_onboarding/climoro_onboarding/doctype/fugitive_screening/fugitive_screening.json` |
-| Stationary Emissions | Record stationary combustion activity (boilers/gensets) for Scope 1. | fuel_type (Select), quantity (Float), unit (Data), efco2 (Float), efch4 (Float), efn20 (Float) | `climoro-onboarding/climoro_onboarding/climoro_onboarding/doctype/stationary_emissions/stationary_emissions.json` |
-| GHG Boundary | Application DocType; see key fields for context. | organization (Link), boundaries (Table), notes (Small Text) | `climoro-onboarding/climoro_onboarding/climoro_onboarding/doctype/ghg_boundary/ghg_boundary.json` |
-| GHG Boundary Line | Application DocType; see key fields for context. | business_unit (Data), location (Data), purpose (Small Text), included (Check), reason_exclusion (Small Text) | `climoro-onboarding/climoro_onboarding/climoro_onboarding/doctype/ghg_boundary_line/ghg_boundary_line.json` |
-| Downstream Transportation Method | Scope 3: Transportation and distribution. | date (Date), transport_mode (Select), distance (Float), weight (Float) | `climoro-onboarding/climoro_onboarding/climoro_onboarding/doctype/downstream_transportation_method/downstream_transportation_method.json` |
-| Stationary Emissions (Child Table) | Record stationary combustion activity (boilers/gensets) for Scope 1. | fuel_type (Select), quantity (Float), unit (Data), efco2 (Float) | `climoro-onboarding/climoro_onboarding/climoro_onboarding/doctype/stationary_emissions/stationary_emissions.json` |
-| Upstream Leased Assets Method | Scope 3: Leased assets activity. | date (Date), asset_type (Select), activity (Float) | `climoro-onboarding/climoro_onboarding/climoro_onboarding/doctype/upstream_leased_assets_method/upstream_leased_assets_method.json` |
-| Business Travel Method | Scope 3 upstream: Business travel (passenger-km) inputs. | date (Date), travel_mode (Select), passenger_km (Float) | `climoro-onboarding/climoro_onboarding/climoro_onboarding/doctype/business_travel_method/business_travel_method.json` |
-| Employee Commuting Method | Scope 3 upstream: Employee commuting. | date (Date), mode (Select), distance (Float), employees (Int) | `climoro-onboarding/climoro_onboarding/climoro_onboarding/doctype/employee_commuting_method/employee_commuting_method.json` |
-| Upstream Transportation Method | Scope 3: Transportation and distribution. | date (Date), transport_mode (Select), distance (Float), weight (Float) | `climoro-onboarding/climoro_onboarding/climoro_onboarding/doctype/upstream_transportation_method/upstream_transportation_method.json` |
-| Upstream Fuel & Energy Activities Method | Application DocType; see key fields for context. | date (Date), fuel_type (Select), amount (Float) | `climoro-onboarding/climoro_onboarding/climoro_onboarding/doctype/upstream_fuel___energy_activities_method/upstream_fuel___energy_activities_method.json` |
-| Use of Sold Products Method | Scope 3 downstream: Use phase of sold products. | date (Date), product (Data), usage (Float), unit (Data) | `climoro-onboarding/climoro_onboarding/climoro_onboarding/doctype/use_of_sold_products_method/use_of_sold_products_method.json` |
-| Downstream Leased Assets Method | Scope 3: Leased assets activity. | date (Date), asset_type (Select), activity (Float) | `climoro-onboarding/climoro_onboarding/climoro_onboarding/doctype/downstream_leased_assets_method/downstream_leased_assets_method.json` |
-| Downstream Processing of Sold Products Method | Application DocType; see key fields for context. | date (Date), product (Data), processed_qty (Float) | `climoro-onboarding/climoro_onboarding/climoro_onboarding/doctype/downstream_processing_of_sold_products_method/downstream_processing_of_sold_products_method.json` |
-| Upstream Purchased Goods & Services Method | Scope 3 upstream: Purchased Goods & Services activity inputs. | date (Date), supplier (Data), amount (Float) | `climoro-onboarding/climoro_onboarding/climoro_onboarding/doctype/upstream_purchased_goods___services_method/upstream_purchased_goods___services_method.json` |
-| Upstream Waste Generated in Operations Method | Scope 3 upstream: Waste generated in operations. | date (Date), waste_type (Select), qty (Float) | `climoro-onboarding/climoro_onboarding/climoro_onboarding/doctype/upstream_waste_generated_in_operations_method/upstream_waste_generated_in_operations_method.json` |
-| Downstream End-of-Life Treatment Method | Scope 3 downstream: End-of-life treatment of sold products. | date (Date), product (Data), disposal_method (Select), qty (Float) | `climoro-onboarding/climoro_onboarding/climoro_onboarding/doctype/downstream_end_of_life_treatment_method/downstream_end_of_life_treatment_method.json` |
-| Downstream Use of Sold Products Method | Scope 3 downstream: Use phase of sold products. | date (Date), product (Data), usage (Float) | `climoro-onboarding/climoro_onboarding/climoro_onboarding/doctype/downstream_use_of_sold_products_method/downstream_use_of_sold_products_method.json` |
-| Downstream Investments Method | Scope 3 downstream: Investments emissions. | date (Date), investment_type (Select), amount (Float) | `climoro-onboarding/climoro_onboarding/climoro_onboarding/doctype/downstream_investments_method/downstream_investments_method.json` |
-| GHG Reduction Initiative | Application DocType; see key fields for context. | initiative_name (Data), owner (Link), start_date (Date), end_date (Date) | `climoro-onboarding/climoro_onboarding/climoro_onboarding/doctype/ghg_reduction_initiative/ghg_reduction_initiative.json` |
-| GHG Reduction Line | Application DocType; see key fields for context. | initiative (Data), description (Small Text), reduction_achieved (Float), scope_category_impacted (Data) | `climoro-onboarding/climoro_onboarding/climoro_onboarding/doctype/ghg_reduction_line/ghg_reduction_line.json` |
-| GHG Report | Aggregate emissions across scopes for reporting. | period (Date), org (Link), totals (Table) | `climoro-onboarding/climoro_onboarding/climoro_onboarding/doctype/ghg_report/ghg_report.json` |
-| Downstream Fuel Method | Application DocType; see key fields for context. | date (Date), vehicle_no (Data), fuel_selection (Select), fuel_used (Float) | `climoro-onboarding/climoro_onboarding/climoro_onboarding/doctype/downstream_fuel_method/downstream_fuel_method.json` |
-| Upstream Processing of Sold Products Method | Application DocType; see key fields for context. | date (Date), product (Data), processed_qty (Float) | `climoro-onboarding/climoro_onboarding/climoro_onboarding/doctype/upstream_processing_of_sold_products_method/upstream_processing_of_sold_products_method.json` |
-| Upstream Downstream T&D Method | Scope 3: Transportation and distribution. | date (Date), transport_mode (Select), distance (Float), weight (Float) | `climoro-onboarding/climoro_onboarding/climoro_onboarding/doctype/upstream_downstream_t___d_method/upstream_downstream_t___d_method.json` |
-| Upstream End-of-Life Treatment Method | Scope 3 downstream: End-of-life treatment of sold products. | date (Date), product (Data), disposal_method (Select), qty (Float) | `climoro-onboarding/climoro_onboarding/climoro_onboarding/doctype/upstream_end_of_life_treatment_method/upstream_end_of_life_treatment_method.json` |
-| Purchased Capital Goods Method | Scope 3 upstream: Capital Goods activity inputs. | date (Date), vendor (Data), amount (Float) | `climoro-onboarding/climoro_onboarding/climoro_onboarding/doctype/purchased_capital_goods_method/purchased_capital_goods_method.json` |
-| Upstream Fuel Method | Application DocType; see key fields for context. | date (Date), fuel_type (Select), fuel_used (Float) | `climoro-onboarding/climoro_onboarding/climoro_onboarding/doctype/upstream_fuel_method/upstream_fuel_method.json` |
-| Upstream Electricity Use Method | Capture purchased/imported electricity for Scope 2. | date (Date), kwh (Float), grid_factor (Float) | `climoro-onboarding/climoro_onboarding/climoro_onboarding/doctype/upstream_electricity_use_method/upstream_electricity_use_method.json` |
-| Downstream Electricity Use Method | Capture purchased/imported electricity for Scope 2. | date (Date), kwh (Float), grid_factor (Float) | `climoro-onboarding/climoro_onboarding/climoro_onboarding/doctype/downstream_electricity_use_method/downstream_electricity_use_method.json` |
-| Upstream Commuting Method | Scope 3 upstream: Employee commuting. | date (Date), mode (Select), distance (Float), employees (Int) | `climoro-onboarding/climoro_onboarding/climoro_onboarding/doctype/upstream_commuting_method/upstream_commuting_method.json` |
-| Upstream Business Travel Method | Scope 3 upstream: Business travel (passenger-km) inputs. | date (Date), travel_mode (Select), passenger_km (Float) | `climoro-onboarding/climoro_onboarding/climoro_onboarding/doctype/upstream_business_travel_method/upstream_business_travel_method.json` |
-| Upstream Investments Method | Scope 3 downstream: Investments emissions. | date (Date), investment_type (Select), amount (Float) | `climoro-onboarding/climoro_onboarding/climoro_onboarding/doctype/upstream_investments_method/upstream_investments_method.json` |
-| Downstream Business Travel Method | Scope 3 upstream: Business travel (passenger-km) inputs. | date (Date), travel_mode (Select), passenger_km (Float) | `climoro-onboarding/climoro_onboarding/climoro_onboarding/doctype/downstream_business_travel_method/downstream_business_travel_method.json` |
-| Upstream Purchased Capital Goods Method | Scope 3 upstream: Capital Goods activity inputs. | date (Date), vendor (Data), amount (Float) | `climoro-onboarding/climoro_onboarding/climoro_onboarding/doctype/upstream_purchased_capital_goods_method/upstream_purchased_capital_goods_method.json` |
-| Downstream Commuting Method | Scope 3 upstream: Employee commuting. | date (Date), mode (Select), distance (Float), employees (Int) | `climoro-onboarding/climoro_onboarding/climoro_onboarding/doctype/downstream_commuting_method/downstream_commuting_method.json` |
-| Upstream Waste Method | Scope 3 upstream: Waste generated in operations. | date (Date), waste_type (Select), qty (Float) | `climoro-onboarding/climoro_onboarding/climoro_onboarding/doctype/upstream_waste_method/upstream_waste_method.json` |
-| Upstream Processing Method | Application DocType; see key fields for context. | date (Date), process_name (Data), qty (Float) | `climoro-onboarding/climoro_onboarding/climoro_onboarding/doctype/upstream_processing_method/upstream_processing_method.json` |
-| Downstream Purchased Goods & Services Method | Scope 3 upstream: Purchased Goods & Services activity inputs. | date (Date), supplier (Data), amount (Float) | `climoro-onboarding/climoro_onboarding/climoro_onboarding/doctype/downstream_purchased_goods___services_method/downstream_purchased_goods___services_method.json` |
-| Upstream Electricity Use T&D Method | Scope 3: Transportation and distribution. | date (Date), electricity_purchased (Float), grid_factor (Float) | `climoro-onboarding/climoro_onboarding/climoro_onboarding/doctype/upstream_electricity_use_t___d_method/upstream_electricity_use_t___d_method.json` |
-| Use of Sold Products - Value Chain Method | Scope 3 downstream: Use phase of sold products. | date (Date), product (Data), usage (Float) | `climoro-onboarding/climoro_onboarding/climoro_onboarding/doctype/use_of_sold_products_-_value_chain_method/use_of_sold_products_-_value_chain_method.json` |
+The combined system provides a robust onboarding → emissions reporting pipeline. To be production-ready, permissions must be hardened, factor update governance established, and documentation/licensing completed. Additionally, AI (Artificial Intelligence) Agents, Cybersecurity measures, and OCR (Optical Character Recognition) applications provide a future roadmap for scalability and automation. These improvements will ensure compliance, security, and customer confidence.
 
