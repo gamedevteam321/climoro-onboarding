@@ -3,12 +3,12 @@
 ## 1. Tech Stack Overview
 - **Framework:** Frappe (Python, MariaDB/MySQL, Redis, Node.js/Webpack)
 - **Backend:** Python (DocType controllers, hooks, workflows, Carbon Dioxide Equivalent (CO₂e) calculations)
-- **Frontend:** HTML (Hypertext Markup Language)/CSS (Cascading Style Sheets) + JavaScript (JS) for dynamic forms, validations, UX (User Experience) helpers
+- **Frontend:** HTML/CSS + JavaScript for dynamic forms, validations, UX (User Experience) helpers
 - **Database:** MariaDB/MySQL via Frappe ORM (Object Relational Mapping)
-- **Background Jobs:** Redis (Remote Dictionary Server) queue (reports, validations)
+- **Background Jobs:** Redis queue (reports, validations)
 - **Reference Data:** IPCC (Intergovernmental Panel on Climate Change) GWP (Global Warming Potential) factors (CSV - Comma Separated Values)
-- **CI/CD:** Continuous Integration/Continuous Deployment with pre-commit (ruff, eslint, prettier, pyupgrade), Semgrep (Static Analysis Tool), pip-audit (Python Dependency Security Audit)
-- **Licensing:** Onboarding → MIT (Massachusetts Institute of Technology) License; GHG (Greenhouse Gas) Forms → License not stated (needs confirmation)
+- **CI/CD:** pre-commit (ruff, eslint, prettier, pyupgrade), Semgrep, pip-audit
+- **Licensing:** Onboarding → MIT License; GHG Forms → License not stated (needs confirmation)
 
 ---
 
@@ -122,17 +122,17 @@ Implements GHG (Greenhouse Gas) Protocol accounting for Scopes 1, 2, and 3. Conv
 **Q5. How customizable are the DocTypes and reports?**  
 *A5.* Fully customizable; standard Frappe JSON (JavaScript Object Notation) definitions. Reports extendable through ERPNext’s Report Builder, custom scripts, or dashboards.
 
-**Q6. What is the roadmap (dashboards, dMRV, AI/Carbon GPT)?**  
-*A6.* Future roadmap should include dashboards, dMRV (Digital Monitoring, Reporting & Verification) integrations (IoT - Internet of Things/satellite), Carbon GPT (Generative Pre-trained Transformer) for auto-doc generation, and alignment with Article 6 compliance.
+**Q6. What is the roadmap (dashboards, dMRV)?**  
+*A6.* Future roadmap should include dashboards, dMRV (Digital Monitoring, Reporting & Verification) integrations (IoT - Internet of Things/satellite), and alignment with Article 6 compliance.
 
-**Q7. AI Agents for Enhanced Accounting and Automation**  
+**Q7. AI Agents for Enhanced Accounting and Automation (AI/Carbon GPT)**  
 *A7.* AI agents are being developed to automate accounting tasks such as invoice processing and data population. These agents can quickly process large volumes of files for audits, significantly reducing the time required compared to manual processes. They enhance human work by providing interoperability and scalability, and can be integrated with various compliance reporting tools.
 
 **Q8. Cybersecurity Measures and Data Protection**  
-*A8.* Cybersecurity is a key concern, and measures are being implemented to protect sensitive data. The system is designed to be highly secure, making it difficult to hack, with features like 2‑state purification. The server is hosted on AWS (Amazon Web Services), which is considered a secure and industry‑trusted platform.
+*A8.* Cybersecurity is a key concern, and measures are being implemented to protect sensitive data. The system is designed to be highly secure, making it difficult to hack, with features like 2-state purification. The server is hosted on AWS (Amazon Web Services), which is considered a secure and industry-trusted platform.
 
 **Q9. OCR (Optical Character Recognition) Technology and its Applications**  
-*A9.* OCR technology is utilized for accounting purposes, including data detection. OCR is efficient and has various applications across industries. OCR libraries are connected with year‑end accounting, enabling automation in document scanning, invoice recognition, and data entry tasks.
+*A9.* OCR technology is utilized for accounting purposes, including data detection. OCR is efficient and has various applications across industries. OCR libraries are connected with year-end accounting, enabling automation in document scanning, invoice recognition, and data entry tasks.
 
 ---
 
