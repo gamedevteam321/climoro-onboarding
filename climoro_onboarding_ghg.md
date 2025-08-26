@@ -129,7 +129,7 @@ Implements GHG (Greenhouse Gas) Protocol accounting for Scopes 1, 2, and 3. Conv
 *A7.* AI agents are being developed to automate accounting tasks such as invoice processing and data population. These agents can quickly process large volumes of files for audits, significantly reducing the time required compared to manual processes. They enhance human work by providing interoperability and scalability, and can be integrated with various compliance reporting tools.
 
 **Q8. Cybersecurity Measures and Data Protection**  
-*A8.* Cybersecurity is a key concern, and measures are being implemented to protect sensitive data. The system is designed to be highly secure, making it difficult to hack, with features like 2-state purification. The server is hosted on AWS (Amazon Web Services), which is considered a secure and industry-trusted platform.
+*A8.* Cybersecurity is a key concern, and measures are being implemented to protect sensitive data. The system is designed to be highly secure, making it difficult to hack, with features like 2-state verification. The server is hosted on AWS (Amazon Web Services), which is considered a secure and industry-trusted platform.
 
 **Q9. OCR (Optical Character Recognition) Technology and its Applications**  
 *A9.* OCR technology is utilized for accounting purposes, including data detection. OCR is efficient and has various applications across industries. OCR libraries are connected with year-end accounting, enabling automation in document scanning, invoice recognition, and data entry tasks.
