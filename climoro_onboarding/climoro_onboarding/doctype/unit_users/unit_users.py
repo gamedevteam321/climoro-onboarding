@@ -218,13 +218,27 @@ class UnitUsers(Document):
 			# Don't fail user creation if permissions fail
 	
 	def assign_user_role(self, user_email):
-		"""Assign appropriate role based on user_role field"""
+		"""Assign appropriate role based on user_role field (robust mapping)"""
 		role_mapping = {
-			"Unit Manager": ["Unit Manager", "Employee"],
-			"Data Analyst": ["Data Analyst", "Employee"]
+			"unit manager": ["Unit Manager", "Employee"],
+			"data analyst": ["Data Analyst", "Employee"],
 		}
-		
-		roles_to_assign = role_mapping.get(self.user_role, ["Employee"])
+		selected_raw = (self.user_role or "").strip()
+		selected_key = selected_raw.lower()
+		roles_to_assign = role_mapping.get(selected_key)
+		if not roles_to_assign:
+			# Heuristic fallback if label mismatches
+			if "manager" in selected_key:
+				roles_to_assign = ["Unit Manager", "Employee"]
+			elif "analyst" in selected_key:
+				roles_to_assign = ["Data Analyst", "Employee"]
+			else:
+				roles_to_assign = ["Employee"]
+			# log for troubleshooting
+			try:
+				frappe.log_error(f"Unexpected user_role value: '{selected_raw}'", "Unit Users Role Mapping")
+			except Exception:
+				pass
 		
 		for role in roles_to_assign:
 			# Check if role exists, create if it doesn't
@@ -390,15 +404,18 @@ class UnitUsers(Document):
 		for role in old_roles:
 			frappe.db.delete("Has Role", {"parent": user_doc.name, "role": role})
 
-		# Remove any existing Scope/Reduction roles before reapplying from template
-		existing = frappe.get_all("Has Role", filters={"parent": user_doc.name}, fields=["name", "role"])
-		for r in existing:
-			if r.role.startswith("Scope") or r.role.startswith("Reduction"):
-				frappe.delete_doc("Has Role", r.name, ignore_permissions=True)
-
 		# Assign base role from selection (and Employee)
 		self.assign_user_role(user_doc.name)
-		# Reapply scope/reduction bundle from Super Admin template
+		# Ensure at least Employee exists as a guardrail
+		if not frappe.db.exists("Has Role", {"parent": user_doc.name, "role": "Employee"}):
+			frappe.get_doc({
+				"doctype": "Has Role",
+				"parent": user_doc.name,
+				"parenttype": "User",
+				"parentfield": "roles",
+				"role": "Employee",
+			}).insert(ignore_permissions=True)
+		# Reapply scope/reduction bundle from Super Admin template (handles purge internally)
 		self.assign_scope_reduction_roles_from_super_admin(user_doc.name)
 
 @frappe.whitelist()
