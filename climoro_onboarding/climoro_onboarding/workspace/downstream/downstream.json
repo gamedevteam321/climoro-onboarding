@@ -13,9 +13,9 @@
  "is_hidden": 0,
  "label": "Downstream",
  "links": [],
- "modified": "2025-08-19 10:57:10.019188",
+ "modified": "2025-08-28 11:08:39.256039",
  "modified_by": "Administrator",
- "module": "climoro onboarding",
+ "module": "Climoro Onboarding",
  "name": "Downstream",
  "number_cards": [],
  "owner": "Administrator",
@@ -24,10 +24,10 @@
  "quick_lists": [],
  "roles": [
   {
-   "role": "Climoro Hidden"
+   "role": "Scope 3 Downstream Access"
   }
  ],
- "sequence_id": 44.0,
+ "sequence_id": 43.0,
  "shortcuts": [],
  "title": "Downstream"
 }

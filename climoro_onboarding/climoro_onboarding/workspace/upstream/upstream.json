@@ -13,9 +13,9 @@
  "is_hidden": 0,
  "label": "Upstream",
  "links": [],
- "modified": "2025-08-19 10:57:10.741494",
+ "modified": "2025-08-28 11:08:39.026739",
  "modified_by": "Administrator",
- "module": "climoro onboarding",
+ "module": "Climoro Onboarding",
  "name": "Upstream",
  "number_cards": [],
  "owner": "Administrator",
@@ -27,7 +27,7 @@
    "role": "Scope 3 Upstream Access"
   }
  ],
- "sequence_id": 33.0,
+ "sequence_id": 32.0,
  "shortcuts": [],
  "title": "Upstream"
 }

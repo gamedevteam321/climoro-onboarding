@@ -1,1 +1,0 @@
-# GHG Reduction Line Doctype

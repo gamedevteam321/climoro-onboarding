@@ -1,1 +1,0 @@
-# GHG Boundary Line Doctype

@@ -1,0 +1,220 @@
+{
+ "actions": [],
+ "allow_import": 1,
+ "allow_rename": 1,
+ "creation": "2025-08-21 15:18:37.175214",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "fuel_type",
+  "fuel_name",
+  "efco2",
+  "efch4",
+  "efn20",
+  "sb_energy",
+  "efco2_energy",
+  "efch4_energy",
+  "efn20_energy",
+  "sb_mass",
+  "col_mass",
+  "efco2_mass",
+  "efch4_mass",
+  "efn20_mass",
+  "col_liquid",
+  "efco2_liquid",
+  "efch4_liquid",
+  "efn20_liquid",
+  "sb_gas",
+  "efco2_gas",
+  "efch4_gas",
+  "efn20_gas"
+ ],
+ "fields": [
+  {
+   "fieldname": "fuel_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Fuel Type",
+   "options": "Solid fossil\nLiquid fossil\nGaseous fossil\nBiomass\nOther",
+   "reqd": 1
+  },
+  {
+   "fieldname": "fuel_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Fuel Name",
+   "reqd": 1
+  },
+  {
+   "fieldname": "efco2",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "EFCO2 (kg CO2/TJ)",
+   "reqd": 1
+  },
+  {
+   "fieldname": "efch4",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "EFCH4 (kg CH4/TJ)",
+   "reqd": 1
+  },
+  {
+   "fieldname": "efn20",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "EFN20 (kg N2O/TJ)",
+   "reqd": 1
+  },
+  {
+   "fieldname": "sb_energy",
+   "fieldtype": "Section Break",
+   "label": "Energy Basis Factors"
+  },
+  {
+   "fieldname": "efco2_energy",
+   "fieldtype": "Float",
+   "label": "EFCO2 (kg CO2/TJ)"
+  },
+  {
+   "fieldname": "efch4_energy",
+   "fieldtype": "Float",
+   "label": "EFCH4 (kg CH4/TJ)"
+  },
+  {
+   "fieldname": "efn20_energy",
+   "fieldtype": "Float",
+   "label": "EFN20 (kg N2O/TJ)"
+  },
+  {
+   "fieldname": "sb_mass",
+   "fieldtype": "Section Break",
+   "label": "Mass & Liquid Basis Factors"
+  },
+  {
+   "fieldname": "col_mass",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "efco2_mass",
+   "fieldtype": "Float",
+   "label": "EFCO2 Mass (kg CO2/tonne)"
+  },
+  {
+   "fieldname": "efch4_mass",
+   "fieldtype": "Float",
+   "label": "EFCH4 Mass (kg CH4/tonne)"
+  },
+  {
+   "fieldname": "efn20_mass",
+   "fieldtype": "Float",
+   "label": "EFN20 Mass (kg N2O/tonne)"
+  },
+  {
+   "fieldname": "col_liquid",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "efco2_liquid",
+   "fieldtype": "Float",
+   "label": "EFCO2 Liquid (kg CO2/litre)"
+  },
+  {
+   "fieldname": "efch4_liquid",
+   "fieldtype": "Float",
+   "label": "EFCH4 Liquid (kg CH4/litre)"
+  },
+  {
+   "fieldname": "efn20_liquid",
+   "fieldtype": "Float",
+   "label": "EFN2O Liquid (kg N2O/litre)"
+  },
+  {
+   "fieldname": "sb_gas",
+   "fieldtype": "Section Break",
+   "label": "Gas Basis Factors"
+  },
+  {
+   "fieldname": "efco2_gas",
+   "fieldtype": "Float",
+   "label": "EFCO2 Gas (kg CO2/m\u00b3)"
+  },
+  {
+   "fieldname": "efch4_gas",
+   "fieldtype": "Float",
+   "label": "EFCH4 Gas (kg CH4/m\u00b3)"
+  },
+  {
+   "fieldname": "efn20_gas",
+   "fieldtype": "Float",
+   "label": "EFN2O Gas (kg N2O/m\u00b3)"
+  }
+ ],
+ "grid_page_length": 50,
+ "in_create": 1,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-08-21 15:18:37.175214",
+ "modified_by": "Administrator",
+ "module": "climoro onboarding",
+ "name": "EF Master",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "read": 1,
+   "report": 1,
+   "role": "All",
+   "share": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Super Admin",
+   "share": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Data Analyst",
+   "share": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Unit Manager",
+   "share": 1
+  }
+ ],
+ "quick_entry": 1,
+ "read_only": 1,
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

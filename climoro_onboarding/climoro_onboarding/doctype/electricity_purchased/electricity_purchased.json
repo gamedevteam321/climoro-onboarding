@@ -80,7 +80,7 @@
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Unit Selection",
-   "options": "kWh\nMWh\nGWh",
+   "options": "Tonnes\nkg",
    "reqd": 1
   },
   {
