@@ -1,0 +1,420 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-01-01 00:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "title_page",
+  "report_title",
+  "organization_name",
+  "period_from",
+  "period_to",
+  "date_of_report",
+  "version",
+  "prepared_by",
+  "disclaimer",
+  "disclaimer_text",
+  "acknowledgements",
+  "acknowledgements_text",
+  "citation_information",
+  "citation_text",
+  "copyright_notice",
+  "copyright_notice_text",
+  "table_of_contents",
+  "toc_note",
+  "purpose_of_this_report",
+  "purpose_objectives",
+  "intended_use_users",
+  "responsibilities",
+  "frequency",
+  "structure_format",
+  "data_included",
+  "dissemination_policy",
+  "introduction",
+  "report_type",
+  "compliance_statement",
+  "verification_status",
+  "gwp_values",
+  "organization_description",
+  "org_overview",
+  "ghg_policies_strategies",
+  "organizational_boundaries",
+  "ghg_boundary_line",
+  "reporting_boundaries",
+  "criteria_significance",
+  "emission_categories",
+  "exclusions",
+  "ghg_inventory_results",
+  "base_year",
+  "changes_to_base_year",
+  "quantification_approaches",
+  "emission_factors",
+  "uncertainties",
+  "ghg_inventory_line",
+  "ghg_scope2_dual_line",
+  "ghg_reductions_and_removals",
+  "ghg_reduction_line",
+  "data_management_and_quality",
+  "activity_data_sources",
+  "quality_assurance",
+  "appendices",
+  "appendix_calculations",
+  "appendix_glossary",
+  "appendix_references"
+ ],
+ "fields": [
+  {
+   "fieldname": "title_page",
+   "fieldtype": "Section Break",
+   "label": "Title Page",
+   "collapsible": 1
+  },
+  {
+   "fieldname": "report_title",
+   "fieldtype": "Data",
+   "label": "Report Title",
+   "reqd": 1
+  },
+  {
+   "fieldname": "organization_name",
+   "fieldtype": "Link",
+   "label": "Organization Name",
+   "options": "Company"
+  },
+  {
+   "fieldname": "period_from",
+   "fieldtype": "Date",
+   "label": "Period From",
+   "reqd": 1
+  },
+  {
+   "fieldname": "period_to",
+   "fieldtype": "Date",
+   "label": "Period To",
+   "reqd": 1
+  },
+  {
+   "fieldname": "date_of_report",
+   "fieldtype": "Date",
+   "label": "Date of Report"
+  },
+  {
+   "fieldname": "version",
+   "fieldtype": "Data",
+   "label": "Version"
+  },
+  {
+   "fieldname": "prepared_by",
+   "fieldtype": "Data",
+   "label": "Prepared By"
+  },
+  {
+   "fieldname": "disclaimer",
+   "fieldtype": "Section Break",
+   "label": "Disclaimer",
+   "collapsible": 1
+  },
+  {
+   "fieldname": "disclaimer_text",
+   "fieldtype": "Long Text",
+   "label": "Disclaimer Text"
+  },
+  {
+   "fieldname": "acknowledgements",
+   "fieldtype": "Section Break",
+   "label": "Acknowledgements",
+   "collapsible": 1
+  },
+  {
+   "fieldname": "acknowledgements_text",
+   "fieldtype": "Long Text",
+   "label": "Acknowledgements Text"
+  },
+  {
+   "fieldname": "citation_information",
+   "fieldtype": "Section Break",
+   "label": "Citation Information",
+   "collapsible": 1
+  },
+  {
+   "fieldname": "citation_text",
+   "fieldtype": "Long Text",
+   "label": "Citation Text"
+  },
+  {
+   "fieldname": "copyright_notice",
+   "fieldtype": "Section Break",
+   "label": "Copyright Notice",
+   "collapsible": 1
+  },
+  {
+   "fieldname": "copyright_notice_text",
+   "fieldtype": "Long Text",
+   "label": "Copyright Notice Text"
+  },
+  {
+   "fieldname": "table_of_contents",
+   "fieldtype": "Section Break",
+   "label": "Table of Contents",
+   "collapsible": 1
+  },
+  {
+   "fieldname": "toc_note",
+   "fieldtype": "HTML Editor",
+   "label": "Table of Contents",
+   "read_only": 1,
+   "description": "Auto-generated table of contents based on document sections"
+  },
+  {
+   "fieldname": "purpose_of_this_report",
+   "fieldtype": "Section Break",
+   "label": "Purpose of This Report",
+   "collapsible": 1
+  },
+  {
+   "fieldname": "purpose_objectives",
+   "fieldtype": "Long Text",
+   "label": "Purpose and Objectives"
+  },
+  {
+   "fieldname": "intended_use_users",
+   "fieldtype": "Long Text",
+   "label": "Intended Use and Users"
+  },
+  {
+   "fieldname": "responsibilities",
+   "fieldtype": "Long Text",
+   "label": "Responsibilities"
+  },
+  {
+   "fieldname": "frequency",
+   "fieldtype": "Data",
+   "label": "Frequency",
+   "default": "Annual"
+  },
+  {
+   "fieldname": "structure_format",
+   "fieldtype": "Long Text",
+   "label": "Structure and Format"
+  },
+  {
+   "fieldname": "data_included",
+   "fieldtype": "Long Text",
+   "label": "Data Included"
+  },
+  {
+   "fieldname": "dissemination_policy",
+   "fieldtype": "Long Text",
+   "label": "Dissemination Policy"
+  },
+  {
+   "fieldname": "introduction",
+   "fieldtype": "Section Break",
+   "label": "Introduction",
+   "collapsible": 1
+  },
+  {
+   "fieldname": "report_type",
+   "fieldtype": "Data",
+   "label": "Report Type",
+   "default": "Annual GHG emissions inventory and management report"
+  },
+  {
+   "fieldname": "compliance_statement",
+   "fieldtype": "Small Text",
+   "label": "Compliance Statement",
+   "default": "This report has been prepared in accordance with ISO 14064-1:2018."
+  },
+  {
+   "fieldname": "verification_status",
+   "fieldtype": "Data",
+   "label": "Verification Status"
+  },
+  {
+   "fieldname": "gwp_values",
+   "fieldtype": "Data",
+   "label": "GWP Values",
+   "default": "IPCC AR6"
+  },
+  {
+   "fieldname": "organization_description",
+   "fieldtype": "Section Break",
+   "label": "Organization Description",
+   "collapsible": 1
+  },
+  {
+   "fieldname": "org_overview",
+   "fieldtype": "Long Text",
+   "label": "Organization Overview"
+  },
+  {
+   "fieldname": "ghg_policies_strategies",
+   "fieldtype": "Long Text",
+   "label": "GHG Policies and Strategies"
+  },
+  {
+   "fieldname": "organizational_boundaries",
+   "fieldtype": "Section Break",
+   "label": "Organizational Boundaries",
+   "collapsible": 1
+  },
+  {
+   "fieldname": "ghg_boundary_line",
+   "fieldtype": "Table",
+   "label": "GHG Boundary Line",
+   "options": "GHG Boundary Line"
+  },
+  {
+   "fieldname": "reporting_boundaries",
+   "fieldtype": "Section Break",
+   "label": "Reporting Boundaries",
+   "collapsible": 1
+  },
+  {
+   "fieldname": "criteria_significance",
+   "fieldtype": "Long Text",
+   "label": "Criteria for Significance"
+  },
+  {
+   "fieldname": "emission_categories",
+   "fieldtype": "Long Text",
+   "label": "Emission Categories"
+  },
+  {
+   "fieldname": "exclusions",
+   "fieldtype": "Long Text",
+   "label": "Exclusions"
+  },
+  {
+   "fieldname": "ghg_inventory_results",
+   "fieldtype": "Section Break",
+   "label": "GHG Inventory Results",
+   "collapsible": 1
+  },
+  {
+   "fieldname": "base_year",
+   "fieldtype": "Int",
+   "label": "Base Year"
+  },
+  {
+   "fieldname": "changes_to_base_year",
+   "fieldtype": "Long Text",
+   "label": "Changes to Base Year"
+  },
+  {
+   "fieldname": "quantification_approaches",
+   "fieldtype": "Long Text",
+   "label": "Quantification Approaches"
+  },
+  {
+   "fieldname": "emission_factors",
+   "fieldtype": "Long Text",
+   "label": "Emission Factors"
+  },
+  {
+   "fieldname": "uncertainties",
+   "fieldtype": "Long Text",
+   "label": "Uncertainties"
+  },
+  {
+   "fieldname": "ghg_inventory_line",
+   "fieldtype": "Table",
+   "label": "Emissions and Removals Summary",
+   "options": "GHG Inventory Line"
+  },
+  {
+   "fieldname": "ghg_scope2_dual_line",
+   "fieldtype": "Table",
+   "label": "GHG Scope 2 Dual Line",
+   "options": "GHG Scope2 Dual Line"
+  },
+  {
+   "fieldname": "ghg_reductions_and_removals",
+   "fieldtype": "Section Break",
+   "label": "GHG Reductions and Removals Enhancements",
+   "collapsible": 1
+  },
+  {
+   "fieldname": "ghg_reduction_line",
+   "fieldtype": "Table",
+   "label": "GHG Reduction Line",
+   "options": "GHG Reduction Line"
+  },
+  {
+   "fieldname": "data_management_and_quality",
+   "fieldtype": "Section Break",
+   "label": "Data Management and Quality",
+   "collapsible": 1
+  },
+  {
+   "fieldname": "activity_data_sources",
+   "fieldtype": "Long Text",
+   "label": "Activity Data Sources"
+  },
+  {
+   "fieldname": "quality_assurance",
+   "fieldtype": "Long Text",
+   "label": "Quality Assurance"
+  },
+  {
+   "fieldname": "appendices",
+   "fieldtype": "Section Break",
+   "label": "Appendices",
+   "collapsible": 1
+  },
+  {
+   "fieldname": "appendix_calculations",
+   "fieldtype": "Attach",
+   "label": "Appendix - Calculations"
+  },
+  {
+   "fieldname": "appendix_glossary",
+   "fieldtype": "Attach",
+   "label": "Appendix - Glossary"
+  },
+  {
+   "fieldname": "appendix_references",
+   "fieldtype": "Long Text",
+   "label": "Appendix - References"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2024-01-01 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Climoro Onboarding",
+ "name": "GHG Report",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Climoro User",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "print_format": "GHG Report (ISO 14064-1)",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1,
+ "track_views": 1
+}
