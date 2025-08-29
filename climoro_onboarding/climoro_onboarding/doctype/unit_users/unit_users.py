@@ -134,6 +134,7 @@ class UnitUsers(Document):
 	def create_frappe_user(self):
 		"""Create a Frappe user account without password and send welcome email"""
 		try:
+			frappe.logger().info(f"[Unit Users] Creating user for {self.email} with role '{self.user_role}'")
 			# Create user document without setting password
 			user_doc = frappe.get_doc({
 				"doctype": "User",
@@ -155,8 +156,17 @@ class UnitUsers(Document):
 			
 			# Assign role based on user_role field
 			self.assign_user_role(user_doc.name)
+			# Verify base role assignment and enforce if missing
+			self._verify_and_enforce_base_roles(user_doc.name)
 			# Also assign scope/reduction roles same as super admin template
 			self.assign_scope_reduction_roles_from_super_admin(user_doc.name)
+			# Final verification after all assignments
+			self._verify_and_enforce_base_roles(user_doc.name)
+			# Ensure the writes are persisted immediately
+			try:
+				frappe.db.commit()
+			except Exception:
+				pass
 			
 			# Create user permissions after user is created
 			if current_user_company:
@@ -184,6 +194,40 @@ class UnitUsers(Document):
 			# Shorter error message to avoid title length issues
 			short_error = str(e)[:100] + "..." if len(str(e)) > 100 else str(e)
 			frappe.throw(f"Failed to create user account: {short_error}")
+
+	def _verify_and_enforce_base_roles(self, user_email: str) -> None:
+		"""Ensure the chosen base role and Employee exist for the user; log state."""
+		try:
+			selected_raw = (self.user_role or "").strip()
+			desired = []
+			if selected_raw.lower().find("manager") != -1:
+				desired.append("Unit Manager")
+			elif selected_raw.lower().find("analyst") != -1:
+				desired.append("Data Analyst")
+			# Always include Employee
+			desired.append("Employee")
+			for role in desired:
+				if not frappe.db.exists("Role", role):
+					self.create_custom_role(role)
+				if not frappe.db.exists("Has Role", {"parent": user_email, "role": role}):
+					frappe.get_doc({
+						"doctype": "Has Role",
+						"parent": user_email,
+						"parenttype": "User",
+						"parentfield": "roles",
+						"role": role,
+					}).insert(ignore_permissions=True)
+			# Log final role set for diagnostics
+			assigned = [r.role for r in frappe.get_all("Has Role", fields=["role"], filters={"parent": user_email})]
+			try:
+				frappe.log_error(
+					message=f"Final roles for {user_email}: {assigned} (selected={selected_raw})",
+					title="Unit Users Role Assignment"
+				)
+			except Exception:
+				pass
+		except Exception:
+			pass
 	
 	def get_current_user_company(self):
 		"""Get the company of the current super admin creating this user"""
@@ -218,7 +262,10 @@ class UnitUsers(Document):
 			# Don't fail user creation if permissions fail
 	
 	def assign_user_role(self, user_email):
-		"""Assign appropriate role based on user_role field (robust mapping)"""
+		"""Assign appropriate role based on user_role field (robust mapping)
+
+		Uses Frappe's built-in add_roles API for reliability and idempotency.
+		"""
 		role_mapping = {
 			"unit manager": ["Unit Manager", "Employee"],
 			"data analyst": ["Data Analyst", "Employee"],
@@ -239,21 +286,32 @@ class UnitUsers(Document):
 				frappe.log_error(f"Unexpected user_role value: '{selected_raw}'", "Unit Users Role Mapping")
 			except Exception:
 				pass
-		
+
+		# Ensure roles exist before assignment
 		for role in roles_to_assign:
-			# Check if role exists, create if it doesn't
 			if not frappe.db.exists("Role", role):
 				self.create_custom_role(role)
-			
-			# Assign role to user
+
+		# Assign roles via Has Role inserts to avoid User doctype permission checks
+		for role in roles_to_assign:
 			if not frappe.db.exists("Has Role", {"parent": user_email, "role": role}):
 				frappe.get_doc({
 					"doctype": "Has Role",
 					"parent": user_email,
 					"parenttype": "User",
 					"parentfield": "roles",
-					"role": role
+					"role": role,
 				}).insert(ignore_permissions=True)
+		# Log for debugging if still not present
+		missing = [r for r in roles_to_assign if not frappe.db.exists("Has Role", {"parent": user_email, "role": r})]
+		if missing:
+			try:
+				frappe.log_error(
+					message=f"Roles still missing after assignment for {user_email}: {missing}; selected={selected_raw}",
+					title="Unit Users Role Assignment"
+				)
+			except Exception:
+				pass
 
 	def assign_scope_reduction_roles_from_super_admin(self, target_user: str) -> None:
 		"""Assign all roles that start with 'Scope' or 'Reduction' from a super admin-like user.
@@ -339,8 +397,18 @@ class UnitUsers(Document):
 
 	def on_update(self):
 		"""Keep linked User in sync on Unit Users update"""
+		# Only super admins can sync to the core User doctype to avoid permission errors
+		if not self._is_super_admin_session():
+			return
 		if self.frappe_user_id and self.user_created:
 			self.update_frappe_user()
+
+	def _is_super_admin_session(self) -> bool:
+		"""Return True if current session has System Manager or is Administrator."""
+		if frappe.session.user == "Administrator":
+			return True
+		user_roles = frappe.get_roles(frappe.session.user)
+		return any(r in ["System Manager", "Administrator"] for r in user_roles)
 	
 	def update_frappe_user(self):
 		"""Update the linked Frappe user when Unit User is updated"""
@@ -353,6 +421,7 @@ class UnitUsers(Document):
 			
 			# Update roles if user_role changed
 			self.update_user_roles(user_doc)
+			self._verify_and_enforce_base_roles(user_doc.name)
 			# Sync username and company on the user
 			if getattr(self, "username", None):
 				user_doc.username = self.username
