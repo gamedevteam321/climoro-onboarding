@@ -2,6 +2,33 @@ import frappe
 import requests
 
 @frappe.whitelist()
+def get_current_user_company_units():
+    """Return the current user's company and allowed units.
+
+    - Super users (Administrator/System Manager) get no restriction markers.
+    - Regular users get their `User.company` and any explicitly assigned units from `Unit Users`.
+      If no units are assigned, client should filter by company only.
+    """
+    user = frappe.session.user
+    if not user or user == "Guest":
+        frappe.throw("Login required")
+
+    roles = set(frappe.get_roles(user))
+    is_super = user == "Administrator" or "System Manager" in roles
+    if is_super:
+        return {"company": None, "units": [], "is_super": True}
+
+    company = frappe.db.get_value("User", user, "company")
+    units = []
+    if company:
+        units = frappe.get_all(
+            "Unit Users",
+            filters={"frappe_user_id": user, "company": company},
+            pluck="assigned_unit",
+        ) or []
+    return {"company": company, "units": units, "is_super": False}
+
+@frappe.whitelist()
 def get_stationary_fuel_efs(fuel_type, fuel_name, unit_preference=None, region="IN"):
     """Get emission factors for stationary fuels - Pure Climatiq API"""
     

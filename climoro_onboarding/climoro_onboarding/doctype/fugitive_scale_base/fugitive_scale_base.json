@@ -28,7 +28,9 @@
   "total_distributed",
   "refrigerant_emission",
   "x5_conversion",
-  "etco2eq"
+  "etco2eq",
+  "company",
+  "unit"
  ],
  "fields": [
   {
@@ -168,12 +170,30 @@
    "in_standard_filter": 1,
    "label": "ETCO2eq",
    "read_only": 1
+  },
+  {
+   "description": "Company name for scope reporting",
+   "fieldname": "company",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Company",
+   "reqd": 1
+  },
+  {
+   "description": "Unit identifier for scope reporting",
+   "fieldname": "unit",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Unit",
+   "reqd": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-08-03 15:38:17.673849",
+ "modified": "2025-08-29 15:10:37.653118",
  "modified_by": "Administrator",
  "module": "Climoro Onboarding",
  "name": "Fugitive Scale Base",
